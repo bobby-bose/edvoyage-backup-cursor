@@ -1,0 +1,810 @@
+{
+    "daily_questions": {
+      "1": [
+        {
+          "id": 1,
+          "question": "Which of the following is the largest organ in the human body?",
+          "options": [
+            "Heart",
+            "Liver",
+            "Skin",
+            "Brain"
+          ],
+          "correct_answer": 2,
+          "explanation": "The skin is the largest organ in the human body, covering approximately 20 square feet in adults."
+        },
+        {
+          "id": 2,
+          "question": "What is the normal range for blood pressure in adults?",
+          "options": [
+            "90/60 mmHg",
+            "120/80 mmHg",
+            "140/90 mmHg",
+            "160/100 mmHg"
+          ],
+          "correct_answer": 1,
+          "explanation": "Normal blood pressure is typically around 120/80 mmHg, with systolic pressure of 120 and diastolic pressure of 80."
+        }
+      ],
+      "2": [
+        {
+          "id": 3,
+          "question": "Which vitamin is essential for blood clotting?",
+          "options": [
+            "Vitamin A",
+            "Vitamin C",
+            "Vitamin D",
+            "Vitamin K"
+          ],
+          "correct_answer": 3,
+          "explanation": "Vitamin K is essential for the synthesis of clotting factors II, VII, IX, and X in the liver."
+        },
+        {
+          "id": 4,
+          "question": "What is the medical term for inflammation of the appendix?",
+          "options": [
+            "Appendicitis",
+            "Cholecystitis",
+            "Pancreatitis",
+            "Gastritis"
+          ],
+          "correct_answer": 0,
+          "explanation": "Appendicitis is the inflammation of the appendix, which typically requires surgical removal."
+        }
+      ],
+      "3": [
+        {
+          "id": 5,
+          "question": "Which of the following is NOT a function of the liver?",
+          "options": [
+            "Detoxification",
+            "Protein synthesis",
+            "Oxygen transport",
+            "Bile production"
+          ],
+          "correct_answer": 2,
+          "explanation": "Oxygen transport is primarily the function of red blood cells and hemoglobin, not the liver."
+        },
+        {
+          "id": 6,
+          "question": "What is the normal heart rate range for adults at rest?",
+          "options": [
+            "40-60 bpm",
+            "60-100 bpm",
+            "100-140 bpm",
+            "140-180 bpm"
+          ],
+          "correct_answer": 1,
+          "explanation": "Normal resting heart rate for adults is typically between 60-100 beats per minute."
+        }
+      ],
+      "4": [
+        {
+          "id": 7,
+          "question": "Which hormone is responsible for regulating blood glucose levels?",
+          "options": [
+            "Thyroxine",
+            "Insulin",
+            "Cortisol",
+            "Adrenaline"
+          ],
+          "correct_answer": 1,
+          "explanation": "Insulin, produced by the pancreas, is the primary hormone responsible for lowering blood glucose levels."
+        },
+        {
+          "id": 8,
+          "question": "What is the medical term for high blood pressure?",
+          "options": [
+            "Hypotension",
+            "Hypertension",
+            "Tachycardia",
+            "Bradycardia"
+          ],
+          "correct_answer": 1,
+          "explanation": "Hypertension refers to persistently elevated blood pressure, typically above 140/90 mmHg."
+        }
+      ],
+      "5": [
+        {
+          "id": 9,
+          "question": "Which of the following is a function of white blood cells?",
+          "options": [
+            "Oxygen transport",
+            "Blood clotting",
+            "Immune defense",
+            "Nutrient transport"
+          ],
+          "correct_answer": 2,
+          "explanation": "White blood cells (leukocytes) are primarily responsible for immune defense against infections and foreign substances."
+        },
+        {
+          "id": 10,
+          "question": "What is the medical term for difficulty in breathing?",
+          "options": [
+            "Dyspnea",
+            "Tachypnea",
+            "Bradypnea",
+            "Apnea"
+          ],
+          "correct_answer": 0,
+          "explanation": "Dyspnea is the medical term for shortness of breath or difficulty in breathing."
+        }
+      ],
+      "6": [
+        {
+          "id": 11,
+          "question": "Which vitamin deficiency causes night blindness?",
+          "options": [
+            "Vitamin A",
+            "Vitamin B",
+            "Vitamin C",
+            "Vitamin D"
+          ],
+          "correct_answer": 0,
+          "explanation": "Vitamin A deficiency can cause night blindness (nyctalopia) as it's essential for rhodopsin formation in the retina."
+        },
+        {
+          "id": 12,
+          "question": "What is the normal body temperature in Celsius?",
+          "options": [
+            "35.5\u00b0C",
+            "36.5\u00b0C",
+            "37.5\u00b0C",
+            "38.5\u00b0C"
+          ],
+          "correct_answer": 2,
+          "explanation": "Normal body temperature is approximately 37\u00b0C (98.6\u00b0F), with a range of 36.5-37.5\u00b0C considered normal."
+        }
+      ],
+      "7": [
+        {
+          "id": 13,
+          "question": "Which organ produces bile?",
+          "options": [
+            "Pancreas",
+            "Liver",
+            "Gallbladder",
+            "Stomach"
+          ],
+          "correct_answer": 1,
+          "explanation": "The liver produces bile, which is stored in the gallbladder and released to help digest fats."
+        },
+        {
+          "id": 14,
+          "question": "What is the medical term for inflammation of the joints?",
+          "options": [
+            "Arthritis",
+            "Osteoporosis",
+            "Osteoarthritis",
+            "Gout"
+          ],
+          "correct_answer": 0,
+          "explanation": "Arthritis is the general term for inflammation of the joints, which can have various causes."
+        }
+      ],
+      "8": [
+        {
+          "id": 15,
+          "question": "Which of the following is a symptom of diabetes mellitus?",
+          "options": [
+            "Polyuria",
+            "Oliguria",
+            "Anuria",
+            "Dysuria"
+          ],
+          "correct_answer": 0,
+          "explanation": "Polyuria (excessive urination) is a classic symptom of diabetes mellitus due to osmotic diuresis."
+        },
+        {
+          "id": 16,
+          "question": "What is the medical term for chest pain?",
+          "options": [
+            "Dyspnea",
+            "Angina",
+            "Palpitation",
+            "Tachycardia"
+          ],
+          "correct_answer": 1,
+          "explanation": "Angina pectoris is the medical term for chest pain, typically caused by reduced blood flow to the heart."
+        }
+      ],
+      "9": [
+        {
+          "id": 17,
+          "question": "Which hormone is known as the 'stress hormone'?",
+          "options": [
+            "Insulin",
+            "Cortisol",
+            "Adrenaline",
+            "Thyroxine"
+          ],
+          "correct_answer": 1,
+          "explanation": "Cortisol, produced by the adrenal cortex, is often called the 'stress hormone' as it helps the body respond to stress."
+        },
+        {
+          "id": 18,
+          "question": "What is the medical term for low blood pressure?",
+          "options": [
+            "Hypertension",
+            "Hypotension",
+            "Tachycardia",
+            "Bradycardia"
+          ],
+          "correct_answer": 1,
+          "explanation": "Hypotension refers to abnormally low blood pressure, typically below 90/60 mmHg."
+        }
+      ],
+      "10": [
+        {
+          "id": 19,
+          "question": "Which vitamin is synthesized in the skin when exposed to sunlight?",
+          "options": [
+            "Vitamin A",
+            "Vitamin C",
+            "Vitamin D",
+            "Vitamin E"
+          ],
+          "correct_answer": 2,
+          "explanation": "Vitamin D is synthesized in the skin when it's exposed to ultraviolet B (UVB) radiation from sunlight."
+        },
+        {
+          "id": 20,
+          "question": "What is the medical term for rapid breathing?",
+          "options": [
+            "Bradypnea",
+            "Tachypnea",
+            "Dyspnea",
+            "Apnea"
+          ],
+          "correct_answer": 1,
+          "explanation": "Tachypnea is the medical term for rapid breathing, typically more than 20 breaths per minute in adults."
+        }
+      ],
+      "11": [
+        {
+          "id": 63,
+          "question": "This is a placeholder medical question with ID 63. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 63, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 64,
+          "question": "This is a placeholder medical question with ID 64. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 1,
+          "explanation": "This is a detailed explanation for question ID 64, elaborating on the medical concept it represents."
+        }
+      ],
+      "12": [
+        {
+          "id": 65,
+          "question": "This is a placeholder medical question with ID 65. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 1,
+          "explanation": "This is a detailed explanation for question ID 65, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 66,
+          "question": "This is a placeholder medical question with ID 66. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 66, elaborating on the medical concept it represents."
+        }
+      ],
+      "13": [
+        {
+          "id": 67,
+          "question": "This is a placeholder medical question with ID 67. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 1,
+          "explanation": "This is a detailed explanation for question ID 67, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 68,
+          "question": "This is a placeholder medical question with ID 68. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 68, elaborating on the medical concept it represents."
+        }
+      ],
+      "14": [
+        {
+          "id": 69,
+          "question": "This is a placeholder medical question with ID 69. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 69, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 70,
+          "question": "This is a placeholder medical question with ID 70. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 70, elaborating on the medical concept it represents."
+        }
+      ],
+      "15": [
+        {
+          "id": 71,
+          "question": "This is a placeholder medical question with ID 71. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 71, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 72,
+          "question": "This is a placeholder medical question with ID 72. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 72, elaborating on the medical concept it represents."
+        }
+      ],
+      "16": [
+        {
+          "id": 73,
+          "question": "This is a placeholder medical question with ID 73. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 73, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 74,
+          "question": "This is a placeholder medical question with ID 74. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 74, elaborating on the medical concept it represents."
+        }
+      ],
+      "17": [
+        {
+          "id": 75,
+          "question": "This is a placeholder medical question with ID 75. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 75, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 76,
+          "question": "This is a placeholder medical question with ID 76. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 76, elaborating on the medical concept it represents."
+        }
+      ],
+      "18": [
+        {
+          "id": 77,
+          "question": "This is a placeholder medical question with ID 77. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 77, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 78,
+          "question": "This is a placeholder medical question with ID 78. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 78, elaborating on the medical concept it represents."
+        }
+      ],
+      "19": [
+        {
+          "id": 79,
+          "question": "This is a placeholder medical question with ID 79. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 79, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 80,
+          "question": "This is a placeholder medical question with ID 80. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 1,
+          "explanation": "This is a detailed explanation for question ID 80, elaborating on the medical concept it represents."
+        }
+      ],
+      "20": [
+        {
+          "id": 81,
+          "question": "This is a placeholder medical question with ID 81. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 81, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 82,
+          "question": "This is a placeholder medical question with ID 82. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 82, elaborating on the medical concept it represents."
+        }
+      ],
+      "21": [
+        {
+          "id": 83,
+          "question": "This is a placeholder medical question with ID 83. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 83, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 84,
+          "question": "This is a placeholder medical question with ID 84. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 84, elaborating on the medical concept it represents."
+        }
+      ],
+      "22": [
+        {
+          "id": 85,
+          "question": "This is a placeholder medical question with ID 85. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 85, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 86,
+          "question": "This is a placeholder medical question with ID 86. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 86, elaborating on the medical concept it represents."
+        }
+      ],
+      "23": [
+        {
+          "id": 87,
+          "question": "This is a placeholder medical question with ID 87. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 87, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 88,
+          "question": "This is a placeholder medical question with ID 88. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 88, elaborating on the medical concept it represents."
+        }
+      ],
+      "24": [
+        {
+          "id": 89,
+          "question": "This is a placeholder medical question with ID 89. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 89, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 90,
+          "question": "This is a placeholder medical question with ID 90. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 90, elaborating on the medical concept it represents."
+        }
+      ],
+      "25": [
+        {
+          "id": 91,
+          "question": "This is a placeholder medical question with ID 91. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 91, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 92,
+          "question": "This is a placeholder medical question with ID 92. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 92, elaborating on the medical concept it represents."
+        }
+      ],
+      "26": [
+        {
+          "id": 93,
+          "question": "This is a placeholder medical question with ID 93. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 93, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 94,
+          "question": "This is a placeholder medical question with ID 94. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 94, elaborating on the medical concept it represents."
+        }
+      ],
+      "27": [
+        {
+          "id": 95,
+          "question": "This is a placeholder medical question with ID 95. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 95, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 96,
+          "question": "This is a placeholder medical question with ID 96. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 96, elaborating on the medical concept it represents."
+        }
+      ],
+      "28": [
+        {
+          "id": 97,
+          "question": "This is a placeholder medical question with ID 97. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 97, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 98,
+          "question": "This is a placeholder medical question with ID 98. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 98, elaborating on the medical concept it represents."
+        }
+      ],
+      "29": [
+        {
+          "id": 99,
+          "question": "This is a placeholder medical question with ID 99. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 99, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 100,
+          "question": "This is a placeholder medical question with ID 100. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 100, elaborating on the medical concept it represents."
+        }
+      ],
+      "30": [
+        {
+          "id": 101,
+          "question": "This is a placeholder medical question with ID 101. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 0,
+          "explanation": "This is a detailed explanation for question ID 101, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 102,
+          "question": "This is a placeholder medical question with ID 102. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 102, elaborating on the medical concept it represents."
+        }
+      ],
+      "31": [
+        {
+          "id": 103,
+          "question": "This is a placeholder medical question with ID 103. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 2,
+          "explanation": "This is a detailed explanation for question ID 103, elaborating on the medical concept it represents."
+        },
+        {
+          "id": 104,
+          "question": "This is a placeholder medical question with ID 104. It is written in two full sentences for clarity and completeness.",
+          "options": [
+            "This is a sample option representing choice A, used for demonstration purposes only.",
+            "This is a sample option representing choice B, used for demonstration purposes only.",
+            "This is a sample option representing choice C, used for demonstration purposes only.",
+            "This is a sample option representing choice D, used for demonstration purposes only."
+          ],
+          "correct_answer": 3,
+          "explanation": "This is a detailed explanation for question ID 104, elaborating on the medical concept it represents."
+        }
+      ]
+    }
+  }

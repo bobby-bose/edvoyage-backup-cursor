@@ -1,0 +1,261 @@
+Based on your Flutter app features and the coding rules, here's my recommended Django project structure with apps:
+
+## Django Apps Structure
+
+### Core Apps (Essential)
+1. **`core`** - Base models, utilities, common functionality
+2. **`users`** - User authentication, profiles, session management
+3. **`universities`** - University management, rankings, details
+4. **`courses`** - Course management, subjects, fees
+5. **`applications`** - Application system, tracking, status
+6. **`notifications`** - Push notifications, offer notifications
+7. **`bookmarks`** - Bookmarking system for universities/courses
+8. **`payments`** - Payment processing, history, status
+9. **`quizzes`** - MCQ system, assessments, progress tracking
+10. **`content`** - Notes, study materials, file management
+11. **`analytics`** - User analytics, progress tracking, metrics
+
+### Feature-Specific Apps
+12. **`education`** - Education profile, work experience, social links
+13. **`study_abroad`** - Study abroad information, visa requirements
+14. **`timer`** - Study timer functionality, session tracking
+15. **`ratings`** - Rating and review system
+16. **`social`** - University following, social features
+17. **`search`** - Advanced search and filtering
+18. **`web_integration`** - WebView, external links handling
+
+## Complete Folder Structure
+
+
+├edvoyage/
+├── manage.py
+├── requirements.txt
+├── .env
+├── .gitignore
+├── README.md
+
+├── edvoyage/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+
+├── users/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   ├── utils.py
+│   └── views.py
+
+├── universities/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── courses/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── applications/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── notifications/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── bookmarks/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── payments/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── quizzes/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── content/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── education/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── study_abroad/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── timer/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── ratings/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── social/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── search/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── analytics/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── web_integration/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+
+├── templates/
+│   └── admin/
+│       └── base_site.html
+
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── images/
+
+├── media/
+│   └── (upload folders)
+
+├── logs/
+│   └── edvoyage.log
+
+├── docs/
+│   ├── api/
+│   └── setup/
+
+└── scripts/
+    ├── __init__.py
+    ├── setup.py
+    └── deploy.py
+
+
+## Key Features Covered by Each App:
+
+1. **`users`** - Authentication, OTP, biometric auth, profiles, sessions
+2. **`universities`** - University listings, details, rankings, images, following
+3. **`courses`** - Course management, subjects, fees, requirements
+4. **`applications`** - Application system, tracking, status management
+5. **`notifications`** - Push notifications, offer notifications, preferences
+6. **`bookmarks`** - University/course bookmarking system
+7. **`payments`** - Payment processing, history, status tracking
+8. **`quizzes`** - MCQ system, assessments, progress tracking
+9. **`content`** - Notes, study materials, file uploads
+10. **`education`** - Education profiles, work experience, social links
+11. **`study_abroad`** - Study abroad info, visa requirements, guidance
+12. **`timer`** - Study timer, session tracking
+13. **`ratings`** - Rating and review system
+14. **`social`** - University following, social features
+15. **`search`** - Advanced search and filtering
+16. **`analytics`** - User analytics, progress tracking, metrics
+17. **`web_integration`** - WebView, external links
+18. **`core`** - Base models, utilities, common functionality
+
+This structure follows all your coding rules and covers every feature from your Flutter app! 

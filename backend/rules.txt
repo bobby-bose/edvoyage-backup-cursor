@@ -1,0 +1,303 @@
+🌟 GENERAL PRINCIPLES
+---------------------------
+1. Code MUST be modular and reusable.
+2. Every model, view, serializer, and utility MUST be documented.
+3. No hardcoded values; use settings.py or constants.
+4. Each feature MUST reside in its own app (e.g., courses/, universities/, quizzes/).
+5. All core feature actions (login, post-create, app submission, etc.) MUST have print/log statements in DEV mode to trace flow.
+6. Use .env or system config for all sensitive data.
+
+===========================
+📛 NAMING CONVENTIONS
+===========================
+- Models: PascalCase (e.g., UniversityApplication)
+- Fields: snake_case (e.g., created_at, user_email)
+- Views: VerbNoun style (e.g., create_course_view)
+- URLs: kebab-case (e.g., /api/user-profile/)
+- Serializers: Same as model + "Serializer" (e.g., UserProfileSerializer)
+- Constants: UPPER_CASE (e.g., MAX_UPLOAD_SIZE_MB)
+
+===========================
+🔁 CODE REUSABILITY
+===========================
+1. Create common base classes in `core/` or `common/` app:
+   - BaseModel (with created_at, updated_at, soft delete)
+   - BaseAPIView (for logging, error handling)
+   - BaseSerializer (add custom validations)
+2. Use DRF ViewSets and Generic Views wherever possible.
+3. Extract shared logic (file upload, validation, pagination) into `utils/`.
+
+===========================
+🛠️ DEVELOPER MODE LOGGING
+===========================
+1. Enable DEVELOPER_MODE in settings.py.
+2. If DEVELOPER_MODE is True:
+   - Every POST/PUT/DELETE API MUST print payload and status.
+   - Every view entry point MUST log "Entering <ViewName>"
+   - Every model save() override should print "Saving <ModelName> instance"
+3. Use `logger.debug()` or `print()` inside `if settings.DEVELOPER_MODE`.
+
+===========================
+🧯 EXCEPTION HANDLING
+===========================
+1. Use try/except in all external API calls, file I/O, and database writes.
+2. All try blocks must:
+   - Log the exception with context
+   - Return a structured error response (do NOT crash)
+3. Always include a fallback/default in serializers and views.
+
+Example:
+```python
+try:
+    result = external_call()
+except ExternalServiceError as e:
+    logger.error(f"Error calling service: {e}")
+    return Response({'error': 'Service Unavailable'}, status=503)
+===========================
+🔐 SECURITY BEST PRACTICES
+NEVER print tokens or passwords.
+
+JWTs must expire in 24 hours or less.
+
+Use CSRF and CORS properly configured.
+
+User uploads are virus-checked and validated.
+
+===========================
+✅ API STRUCTURE
+All APIs must follow: /api/v1/<app_name>/<action>/
+
+Use pagination for any list > 25 items
+
+All POST/PUT APIs must validate input using serializers
+
+Use status codes correctly (200, 201, 400, 403, 404, 500)
+
+Use Response({'success': True, 'data': ...}) as standard response
+
+===========================
+📂 FOLDER STRUCTURE
+Each app MUST follow this structure:
+
+php-template
+Copy
+Edit
+<app>/
+├── models/
+│   └── <feature_model>.py
+├── views/
+│   └── <feature_view>.py
+├── serializers/
+│   └── <feature_serializer>.py
+├── urls.py
+├── tests/
+│   └── test_<feature>.py
+├── utils/
+│   └── helpers.py
+===========================
+🧪 TESTING
+100% of views and serializers must have test cases.
+
+Use factory_boy or model_mommy for dummy data.
+
+Each app MUST contain tests/test_*.py.
+
+===========================
+📊 ANALYTICS HOOKS (Optional)
+Add analytics/log events for:
+
+Login success/fail
+
+Application submission
+
+Payment attempt
+
+Quiz started/completed
+
+===========================
+📈 SCALABILITY & FUTURE-PROOFING
+Use Celery for background jobs (notifications, analytics)
+
+Use S3 or cloud storage for file uploads
+
+Structure models for multi-tenant scalability if needed
+
+
+📁 File-Specific Coding Conventions
+
+===========================
+🔹 models.py (Models Layer)
+Use models.Model as base for all models
+
+All models must include:
+
+created_at and updated_at (auto_now_add, auto_now)
+
+__str__() for readable admin view
+
+Meta class with verbose_name, ordering
+
+✅ Example
+
+python
+Copy
+Edit
+class Course(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    university = models.ForeignKey('University', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Course"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.name
+✅ Best Practices
+
+Use choices for enum-type fields
+
+Use related_name in all relationships
+
+Use validators (e.g., MinLengthValidator) where possible
+
+Avoid null=True on CharField and TextField
+
+🔹 serializers.py (API Data Layer)
+Use ModelSerializer when possible
+
+Add validate_<field>() for field-level validation
+
+Use create() and update() methods for custom logic
+
+Always exclude sensitive fields (password, is_staff)
+
+✅ Example
+
+python
+Copy
+Edit
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'description', 'university']
+
+    def validate_name(self, value):
+        if not value:
+            raise serializers.ValidationError("Course name cannot be empty.")
+        return value
+✅ Best Practices
+
+Use nested serializers for foreign key/many-to-many
+
+Use depth=1 only for admin/dev debugging
+
+All fields should have read_only or write_only defined if not both
+
+🔹 views.py (View Layer / Logic)
+Use class-based views (APIView, GenericViewSet, ModelViewSet)
+
+All views must be documented with a short docstring
+
+Return consistent Response() objects with success, data, message
+
+Use try-except in all methods that perform I/O, DB write, or 3rd-party calls
+
+✅ Example
+
+python
+Copy
+Edit
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        print("Creating course") if settings.DEVELOPER_MODE else None
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            logger.error(f"Course creation failed: {e}")
+            return Response({'success': False, 'message': 'Internal error'}, status=500)
+✅ Best Practices
+
+Use get_queryset() to filter by current user if needed
+
+Return 404 using get_object_or_404 instead of try/except on .get()
+
+Add pagination on list views if > 25 items
+
+🔹 urls.py (Routing Layer)
+Use path() or re_path() consistently — prefer path() unless regex is needed
+
+Group routes logically per app/module
+
+All paths must follow kebab-case
+
+Versioning must be enforced (api/v1/)
+
+✅ Example
+
+python
+Copy
+Edit
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import CourseViewSet
+
+router = DefaultRouter()
+router.register(r'courses', CourseViewSet, basename='courses')
+
+urlpatterns = [
+    path('api/v1/', include(router.urls)),
+]
+✅ Best Practices
+
+Never use string-based view references like 'myapp.views.view_name'
+
+Use named routes (e.g., name='course-list') for reverse lookups
+
+All API routes must be documented in OpenAPI/Swagger if possible
+
+🔹 admin.py (Admin Interface)
+Use @admin.register(Model) for all models
+
+Include list_display, search_fields, list_filter
+
+Avoid registering models without a custom admin class
+
+✅ Example
+
+python
+Copy
+Edit
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'university', 'created_at')
+    search_fields = ('name',)
+    list_filter = ('university',)
+🔹 apps.py
+All apps must have:
+
+python
+Copy
+Edit
+default_auto_field = 'django.db.models.BigAutoField'
+App name must match folder exactly
+
+🔹 settings.py
+Use .env with python-decouple or django-environ
+
+Separate settings into:
+
+base.py, dev.py, prod.py
+
+Developer flags:
+
+python
+Copy
+Edit
+DEVELOPER_MODE = True

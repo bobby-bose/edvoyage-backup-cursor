@@ -1,0 +1,199 @@
+The app has the following features:
+
+AUTHENTICATION & USER MANAGEMENT:
+- User login with OTP verification
+- User registration/signup
+- Google login integration
+- Face authentication (biometric)
+- Voice authentication
+- Security questions for authentication
+- Password reset functionality
+- User logout
+- Profile creation and management
+- Profile image upload
+- User session management
+
+ONBOARDING:
+- Onboarding screens (4 screens)
+- Splash screen
+- Welcome/introduction flow
+
+HOME & DASHBOARD:
+- Home screen with mood analysis
+- Mood-based home screen variations (happy, sad, exhausted)
+- Dashboard with user statistics
+- Quick access to main features
+- Search functionality
+- Filtering options
+
+UNIVERSITY MANAGEMENT:
+- University listings and search
+- University details and information
+- University rankings and ratings
+- University filtering by location, ranking, rating
+- University bookmarking/favorites
+- University images and galleries
+- University entrance photos
+- Laboratory photos
+- Lecture room photos
+- University following system
+- University feed
+- University about information
+- University establishment year
+- University country and location
+- University logo and branding
+
+COURSE MANAGEMENT:
+- Course listings and search
+- Course details and information
+- Course filtering and sorting
+- Course duration and intake information
+- Course fees breakdown (1st year, 2nd year, etc.)
+- Course subjects by year
+- Course eligibility requirements (NEET, IELTS)
+- Course requirements (passport, visa, documents)
+- Course bookmarking/favorites
+- Course ratings and reviews
+
+APPLICATION SYSTEM:
+- University application submission
+- Application tracking and status
+- Application history
+- Application details view
+- Application month/year tracking
+- Application management
+- Application notifications
+
+EDUCATION PROFILE:
+- Education details management
+- Higher education details
+- Secondary education details
+- Lower education details
+- Work experience details
+- Social media links
+- Educational background tracking
+
+STUDY ABROAD:
+- Study abroad information
+- International university listings
+- Visa and documentation requirements
+- Country-specific information
+- Study abroad guidance
+
+NOTIFICATION SYSTEM:
+- Push notifications
+- General notifications
+- Offer notifications
+- Notification preferences
+- Notification history
+- Notification management
+
+BOOKMARKING & FAVORITES:
+- University bookmarks
+- Course bookmarks
+- Favorite universities
+- Favorite courses
+- Bookmark management
+
+MCQ & QUIZ SYSTEM:
+- MCQ questions and answers
+- Quiz functionality
+- Educational assessments
+- Progress tracking
+
+PAYMENT SYSTEM:
+- Payment processing
+- Payment history
+- Payment status tracking
+- Payment methods
+
+TIMER & STUDY TOOLS:
+- Study timer functionality
+- Timer controls (start, stop, pause)
+- Study session tracking
+- Progress indicators
+
+NOTES & CONTENT:
+- Educational notes
+- Study materials
+- Content management
+- File uploads
+- Document viewing (PDF)
+- Image galleries
+
+PROFILE & SETTINGS:
+- User profile management
+- Profile editing
+- Settings configuration
+- Privacy settings
+- Account management
+- Profile image management
+
+SEARCH & FILTERING:
+- University search
+- Course search
+- Advanced filtering options
+- Search results management
+- Filtered university listings
+
+NAVIGATION:
+- Bottom navigation
+- Tab navigation
+- Drawer navigation
+- Navigation between screens
+- Back navigation
+
+ERROR HANDLING:
+- Error screens
+- Loading states
+- Network error handling
+- Validation error handling
+
+WEB INTEGRATION:
+- WebView functionality
+- External link handling
+- Web content display
+- URL launching
+
+FILE MANAGEMENT:
+- Image picking and upload
+- File storage
+- Document management
+- Media handling
+
+RATING & REVIEWS:
+- University ratings
+- Course ratings
+- Review system
+- Rating display
+
+SOCIAL FEATURES:
+- University following
+- Social sharing
+- Community features
+- User interactions
+
+ANALYTICS & REPORTING:
+- User analytics
+- Progress tracking
+- Performance metrics
+- Usage statistics
+
+SECURITY:
+- Biometric authentication
+- Session management
+- Data encryption
+- Secure storage
+
+ACCESSIBILITY:
+- Responsive design
+- Different screen sizes
+- Accessibility features
+- User-friendly interface
+
+TECHNICAL FEATURES:
+- Offline functionality
+- Data caching
+- Local storage
+- Network connectivity handling
+- Cross-platform compatibility 

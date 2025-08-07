@@ -1,0 +1,81 @@
+Sign Up 
+
+3 input fields needed
+the 2nd field should have 2 parts
+Dr  with dropdown and for name
+adjust the spacing between the 
+'By Signing Up , ... till privacy policy'
+
+and Everything below as same
+
+============================================
+
+Login page is Missing(IMPORTANT)
+
+same with different ICON
+then the Login text
+2 input tags for Email ID and Password
+and finally the 
+Forgot password?
+
+Login button with 
+
+-OR-
+
+Login with Google
+
+New to DeVoyage? Register
+
+=============================================
+
+Enter OTP
+
+No bold text
+the OTP boxes should have Green background 
+Correct the responsiveness
+
+=============================================
+
+Forgot password Is missing
+
+with a title
+a 2 sentence sub-title
+a input type for the Email ID / Mobile Number
+
+=============================================
+
+The Timer Icon is missing in the Home Screen
+
+=============================================
+
+The Navigation Icon (Section) which is having sliding animation is also missing
+
+=============================================
+
+The Profile Section is missing in the App
+
+=============================================
+
+The Cavity Section is missing in the App ( 9 Pages )
+
+=============================================
+
+The Overseas Section is missing in the App (5 pages)
+
+=============================================
+
+The Teach Section is missing in the App (13 pages)
+
+=============================================
+
+
+
+In the current home screen there is Navigation bar missing
+
+
+
+
+
+
+
+

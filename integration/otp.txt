@@ -1,0 +1,42 @@
+OTP Integration Plan
+===================
+
+Flutter Page: lib/screens/login/otp.dart
+
+1. API Endpoint:
+   - Use endpoint: /api/auth/verify_otp/ (or as defined in backend)
+   - Add endpoint constant in lib/constants/api_endpoints.dart
+
+2. API Call:
+   - Use http package for POST request to verify OTP
+   - Send OTP and user identifier (email/phone) as JSON
+   - Handle response codes (200: success, 400/401: error)
+   - Parse and store JWT/auth token on success (if applicable)
+
+3. State Management:
+   - Use provider/riverpod for auth state
+   - Show loading indicator during request
+   - Show error message on failure (SnackBar/AlertDialog)
+
+4. Debugging:
+   - Print debug info in kDebugMode (method, status, response)
+
+5. Null Safety:
+   - Check for nulls in response and user input
+
+6. UI:
+   - Disable verify button while loading
+   - Navigate to next screen on success
+
+7. Error Handling:
+   - Handle SocketException, TimeoutException, FormatException
+   - Show user-friendly error messages
+
+8. Token Storage:
+   - Store token securely if returned
+
+9. Testing:
+   - Test with Postman and Django backend
+
+---
+Refer to integration_guidelines.txt for standards. 

@@ -1,0 +1,82 @@
+Search Explore Courses Integration Plan (Swagger Style)
+======================================================
+
+**Flutter Page:** `lib/screens/home_screen/SearchResults/searchexplorecourses.dart`
+
+**Base API URL:** `/api/v1/`
+
+---
+
+### 1. Search Universities
+**Endpoint:** `GET /api/v1/universities/universities/search/?query=...`
+
+**Description:**
+Returns a list of universities matching the search query. This data must be used to dynamically populate the search results (no static values).
+
+**Query Params:**
+- `query`: Search string (required)
+
+**Response Codes:**
+- 200 OK: List of universities
+- 400 Bad Request: Invalid query
+- 401 Unauthorized: Authentication required
+- 500 Internal Server Error: Server error
+
+**Response Example (200):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Siberian State Medical University",
+      "location": "Tomsk",
+      "country": "Russia",
+      "logo": "https://...",
+      "established_year": "1888",
+      "bookmark": false,
+      "rating": 4.5
+    }
+  ]
+}
+```
+
+---
+
+### State Management
+- Use **Riverpod** for all state (loading, data, error)
+- Show loading indicators and error messages as needed
+- No UI changes, only state/data for UI to consume
+- **All university data in the UI must come from the Riverpod provider, not static values**
+
+---
+
+### Error Handling & Try-Catch
+- **Wrap every logic block with `try-catch`**
+- Log exceptions in debug mode
+- Handle `SocketException`, `TimeoutException`, `FormatException`, `HttpException`
+- Show user-friendly error messages using SnackBar or AlertDialog
+- Handle all HTTP/network errors and show user-friendly messages
+- Response codes handled: 200, 400, 401, 500
+
+---
+
+### Null Safety
+- Enable strict null safety in `pubspec.yaml`
+- Avoid forced unwrapping (`!`)
+- Always check for `null` when reading API responses or shared preferences
+- Use `??` for fallbacks and `late` carefully
+
+---
+
+### Token Usage
+- All endpoints require JWT token in `Authorization: Bearer <token>` header
+
+---
+
+### Testing
+- Test all endpoints with Postman and Django backend
+
+---
+Refer to integration_guidelines.txt for standards.
+ALSO VERY IMPORTANT: MAKE SURE TO REPLACE ALL THE STATIC VALUES WITH VALUES FETCHED FROM THE BACKEND API TO JSON 

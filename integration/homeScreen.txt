@@ -1,0 +1,174 @@
+Home Screen Integration Plan (Swagger Style)
+===========================================
+
+**Base API URL:** `/api/v1/`
+
+---
+
+### 1. Get University List
+**Endpoint:** `GET /api/v1/universities/universities/`
+
+**Description:**
+Returns a paginated list of all active universities.
+
+**Response Codes:**
+- 200 OK: List of universities
+- 401 Unauthorized: Authentication required
+- 500 Internal Server Error: Server error
+
+**Response Example (200):**
+```json
+{
+  "count": 123,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "name": "Siberian State Medical University",
+      "city": "Tomsk",
+      "country": "Russia",
+      ...
+    }
+  ]
+}
+```
+
+---
+
+### 2. Get University Stats
+**Endpoint:** `GET /api/v1/universities/universities/stats/`
+
+**Description:**
+Returns statistics about universities (total, active, featured, by country/type, etc.)
+
+**Response Codes:**
+- 200 OK: Stats object
+- 401 Unauthorized: Authentication required
+- 500 Internal Server Error: Server error
+
+**Response Example (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "total_universities": 123,
+    "active_universities": 120,
+    "featured_universities": 10,
+    "verified_universities": 100,
+    "universities_by_country": {"Russia": 10, "India": 20},
+    "universities_by_type": {"public": 80, "private": 43},
+    "top_ranked_universities": [ ... ],
+    "recent_universities": [ ... ]
+  },
+  "message": "Statistics retrieved successfully"
+}
+```
+
+---
+
+### 3. Get Home Analytics Overview
+**Endpoint:** `GET /api/v1/analytics/overview/`
+
+**Description:**
+Returns analytics overview for the home/dashboard (events, sessions, users, engagement, etc.)
+
+**Query Params:**
+- `days` (optional, int): Number of days to include (default: 30)
+
+**Response Codes:**
+- 200 OK: Analytics overview object
+- 401 Unauthorized: Authentication required
+- 500 Internal Server Error: Server error
+
+**Response Example (200):**
+```json
+{
+  "total_events": 1000,
+  "total_page_views": 500,
+  "total_sessions": 200,
+  "total_users": 150,
+  "avg_session_duration": 360.0,
+  "avg_page_views_per_session": 2.5,
+  "top_events": [ {"event_type__name": "login", "count": 100} ],
+  "top_pages": [ {"page_url": "/home", "views": 200} ],
+  "user_engagement_score": 85.5,
+  "conversion_rate": 12.5
+}
+```
+
+---
+
+### 4. Get Recent Notifications
+**Endpoint:** `GET /api/v1/notifications/notifications/recent/?limit=10`
+
+**Description:**
+Returns the most recent notifications for the user.
+
+**Response Codes:**
+- 200 OK: List of notifications
+- 401 Unauthorized: Authentication required
+- 500 Internal Server Error: Server error
+
+**Response Example (200):**
+```json
+[
+  {
+    "id": 1,
+    "title": "Welcome!",
+    "content": "Thanks for joining...",
+    ...
+  }
+]
+```
+
+---
+
+### 5. Get Unread Notifications
+**Endpoint:** `GET /api/v1/notifications/notifications/unread/`
+
+**Description:**
+Returns all unread notifications for the user.
+
+**Response Codes:**
+- 200 OK: List of unread notifications
+- 401 Unauthorized: Authentication required
+- 500 Internal Server Error: Server error
+
+**Response Example (200):**
+```json
+[
+  {
+    "id": 2,
+    "title": "New Update",
+    "content": "Check out the new features...",
+    ...
+  }
+]
+```
+
+---
+
+### State Management
+- Use Riverpod for all state (loading, data, error)
+- Show loading indicators and error messages as needed
+- No UI changes, only state/data for UI to consume
+
+---
+
+### Error Handling
+- Handle all HTTP/network errors and show user-friendly messages
+- Response codes handled: 200, 401, 500
+
+---
+
+### Token Usage
+- All endpoints require JWT token in `Authorization: Bearer <token>` header
+
+---
+
+### Testing
+- Test all endpoints with Postman and Django backend
+
+---
+Refer to integration_guidelines.txt for standards. 

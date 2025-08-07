@@ -1,0 +1,38 @@
+Privacy Policy Integration Plan
+==============================
+
+Flutter Page: lib/screens/login/privacy_policy.dart
+
+1. API Endpoint (if dynamic):
+   - Use endpoint: /api/content/privacy_policy/ (if privacy policy is served from backend)
+   - Add endpoint constant in lib/constants/api_endpoints.dart
+
+2. API Call (if dynamic):
+   - Use http package for GET request to fetch privacy policy text
+   - Handle response codes (200: success, 404: not found)
+   - Display fetched content in the UI
+
+3. State Management:
+   - Use provider/riverpod if privacy policy is dynamic
+   - Show loading indicator during request
+   - Show error message on failure (SnackBar/AlertDialog)
+
+4. Debugging:
+   - Print debug info in kDebugMode (method, status, response)
+
+5. Null Safety:
+   - Check for nulls in response
+
+6. UI:
+   - Show loading spinner while fetching
+   - Display privacy policy text
+
+7. Error Handling:
+   - Handle SocketException, TimeoutException, FormatException
+   - Show user-friendly error messages
+
+8. Testing:
+   - Test with Postman and Django backend (if dynamic)
+
+---
+Refer to integration_guidelines.txt for standards. 

@@ -1,0 +1,41 @@
+Profile Info Integration Plan
+============================
+
+Flutter Page: lib/screens/login/profile_info.dart
+
+1. API Endpoint:
+   - Use endpoint: /api/user/profile/ (or as defined in backend)
+   - Add endpoint constant in lib/constants/api_endpoints.dart
+
+2. API Call:
+   - Use http package for GET (fetch) and PUT/PATCH (update) requests
+   - Send/receive user profile data as JSON
+   - Handle response codes (200: success, 400/401: error)
+
+3. State Management:
+   - Use provider/riverpod for user state
+   - Show loading indicator during request
+   - Show error message on failure (SnackBar/AlertDialog)
+
+4. Debugging:
+   - Print debug info in kDebugMode (method, status, response)
+
+5. Null Safety:
+   - Check for nulls in response and user input
+
+6. UI:
+   - Disable save button while loading
+   - Show success message on update
+
+7. Error Handling:
+   - Handle SocketException, TimeoutException, FormatException
+   - Show user-friendly error messages
+
+8. Token Usage:
+   - Use stored JWT/auth token for authenticated requests
+
+9. Testing:
+   - Test with Postman and Django backend
+
+---
+Refer to integration_guidelines.txt for standards. 

@@ -1,0 +1,557 @@
+EDVOYAGE BACKEND API DOCUMENTATION
+====================================
+
+BASE URL: /api/v1/
+
+AUTHENTICATION: Bearer Token (JWT)
+
+====================================
+1. BOOKMARKS API
+====================================
+Base URL: /api/v1/bookmarks/
+
+Endpoints:
+- GET    /bookmarks/                    - List all bookmarks
+- POST   /bookmarks/                    - Create new bookmark
+- GET    /bookmarks/{id}/               - Retrieve bookmark details
+- PUT    /bookmarks/{id}/               - Update bookmark
+- DELETE /bookmarks/{id}/               - Delete bookmark
+- GET    /bookmarks/my-bookmarks/       - Get current user's bookmarks
+- GET    /bookmarks/by-type/            - Get bookmarks by type
+- GET    /bookmarks/favorites/          - Get favorite bookmarks
+- POST   /bookmarks/{id}/toggle-favorite/ - Toggle bookmark favorite status
+
+====================================
+2. QUIZZES API
+====================================
+Base URL: /api/v1/quizzes/
+
+Endpoints:
+- GET    /quizzes/                      - List all quizzes
+- POST   /quizzes/                      - Create new quiz
+- GET    /quizzes/{id}/                 - Retrieve quiz details
+- PUT    /quizzes/{id}/                 - Update quiz
+- DELETE /quizzes/{id}/                 - Delete quiz
+- GET    /quizzes/active/               - Get active quizzes
+- GET    /quizzes/featured/             - Get featured quizzes
+- GET    /quizzes/by-category/          - Get quizzes by category
+- GET    /quizzes/{id}/questions/       - Get quiz questions
+- POST   /quizzes/{id}/start/           - Start quiz session
+- POST   /quizzes/{id}/submit/          - Submit quiz answers
+- GET    /quizzes/{id}/results/         - Get quiz results
+
+Quiz Questions:
+- GET    /quiz-questions/                - List all quiz questions
+- POST   /quiz-questions/                - Create new question
+- GET    /quiz-questions/{id}/          - Retrieve question details
+- PUT    /quiz-questions/{id}/          - Update question
+- DELETE /quiz-questions/{id}/          - Delete question
+
+Quiz Options:
+- GET    /quiz-options/                  - List all quiz options
+- POST   /quiz-options/                  - Create new option
+- GET    /quiz-options/{id}/            - Retrieve option details
+- PUT    /quiz-options/{id}/            - Update option
+- DELETE /quiz-options/{id}/            - Delete option
+
+Quiz Attempts:
+- GET    /quiz-attempts/                - List all quiz attempts
+- POST   /quiz-attempts/                - Create new attempt
+- GET    /quiz-attempts/{id}/           - Retrieve attempt details
+- PUT    /quiz-attempts/{id}/           - Update attempt
+- DELETE /quiz-attempts/{id}/           - Delete attempt
+- GET    /quiz-attempts/my-attempts/    - Get current user's attempts
+- GET    /quiz-attempts/by-quiz/        - Get attempts by quiz
+
+Quiz Categories:
+- GET    /quiz-categories/               - List all quiz categories
+- POST   /quiz-categories/               - Create new category
+- GET    /quiz-categories/{id}/         - Retrieve category details
+- PUT    /quiz-categories/{id}/         - Update category
+- DELETE /quiz-categories/{id}/         - Delete category
+- GET    /quiz-categories/active/       - Get active categories
+
+====================================
+3. CONTENT API
+====================================
+Base URL: /api/v1/content/
+
+Endpoints:
+- GET    /content/                      - List all content
+- POST   /content/                      - Create new content
+- GET    /content/{id}/                 - Retrieve content details
+- PUT    /content/{id}/                 - Update content
+- DELETE /content/{id}/                 - Delete content
+- GET    /content/published/            - Get published content
+- GET    /content/featured/             - Get featured content
+- GET    /content/by-category/          - Get content by category
+- GET    /content/by-author/            - Get content by author
+- POST   /content/{id}/publish/         - Publish content
+- POST   /content/{id}/unpublish/       - Unpublish content
+- POST   /content/{id}/feature/         - Feature content
+- POST   /content/{id}/unfeature/       - Unfeature content
+
+Content Categories:
+- GET    /content-categories/            - List all content categories
+- POST   /content-categories/            - Create new category
+- GET    /content-categories/{id}/      - Retrieve category details
+- PUT    /content-categories/{id}/      - Update category
+- DELETE /content-categories/{id}/      - Delete category
+- GET    /content-categories/active/    - Get active categories
+
+Content Tags:
+- GET    /content-tags/                 - List all content tags
+- POST   /content-tags/                 - Create new tag
+- GET    /content-tags/{id}/           - Retrieve tag details
+- PUT    /content-tags/{id}/           - Update tag
+- DELETE /content-tags/{id}/           - Delete tag
+- GET    /content-tags/popular/        - Get popular tags
+
+Content Comments:
+- GET    /content-comments/             - List all content comments
+- POST   /content-comments/             - Create new comment
+- GET    /content-comments/{id}/        - Retrieve comment details
+- PUT    /content-comments/{id}/        - Update comment
+- DELETE /content-comments/{id}/        - Delete comment
+- GET    /content-comments/my-comments/ - Get current user's comments
+- GET    /content-comments/by-content/  - Get comments by content
+
+====================================
+4. EDUCATION API
+====================================
+Base URL: /api/v1/education/
+
+Endpoints:
+
+Education Levels:
+- GET    /education-levels/             - List all education levels
+- POST   /education-levels/             - Create new level
+- GET    /education-levels/{id}/        - Retrieve level details
+- PUT    /education-levels/{id}/        - Update level
+- DELETE /education-levels/{id}/        - Delete level
+- GET    /education-levels/active/      - Get active levels
+- POST   /education-levels/{id}/toggle-active/ - Toggle level active status
+
+Education Institutions:
+- GET    /education-institutions/        - List all institutions
+- POST   /education-institutions/        - Create new institution
+- GET    /education-institutions/{id}/  - Retrieve institution details
+- PUT    /education-institutions/{id}/  - Update institution
+- DELETE /education-institutions/{id}/  - Delete institution
+- GET    /education-institutions/by-country/ - Get institutions by country
+- GET    /education-institutions/by-type/ - Get institutions by type
+
+User Education:
+- GET    /user-education/               - List all user education records
+- POST   /user-education/               - Create new education record
+- GET    /user-education/{id}/          - Retrieve education details
+- PUT    /user-education/{id}/          - Update education record
+- DELETE /user-education/{id}/          - Delete education record
+- GET    /user-education/my-education/  - Get current user's education
+- GET    /user-education/current-education/ - Get current education
+- GET    /user-education/statistics/    - Get education statistics
+- POST   /user-education/{id}/verify-education/ - Verify education (admin)
+
+Education Certificates:
+- GET    /education-certificates/       - List all certificates
+- POST   /education-certificates/       - Create new certificate
+- GET    /education-certificates/{id}/  - Retrieve certificate details
+- PUT    /education-certificates/{id}/  - Update certificate
+- DELETE /education-certificates/{id}/  - Delete certificate
+- GET    /education-certificates/expired/ - Get expired certificates
+- POST   /education-certificates/{id}/verify-certificate/ - Verify certificate (admin)
+
+Education Requirements:
+- GET    /education-requirements/        - List all requirements
+- POST   /education-requirements/        - Create new requirement
+- GET    /education-requirements/{id}/  - Retrieve requirement details
+- PUT    /education-requirements/{id}/  - Update requirement
+- DELETE /education-requirements/{id}/  - Delete requirement
+- GET    /education-requirements/by-type/ - Get requirements by type
+- GET    /education-requirements/mandatory/ - Get mandatory requirements
+
+Education Assessments:
+- GET    /education-assessments/        - List all assessments
+- POST   /education-assessments/        - Create new assessment
+- GET    /education-assessments/{id}/   - Retrieve assessment details
+- PUT    /education-assessments/{id}/   - Update assessment
+- DELETE /education-assessments/{id}/   - Delete assessment
+- GET    /education-assessments/my-assessments/ - Get current user's assessments
+- GET    /education-assessments/by-type/ - Get assessments by type
+- GET    /education-assessments/passed/ - Get passed assessments
+
+====================================
+5. STUDY ABROAD API
+====================================
+Base URL: /api/v1/study-abroad/
+
+Endpoints:
+
+Study Abroad Programs:
+- GET    /study-abroad-programs/        - List all programs
+- POST   /study-abroad-programs/        - Create new program
+- GET    /study-abroad-programs/{id}/   - Retrieve program details
+- PUT    /study-abroad-programs/{id}/   - Update program
+- DELETE /study-abroad-programs/{id}/   - Delete program
+- GET    /study-abroad-programs/active/ - Get active programs
+- GET    /study-abroad-programs/featured/ - Get featured programs
+- GET    /study-abroad-programs/by-country/ - Get programs by country
+- GET    /study-abroad-programs/by-type/ - Get programs by type
+- POST   /study-abroad-programs/{id}/toggle-featured/ - Toggle featured status (admin)
+
+Study Abroad Applications:
+- GET    /study-abroad-applications/    - List all applications
+- POST   /study-abroad-applications/    - Create new application
+- GET    /study-abroad-applications/{id}/ - Retrieve application details
+- PUT    /study-abroad-applications/{id}/ - Update application
+- DELETE /study-abroad-applications/{id}/ - Delete application
+- GET    /study-abroad-applications/my-applications/ - Get current user's applications
+- GET    /study-abroad-applications/by-status/ - Get applications by status
+- POST   /study-abroad-applications/{id}/review-application/ - Review application (admin)
+
+Study Abroad Experiences:
+- GET    /study-abroad-experiences/     - List all experiences
+- POST   /study-abroad-experiences/     - Create new experience
+- GET    /study-abroad-experiences/{id}/ - Retrieve experience details
+- PUT    /study-abroad-experiences/{id}/ - Update experience
+- DELETE /study-abroad-experiences/{id}/ - Delete experience
+- GET    /study-abroad-experiences/my-experiences/ - Get current user's experiences
+- GET    /study-abroad-experiences/approved/ - Get approved experiences
+- GET    /study-abroad-experiences/featured/ - Get featured experiences
+- POST   /study-abroad-experiences/{id}/approve-experience/ - Approve experience (admin)
+
+Study Abroad Resources:
+- GET    /study-abroad-resources/       - List all resources
+- POST   /study-abroad-resources/       - Create new resource
+- GET    /study-abroad-resources/{id}/  - Retrieve resource details
+- PUT    /study-abroad-resources/{id}/  - Update resource
+- DELETE /study-abroad-resources/{id}/  - Delete resource
+- GET    /study-abroad-resources/active/ - Get active resources
+- GET    /study-abroad-resources/featured/ - Get featured resources
+- POST   /study-abroad-resources/{id}/increment-view/ - Increment view count
+- POST   /study-abroad-resources/{id}/increment-download/ - Increment download count
+
+Study Abroad Events:
+- GET    /study-abroad-events/          - List all events
+- POST   /study-abroad-events/          - Create new event
+- GET    /study-abroad-events/{id}/     - Retrieve event details
+- PUT    /study-abroad-events/{id}/     - Update event
+- DELETE /study-abroad-events/{id}/     - Delete event
+- GET    /study-abroad-events/upcoming/ - Get upcoming events
+- GET    /study-abroad-events/featured/ - Get featured events
+- GET    /study-abroad-events/by-type/  - Get events by type
+
+Study Abroad Event Registrations:
+- GET    /study-abroad-event-registrations/ - List all registrations
+- POST   /study-abroad-event-registrations/ - Create new registration
+- GET    /study-abroad-event-registrations/{id}/ - Retrieve registration details
+- PUT    /study-abroad-event-registrations/{id}/ - Update registration
+- DELETE /study-abroad-event-registrations/{id}/ - Delete registration
+- GET    /study-abroad-event-registrations/my-registrations/ - Get current user's registrations
+- POST   /study-abroad-event-registrations/{id}/mark-attended/ - Mark as attended
+
+====================================
+6. TIMER API
+====================================
+Base URL: /api/v1/timer/
+
+Endpoints:
+
+Timer Sessions:
+- GET    /timer-sessions/               - List all timer sessions
+- POST   /timer-sessions/               - Create new session
+- GET    /timer-sessions/{id}/          - Retrieve session details
+- PUT    /timer-sessions/{id}/          - Update session
+- DELETE /timer-sessions/{id}/          - Delete session
+- GET    /timer-sessions/active/        - Get active sessions
+- GET    /timer-sessions/completed/     - Get completed sessions
+- GET    /timer-sessions/by-type/       - Get sessions by type
+- POST   /timer-sessions/{id}/pause/    - Pause session
+- POST   /timer-sessions/{id}/resume/   - Resume session
+- POST   /timer-sessions/{id}/complete/ - Complete session
+- POST   /timer-sessions/{id}/cancel/   - Cancel session
+
+Timer Breaks:
+- GET    /timer-breaks/                 - List all timer breaks
+- POST   /timer-breaks/                 - Create new break
+- GET    /timer-breaks/{id}/            - Retrieve break details
+- PUT    /timer-breaks/{id}/            - Update break
+- DELETE /timer-breaks/{id}/            - Delete break
+- POST   /timer-breaks/{id}/complete/   - Complete break
+- POST   /timer-breaks/{id}/skip/       - Skip break
+
+Timer Templates:
+- GET    /timer-templates/              - List all timer templates
+- POST   /timer-templates/              - Create new template
+- GET    /timer-templates/{id}/         - Retrieve template details
+- PUT    /timer-templates/{id}/         - Update template
+- DELETE /timer-templates/{id}/         - Delete template
+- GET    /timer-templates/favorites/    - Get favorite templates
+- GET    /timer-templates/public/       - Get public templates
+- POST   /timer-templates/{id}/toggle-favorite/ - Toggle favorite status
+
+Timer Statistics:
+- GET    /timer-statistics/             - List all timer statistics
+- POST   /timer-statistics/             - Create new statistics
+- GET    /timer-statistics/{id}/        - Retrieve statistics details
+- PUT    /timer-statistics/{id}/        - Update statistics
+- DELETE /timer-statistics/{id}/        - Delete statistics
+- GET    /timer-statistics/daily/       - Get daily statistics
+- GET    /timer-statistics/weekly/      - Get weekly statistics
+- GET    /timer-statistics/monthly/     - Get monthly statistics
+
+Timer Goals:
+- GET    /timer-goals/                  - List all timer goals
+- POST   /timer-goals/                  - Create new goal
+- GET    /timer-goals/{id}/             - Retrieve goal details
+- PUT    /timer-goals/{id}/             - Update goal
+- DELETE /timer-goals/{id}/             - Delete goal
+- GET    /timer-goals/active/           - Get active goals
+- GET    /timer-goals/completed/        - Get completed goals
+- GET    /timer-goals/overdue/          - Get overdue goals
+
+====================================
+7. RATINGS API (To be implemented)
+====================================
+Base URL: /api/v1/ratings/
+
+Endpoints:
+- GET    /ratings/                      - List all ratings
+- POST   /ratings/                      - Create new rating
+- GET    /ratings/{id}/                 - Retrieve rating details
+- PUT    /ratings/{id}/                 - Update rating
+- DELETE /ratings/{id}/                 - Delete rating
+- GET    /ratings/my-ratings/           - Get current user's ratings
+- GET    /ratings/by-item/              - Get ratings by item
+- GET    /ratings/average/              - Get average ratings
+
+====================================
+8. SOCIAL API (To be implemented)
+====================================
+Base URL: /api/v1/social/
+
+Endpoints:
+- GET    /posts/                        - List all posts
+- POST   /posts/                        - Create new post
+- GET    /posts/{id}/                   - Retrieve post details
+- PUT    /posts/{id}/                   - Update post
+- DELETE /posts/{id}/                   - Delete post
+- GET    /posts/my-posts/               - Get current user's posts
+- GET    /posts/feed/                   - Get user feed
+- POST   /posts/{id}/like/              - Like post
+- POST   /posts/{id}/unlike/            - Unlike post
+- POST   /posts/{id}/comment/           - Comment on post
+
+====================================
+9. SEARCH API (To be implemented)
+====================================
+Base URL: /api/v1/search/
+
+Endpoints:
+- GET    /search/                       - Global search
+- GET    /search/courses/               - Search courses
+- GET    /search/universities/          - Search universities
+- GET    /search/content/               - Search content
+- GET    /search/users/                 - Search users
+- GET    /search/advanced/              - Advanced search
+
+====================================
+10. WEB INTEGRATION API (To be implemented)
+====================================
+Base URL: /api/v1/web-integration/
+
+Endpoints:
+- GET    /webhooks/                     - List all webhooks
+- POST   /webhooks/                     - Create new webhook
+- GET    /webhooks/{id}/                - Retrieve webhook details
+- PUT    /webhooks/{id}/                - Update webhook
+- DELETE /webhooks/{id}/                - Delete webhook
+- POST   /webhooks/{id}/test/           - Test webhook
+
+====================================
+11. NOTIFICATIONS API (Existing)
+====================================
+Base URL: /api/v1/notifications/
+
+Endpoints:
+- GET    /notifications/                - List all notifications
+- POST   /notifications/                - Create new notification
+- GET    /notifications/{id}/           - Retrieve notification details
+- PUT    /notifications/{id}/           - Update notification
+- DELETE /notifications/{id}/           - Delete notification
+- GET    /notifications/my-notifications/ - Get current user's notifications
+- POST   /notifications/{id}/mark-read/ - Mark notification as read
+- POST   /notifications/mark-all-read/  - Mark all notifications as read
+
+====================================
+12. PAYMENTS API (Existing)
+====================================
+Base URL: /api/v1/payments/
+
+Endpoints:
+- GET    /payments/                     - List all payments
+- POST   /payments/                     - Create new payment
+- GET    /payments/{id}/                - Retrieve payment details
+- PUT    /payments/{id}/                - Update payment
+- DELETE /payments/{id}/                - Delete payment
+- GET    /payments/my-payments/         - Get current user's payments
+- POST   /payments/{id}/process/        - Process payment
+- GET    /payments/transactions/        - Get payment transactions
+
+====================================
+13. APPLICATIONS API (Existing)
+====================================
+Base URL: /api/v1/applications/
+
+Endpoints:
+- GET    /applications/                 - List all applications
+- POST   /applications/                 - Create new application
+- GET    /applications/{id}/            - Retrieve application details
+- PUT    /applications/{id}/            - Update application
+- DELETE /applications/{id}/            - Delete application
+- GET    /applications/my-applications/ - Get current user's applications
+- POST   /applications/{id}/submit/     - Submit application
+- GET    /applications/status/          - Get application status
+
+====================================
+14. UNIVERSITIES API (Existing)
+====================================
+Base URL: /api/v1/universities/
+
+Endpoints:
+- GET    /universities/                 - List all universities
+- POST   /universities/                 - Create new university
+- GET    /universities/{id}/            - Retrieve university details
+- PUT    /universities/{id}/            - Update university
+- DELETE /universities/{id}/            - Delete university
+- GET    /universities/featured/        - Get featured universities
+- GET    /universities/by-country/      - Get universities by country
+- GET    /universities/search/          - Search universities
+
+====================================
+15. USERS API (Existing)
+====================================
+Base URL: /api/v1/users/
+
+Endpoints:
+- GET    /users/                        - List all users
+- POST   /users/                        - Create new user
+- GET    /users/{id}/                   - Retrieve user details
+- PUT    /users/{id}/                   - Update user
+- DELETE /users/{id}/                   - Delete user
+- GET    /users/profile/                - Get current user profile
+- PUT    /users/profile/                - Update current user profile
+- POST   /users/change-password/        - Change password
+- POST   /users/reset-password/         - Reset password
+
+====================================
+16. COURSES API (Existing)
+====================================
+Base URL: /api/v1/courses/
+
+Endpoints:
+- GET    /courses/                      - List all courses
+- POST   /courses/                      - Create new course
+- GET    /courses/{id}/                 - Retrieve course details
+- PUT    /courses/{id}/                 - Update course
+- DELETE /courses/{id}/                 - Delete course
+- GET    /courses/featured/             - Get featured courses
+- GET    /courses/by-category/          - Get courses by category
+- GET    /courses/search/               - Search courses
+
+====================================
+17. ANALYTICS API (Existing)
+====================================
+Base URL: /api/v1/analytics/
+
+Endpoints:
+- GET    /analytics/dashboard/          - Get dashboard analytics
+- GET    /analytics/users/              - Get user analytics
+- GET    /analytics/courses/            - Get course analytics
+- GET    /analytics/revenue/            - Get revenue analytics
+- GET    /analytics/engagement/         - Get engagement analytics
+
+====================================
+AUTHENTICATION ENDPOINTS
+====================================
+Base URL: /api/v1/auth/
+
+Endpoints:
+- POST   /auth/login/                   - User login
+- POST   /auth/logout/                  - User logout
+- POST   /auth/register/                - User registration
+- POST   /auth/refresh/                 - Refresh token
+- POST   /auth/verify-email/            - Verify email
+- POST   /auth/resend-verification/     - Resend verification email
+- POST   /auth/forgot-password/         - Forgot password
+- POST   /auth/reset-password/          - Reset password
+- POST   /auth/change-password/         - Change password
+
+====================================
+COMMON PARAMETERS
+====================================
+
+Query Parameters:
+- page: Page number for pagination
+- page_size: Number of items per page (default: 20, max: 100)
+- search: Search term for filtering
+- ordering: Field to order by (prefix with - for descending)
+- filters: Various filter parameters depending on endpoint
+
+Response Format:
+{
+    "count": 100,
+    "next": "http://api.example.com/endpoint/?page=2",
+    "previous": null,
+    "results": [...]
+}
+
+Error Response Format:
+{
+    "error": "Error message",
+    "detail": "Detailed error information",
+    "code": "ERROR_CODE"
+}
+
+====================================
+STATUS CODES
+====================================
+- 200: OK - Request successful
+- 201: Created - Resource created successfully
+- 204: No Content - Request successful, no content to return
+- 400: Bad Request - Invalid request data
+- 401: Unauthorized - Authentication required
+- 403: Forbidden - Permission denied
+- 404: Not Found - Resource not found
+- 405: Method Not Allowed - HTTP method not allowed
+- 429: Too Many Requests - Rate limit exceeded
+- 500: Internal Server Error - Server error
+
+====================================
+RATE LIMITING
+====================================
+- Authenticated users: 1000 requests per hour
+- Unauthenticated users: 100 requests per hour
+- Admin users: 5000 requests per hour
+
+====================================
+VERSIONING
+====================================
+- Current version: v1
+- API versioning is handled via URL path
+- Future versions will be available at /api/v2/, /api/v3/, etc.
+
+====================================
+DEPRECATION POLICY
+====================================
+- Endpoints will be deprecated with 6 months notice
+- Deprecated endpoints will return a deprecation warning header
+- New versions will maintain backward compatibility where possible
+
+====================================
+SUPPORT
+====================================
+- API Documentation: /api/docs/
+- Interactive API Explorer: /api/explorer/
+- Support Email: api-support@edvoyage.com
+- Developer Portal: https://developers.edvoyage.com 

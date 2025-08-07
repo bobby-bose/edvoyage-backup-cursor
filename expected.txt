@@ -1,0 +1,143 @@
+{
+  "success": true,
+  "data": {
+    "id": 12,
+    "name": "Dummy University 2",
+    "short_name": "DU2",
+    "slug": "dummy-university-2",
+    "description": "This is a dummy description for Dummy University 2.",
+    "mission_statement": "",
+    "vision_statement": "",
+    "university_type": "private",
+    "founded_year": 2012,
+    "accreditation": "",
+    "website": "https://www.dummyuniversity2.edu",
+    "email": "info2@dummyuniversity.edu",
+    "phone": "+1-555-0002",
+    "country": "UK",
+    "state": "",
+    "city": "London",
+    "address": "",
+    "postal_code": "",
+    "logo": "http://localhost:8000/media/https%3A/images.shiksha.com/mediadata/images/articles/1744019588phpVCRWzS.jpeg",
+    "banner_image": null,
+    "gallery": [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg"
+    ],
+    "total_students": null,
+    "international_students": null,
+    "faculty_count": null,
+    "is_active": true,
+    "is_featured": false,
+    "is_verified": false,
+    "age": 13,
+    "international_student_percentage": null,
+    "campuses": [],
+    "rankings": [
+      {
+        "id": 1,
+        "university_name": "Dummy University 2",
+        "ranking_type": "world",
+        "ranking_source": "QS",
+        "rank": 3,
+        "total_institutions": 3,
+        "score": "23.00",
+        "year": 2024,
+        "methodology": "QS methodology",
+        "criteria": [],
+        "created_at": "2025-07-25T14:11:47.435122Z",
+        "updated_at": "2025-07-25T14:11:47.435122Z"
+      }
+    ],
+    "programs": [
+      {
+        "id": 1,
+        "university_name": "Dummy University 2",
+        "name": "Computer Science",
+        "program_level": "postgraduate",
+        "program_type": "full_time",
+        "description": "Advanced CS program.",
+        "objectives": "Teach advanced computing.",
+        "outcomes": "Graduates ready for research.",
+        "duration_years": 2,
+        "total_credits": 120,
+        "semesters": 4,
+        "entry_requirements": "Bachelor's degree in CS.",
+        "language_requirements": "IELTS 6.5",
+        "is_active": true,
+        "is_featured": false,
+        "created_at": "2025-07-25T14:11:21.850074Z",
+        "updated_at": "2025-07-25T14:11:21.851177Z"
+      }
+    ],
+    "faculties": [
+      {
+        "id": 1,
+        "university_name": "Dummy University 2",
+        "name": "Engineering",
+        "short_name": "ENG",
+        "description": "Faculty of Engineering",
+        "mission": "Innovate in engineering.",
+        "email": "eng@dummyuniversity.edu",
+        "phone": "999999999",
+        "website": "https://www.g.com/",
+        "student_count": 200,
+        "faculty_count": 20,
+        "logo": "http://localhost:8000/media/faculties/logos/unnamed6.jpg",
+        "images": [],
+        "is_active": true,
+        "created_at": "2025-07-25T14:10:13.810802Z",
+        "updated_at": "2025-07-25T14:10:13.810802Z"
+      }
+    ],
+    "research": [
+      {
+        "id": 1,
+        "university_name": "Dummy University 2",
+        "title": "AI Research",
+        "research_area": "engineering",
+        "description": "Research in AI.",
+        "objectives": "Advance AI.",
+        "methodology": "Deep learning.",
+        "funding_amount": 100000,
+        "funding_source": "Govt",
+        "start_date": "2025-07-16",
+        "end_date": "2025-07-24",
+        "status": "completed",
+        "publications": [],
+        "created_at": "2025-07-25T14:12:30.074199Z",
+        "updated_at": "2025-07-25T14:12:30.074199Z"
+      }
+    ],
+    "partnerships": [
+      {
+        "id": 1,
+        "university_name": "Dummy University 2",
+        "partner_name": "Tech Corp",
+        "partnership_type": "research",
+        "description": "AI research partnership.",
+        "objectives": "Collaborate on AI.",
+        "partner_contact": "John Partner",
+        "partner_email": "partner@techcorp.com",
+        "partner_website": "https://www.techcorp.com/",
+        "start_date": "2025-07-16",
+        "end_date": "2025-07-29",
+        "status": "active",
+        "created_at": "2025-07-25T14:10:52.632902Z",
+        "updated_at": "2025-07-25T14:10:52.632902Z"
+      }
+    ],
+    "feed": [
+      {
+        "user_name": "John Doe",
+        "avatar_url": "https://example.com/avatar1.jpg",
+        "date_posted": "2024-06-01T12:00:00Z",
+        "title": "Welcome to the new semester!",
+        "description": "We are excited to start the new academic year."
+      }
+    ],
+    "created_at": "2025-07-24T14:44:25.819272Z",
+    "updated_at": "2025-07-24T14:44:25.819272Z"
+  }
+} 

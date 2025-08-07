@@ -1,0 +1,51 @@
+[
+    {
+      "id": 1,
+      "name": "Dr. Arya Menon",
+      "profileImage": "https://via.placeholder.com/150/FF0000/FFFFFF?text=A",
+      "lastMessage": "Can you share the link for the NEET 2025 schedule?",
+      "timestamp": "2025-07-31T20:55:00Z",
+      "unreadCount": 2
+    },
+    {
+      "id": 2,
+      "name": "Jayanth Narayanan",
+      "profileImage": "https://via.placeholder.com/150/FF0000/FFFFFF?text=J",
+      "lastMessage": "I’ve uploaded the histology notes, check once.",
+      "timestamp": "2025-07-31T19:45:00Z",
+      "unreadCount": 1
+    },
+    {
+      "id": 3,
+      "name": "Ankita Roy",
+      "profileImage": "https://via.placeholder.com/150/FF0000/FFFFFF?text=A",
+      "lastMessage": "Thanks for the previous papers, they helped a lot!",
+      "timestamp": "2025-07-31T18:10:00Z",
+      "unreadCount": 0
+    },
+    {
+      "id": 4,
+      "name": "Dr. Sunny Raj",
+      "profileImage": "https://via.placeholder.com/150/FF0000/FFFFFF?text=S",
+      "lastMessage": "Don't forget tomorrow's pharmacology class.",
+      "timestamp": "2025-07-31T17:00:00Z",
+      "unreadCount": 3
+    },
+    {
+      "id": 5,
+      "name": "Nivetha Sharma",
+      "profileImage": "https://via.placeholder.com/150/FF0000/FFFFFF?text=N",
+      "lastMessage": "Can you explain the cavity classification again?",
+      "timestamp": "2025-07-31T16:30:00Z",
+      "unreadCount": 0
+    },
+    {
+      "id": 6,
+      "name": "Harsh Vardhan",
+      "profileImage": "https://via.placeholder.com/150/FF0000/FFFFFF?text=H",
+      "lastMessage": "Meeting scheduled for Friday at 5 PM. Join early.",
+      "timestamp": "2025-07-31T15:00:00Z",
+      "unreadCount": 5
+    }
+  ]
+  

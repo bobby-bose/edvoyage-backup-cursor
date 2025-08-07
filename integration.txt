@@ -1,0 +1,189 @@
+Here is your **Flutter-Django Integration Guidelines** file, combining **all previous rules and requirements** you asked for — structured clearly for you and your development team. You can save this as `integration_guidelines.txt`:
+
+---
+
+### 🔗 FLUTTER – DJANGO INTEGRATION GUIDELINES
+
+---
+
+#### 🔧 HOST & PORT CONFIGURATION
+
+* Create a Dart file: `lib/config/api_config.dart`
+* Store host and port constants:
+
+```dart
+class ApiConfig {
+  static const String baseUrl = 'http://127.0.0.1:8000'; // Change only here
+}
+```
+
+* Reuse `ApiConfig.baseUrl` throughout all API requests.
+
+---
+
+#### 🛠️ API CALLS (HTTP ONLY)
+
+* Use **http** package (`http`) — do not use `dio`.
+* Define **GET**, **POST**, **PUT**, **DELETE** in reusable service files per feature (e.g., `user_service.dart`, `course_service.dart`)
+* All endpoints must be declared as constants in `lib/constants/api_endpoints.dart`.
+
+**Example:**
+
+```dart
+class UserApiEndpoints {
+  static const String login = '/api/auth/login/';
+  static const String register = '/api/auth/register/';
+}
+```
+
+---
+
+#### 📬 API INTERFACE STANDARD
+
+Each API method must:
+
+* Handle HTTP response codes with a switch/case or `if` block
+* Always wrap requests in try-catch blocks
+* Print debug information in **developer mode only** (`kDebugMode` from Flutter)
+* Handle nulls safely (e.g., `response?.body`, optional chaining)
+* Use `async/await` + `Future` type with clear return types
+* Use JSON decode inside try block and check for malformed responses
+
+---
+
+#### ✅ DEBUGGING STANDARDS
+
+* Every core feature (API call, state transition, form submit, navigation) **must** have a debug log in `kDebugMode`.
+
+```dart
+if (kDebugMode) print("Login response: $response");
+```
+
+* Logs must include the method name, status code, and response/error details.
+
+---
+
+#### 🔀 STATE MANAGEMENT CONVENTION
+
+> Separate by type of state:
+
+**1. App-wide State:**
+
+* Use `provider` or `riverpod` for authentication, theme, global flags, and language.
+
+**2. Screen/Page State:**
+
+* Use `StatefulWidget` or local state in `ChangeNotifier`-backed models.
+
+**3. Component/UI State:**
+
+* Use `setState()` or hooks (`flutter_hooks`) for internal form fields, toggles, etc.
+
+Each state type should be isolated — never tightly coupled.
+
+---
+
+#### 🧪 TOOLS PREFERRED FOR TESTING API
+
+* Use **Postman** for initial testing
+* Enable Django CORS (`django-cors-headers`)
+* Ensure Swagger is available at `/swagger/` or `/docs/`
+
+> Django Swagger tool: `drf-yasg`
+
+---
+
+#### 📦 API INTEGRATION PRACTICES IN FLUTTER
+
+* Reuse API logic in separate services
+* Use parameters instead of hard-coded values
+* Catch and handle API exceptions gracefully in UI
+* Create utility for parsing common response formats
+* Support loading, success, and error UI states
+
+---
+
+#### 📑 ERROR HANDLING RULES
+
+* Wrap every logic block with `try-catch`
+* Log exceptions in debug mode
+* Handle `SocketException`, `TimeoutException`, `FormatException`, `HttpException`
+* Show user-friendly error messages using SnackBar or AlertDialog
+
+---
+
+#### 🧼 NULL SAFETY RULES
+
+* Enable strict null safety in `pubspec.yaml`
+* Avoid forced unwrapping (`!`)
+* Always check for `null` when reading API responses or shared preferences
+* Use `??` for fallbacks and `late` carefully
+
+---
+
+#### 🔤 NAMING CONVENTIONS
+
+**Files:**
+
+* Lowercase with underscores: `course_service.dart`, `auth_provider.dart`
+
+**Classes:**
+
+* PascalCase: `UserModel`, `LoginService`, `CourseCard`
+
+**Variables & Methods:**
+
+* camelCase: `loginUser`, `getCourseList`, `isDarkModeEnabled`
+
+**Endpoints:**
+
+* snake\_case in Django: `/api/get_user_details/`
+
+---
+
+#### 🔄 FOLDER STRUCTURE FOR FLUTTER INTEGRATION
+
+```
+lib/
+├── config/
+│   └── api_config.dart
+├── constants/
+│   └── api_endpoints.dart
+├── models/
+├── services/
+├── providers/
+├── screens/
+├── widgets/
+└── utils/
+```
+
+---
+
+#### 💥 SWAGGER (DJANGO BACKEND)
+
+* `/swagger/` route must be added for all API docs.
+* Ensure that all endpoints contain:
+
+  * Method
+  * Description
+  * Parameters (with required/optional)
+  * Response samples
+  * Authentication required or not
+
+---
+
+#### 📌 FINAL TIPS
+
+* Keep all `try-catch` and `debugPrint()` consistent across all layers
+* Isolate network layer logic from UI
+* Validate every response before parsing
+* Provide fallback UI for empty/null data
+* Maintain separate error classes for HTTP vs logic vs parsing errors
+
+also use the Riverpod Stae MANAGEMENT
+and also in the generated integration .tx files for each .dat filemake sure to mention all the API points with swagger method
+and also add response code features for all the status codes
+
+also make sure to mention about the try cathc featurs clearly in the each .txt files
+
+ALSO VERY IMPORTNAT MAKE SURE TO REPLACE ALL THE STATIC VALUES WITH VALUES FETCHED FROM THE BACKEND API TO JSON 
