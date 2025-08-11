@@ -8,6 +8,7 @@ import 'package:frontend/utils/responsive.dart';
 import 'dart:convert'; // Added for jsonEncode
 import 'dart:io'; // Added for SocketException
 import 'dart:async'; // Added for TimeoutException
+import 'package:frontend/utils/session_manager.dart';
 
 class EducationDetails extends StatefulWidget {
   const EducationDetails({super.key});
@@ -34,6 +35,8 @@ class _EducationDetailsState extends State<EducationDetails> {
   Future<void> sendDataToBackend() async {
     final url = BaseUrl.profileEducation;
     print('Attempting to connect to: $url');
+    String? userId =
+        await SessionManager.fetchUserData()?.then((data) => data?['id']);
 
     try {
       // Validate required fields for Higher Education
@@ -96,6 +99,7 @@ class _EducationDetailsState extends State<EducationDetails> {
 
       // Prepare data for simple education API
       final educationData = {
+        'user': userId,
         'higher_start_year': int.parse(dropdownValueStartYearHigher!),
         'higher_end_year': int.parse(dropdownValueEndYearHigher!),
         'higher_gpa': higherGpaValue,

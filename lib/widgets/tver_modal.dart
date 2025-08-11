@@ -263,415 +263,384 @@ class _DropDownDemoState extends State<DropDownDemo> {
     size = Measurements(MediaQuery.of(context).size);
 
     return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: size?.hp(2)),
-            Center(
-              child: Text(
-                "Apply to ${widget.universityName}",
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: size?.hp(2)),
+              Center(
+                child: Text(
+                  "Apply to ${widget.universityName}",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+              ),
+              SizedBox(height: size?.hp(2)),
+
+              // Program Selection
+              Text(
+                "Select Program",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-            ),
-            SizedBox(height: size?.hp(2)),
-
-            // Program Selection
-            Text(
-              "Select Program",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              child: isLoadingPrograms
-                  ? Center(child: CircularProgressIndicator())
-                  : DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: grey4),
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 50,
+                child: isLoadingPrograms
+                    ? Center(child: CircularProgressIndicator())
+                    : DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: grey4),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: grey4),
+                          ),
+                          filled: true,
+                          fillColor: grey4,
+                          contentPadding: EdgeInsets.only(left: 10, right: 10),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: grey4),
-                        ),
-                        filled: true,
-                        fillColor: grey4,
-                        contentPadding: EdgeInsets.only(left: 10, right: 10),
-                      ),
-                      dropdownColor: grey4,
-                      value: selectedProgram.isEmpty ||
-                              !programs.any((p) => p['name'] == selectedProgram)
-                          ? null
-                          : selectedProgram,
-                      hint: Text('Select a program'),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedProgram = newValue ?? '';
-                        });
-                      },
-                      items: programs.isNotEmpty
-                          ? programs.map<DropdownMenuItem<String>>((program) {
-                              return DropdownMenuItem<String>(
-                                value: program['name'],
-                                child: Text(
-                                  program['name'] ?? 'Unknown Program',
-                                  style: TextStyle(fontSize: 16),
+                        dropdownColor: grey4,
+                        value: selectedProgram.isEmpty ||
+                                !programs
+                                    .any((p) => p['name'] == selectedProgram)
+                            ? null
+                            : selectedProgram,
+                        hint: Text('Select a program'),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedProgram = newValue ?? '';
+                          });
+                        },
+                        items: programs.isNotEmpty
+                            ? programs.map<DropdownMenuItem<String>>((program) {
+                                return DropdownMenuItem<String>(
+                                  value: program['name'],
+                                  child: Text(
+                                    program['name'] ?? 'Unknown Program',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              }).toList()
+                            : [
+                                DropdownMenuItem<String>(
+                                  value: 'Computer Science',
+                                  child: Text('Computer Science',
+                                      style: TextStyle(fontSize: 16)),
                                 ),
-                              );
-                            }).toList()
-                          : [
-                              DropdownMenuItem<String>(
-                                value: 'Computer Science',
-                                child: Text('Computer Science',
-                                    style: TextStyle(fontSize: 16)),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'Business Administration',
-                                child: Text('Business Administration',
-                                    style: TextStyle(fontSize: 16)),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'Engineering',
-                                child: Text('Engineering',
-                                    style: TextStyle(fontSize: 16)),
-                              ),
-                            ],
-                    ),
-            ),
-            SizedBox(height: size?.hp(2)),
-
-            // Start Date Selection
-            Text(
-              "Start Date",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              child: InkWell(
-                onTap: () async {
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now().add(Duration(days: 30)),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365 * 2)),
-                  );
-                  if (date != null) {
-                    setState(() {
-                      selectedStartDate = date;
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: grey4),
-                    borderRadius: BorderRadius.circular(15),
-                    color: grey4,
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  child: Row(
-                    children: [
-                      Icon(Icons.calendar_today, color: Colors.grey),
-                      SizedBox(width: 10),
-                      Text(
-                        selectedStartDate != null
-                            ? '${selectedStartDate!.day}/${selectedStartDate!.month}/${selectedStartDate!.year}'
-                            : 'Select start date',
-                        style: TextStyle(fontSize: 16),
+                                DropdownMenuItem<String>(
+                                  value: 'Business Administration',
+                                  child: Text('Business Administration',
+                                      style: TextStyle(fontSize: 16)),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: 'Engineering',
+                                  child: Text('Engineering',
+                                      style: TextStyle(fontSize: 16)),
+                                ),
+                              ],
                       ),
-                    ],
-                  ),
-                ),
               ),
-            ),
-            SizedBox(height: size?.hp(2)),
+              SizedBox(height: size?.hp(2)),
 
-            // Semester Selection
-            Text(
-              "Semester",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: grey4),
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: grey4),
-                  ),
-                  filled: true,
-                  fillColor: grey4,
-                  contentPadding: EdgeInsets.only(left: 10, right: 10),
-                ),
-                dropdownColor: grey4,
-                value: selectedSemester,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedSemester = newValue!;
-                  });
-                },
-                items: <String>[
-                  'Fall',
-                  'Spring',
-                  'Summer',
-                  'Winter',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
-                }).toList(),
+              // Start Date Selection
+              Text(
+                "Start Date",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-            ),
-            SizedBox(height: size?.hp(2)),
-
-            // Intake Month
-            Text(
-              "Choose Intake Month",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: grey4),
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: grey4),
-                  ),
-                  filled: true,
-                  fillColor: grey4,
-                  contentPadding: EdgeInsets.only(left: 10, right: 10),
-                ),
-                dropdownColor: grey4,
-                value: dropdownValue,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
-                },
-                items: <String>[
-                  'January',
-                  'February',
-                  'March',
-                  'May',
-                  'June',
-                  'July',
-                  'August',
-                  'September',
-                  'October',
-                  'November',
-                  'December',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: size?.hp(2)),
-
-            // Intake Year
-            Text(
-              "Choose Intake year",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: grey4),
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: grey4),
-                  ),
-                  filled: true,
-                  fillColor: grey4,
-                  contentPadding: EdgeInsets.only(left: 10, right: 10),
-                ),
-                dropdownColor: grey4,
-                value: yearValue,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    yearValue = newValue!;
-                  });
-                },
-                items: <String>[
-                  '2023',
-                  '2024',
-                  '2025',
-                  '2026',
-                  '2027',
-                  '2028',
-                  '2029',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: size?.hp(2)),
-
-            // Email Field
-            Text(
-              "Your Email",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              child: TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                  fillColor: grey4,
-                  labelText: 'Email address',
-                  isDense: true,
-                  filled: true,
-                  hintText: "Enter your email",
-                  hintStyle: TextStyle(fontFamily: 'Roboto', color: textColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide(color: grey4),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: grey4),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: size?.hp(3)),
-
-            // Test Button (for debugging)
-            Container(
-              height: 40,
-              width: getWidth(context),
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Material(
-                color: Colors.transparent,
+              SizedBox(height: 10),
+              SizedBox(
+                height: 60,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: () {
-                    print("🔍 DEBUG: Test button tapped!");
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Test button works!'),
-                        backgroundColor: Colors.orange,
-                      ),
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now().add(Duration(days: 30)),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(Duration(days: 365 * 2)),
                     );
+                    if (date != null) {
+                      setState(() {
+                        selectedStartDate = date;
+                      });
+                    }
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Center(
-                      child: Text(
-                        "Test Button",
-                        style: TextStyle(
-                          letterSpacing: 2,
-                          fontFamily: 'Roboto',
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(15),
+                      color: grey4,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today, color: Colors.grey),
+                        SizedBox(width: 10),
+                        Text(
+                          selectedStartDate != null
+                              ? '${selectedStartDate!.day}/${selectedStartDate!.month}/${selectedStartDate!.year}'
+                              : 'Select start date',
+                          style: TextStyle(fontSize: 16),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: size?.hp(2)),
+
+              // Semester Selection
+              Text(
+                "Semester",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 50,
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: grey4),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: grey4),
+                    ),
+                    filled: true,
+                    fillColor: grey4,
+                    contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  ),
+                  dropdownColor: grey4,
+                  value: selectedSemester,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedSemester = newValue!;
+                    });
+                  },
+                  items: <String>[
+                    'Fall',
+                    'Spring',
+                    'Summer',
+                    'Winter',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: size?.hp(2)),
+
+              // Intake Month
+              Text(
+                "Choose Intake Month",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 50,
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: grey4),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: grey4),
+                    ),
+                    filled: true,
+                    fillColor: grey4,
+                    contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  ),
+                  dropdownColor: grey4,
+                  value: dropdownValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                  items: <String>[
+                    'January',
+                    'February',
+                    'March',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: size?.hp(2)),
+
+              // Intake Year
+              Text(
+                "Choose Intake year",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 50,
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: grey4),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: grey4),
+                    ),
+                    filled: true,
+                    fillColor: grey4,
+                    contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  ),
+                  dropdownColor: grey4,
+                  value: yearValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      yearValue = newValue!;
+                    });
+                  },
+                  items: <String>[
+                    '2023',
+                    '2024',
+                    '2025',
+                    '2026',
+                    '2027',
+                    '2028',
+                    '2029',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: size?.hp(2)),
+
+              // Email Field
+              Text(
+                "Your Email",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 50,
+                child: TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    fillColor: grey4,
+                    labelText: 'Email address',
+                    isDense: true,
+                    filled: true,
+                    hintText: "Enter your email",
+                    hintStyle:
+                        TextStyle(fontFamily: 'Roboto', color: textColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(color: grey4),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: grey4),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: size?.hp(3)),
+
+              // Test Button (for debugging)
+              SizedBox(height: size?.hp(2)),
+
+              // Submit Button
+              Container(
+                height: size?.hp(5),
+                width: getWidth(context),
+                decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: isLoading
+                        ? null
+                        : () {
+                            print("🔍 DEBUG: Button tapped!");
+                            submitApplication();
+                          },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      child: Center(
+                        child: isLoading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(thirdColor),
+                                ),
+                              )
+                            : Text(
+                                "Submit Application",
+                                style: TextStyle(
+                                  letterSpacing: 2,
+                                  fontFamily: 'Roboto',
+                                  fontSize: 20,
+                                  color: thirdColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: size?.hp(2)),
-
-            // Submit Button
-            Container(
-              height: size?.hp(5),
-              width: getWidth(context),
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: isLoading
-                      ? null
-                      : () {
-                          print("🔍 DEBUG: Button tapped!");
-                          submitApplication();
-                        },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    child: Center(
-                      child: isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(thirdColor),
-                              ),
-                            )
-                          : Text(
-                              "Submit Application",
-                              style: TextStyle(
-                                letterSpacing: 2,
-                                fontFamily: 'Roboto',
-                                fontSize: 20,
-                                color: thirdColor,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

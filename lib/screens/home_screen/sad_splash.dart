@@ -149,6 +149,17 @@ class _SadSplashState extends State<SadSplash> {
     return Scaffold(
       backgroundColor: vBarBgcolor,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: primaryColor,
+            size: size!.hp(3.5), // Slightly larger than default
+            weight: 700, // For a little thickness (Flutter 3.7+)
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         backgroundColor: Colors.white,
         elevation: 0.2,
         automaticallyImplyLeading: false,
@@ -180,7 +191,7 @@ class _SadSplashState extends State<SadSplash> {
               Center(
                 child: Container(
                   padding: EdgeInsets.only(top: 5),
-                  height: size?.hp(26),
+                  height: size?.hp(7),
                   width: size?.wp(95),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
@@ -189,15 +200,10 @@ class _SadSplashState extends State<SadSplash> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
-                        'How are you feeling today?',
-                        style: TextStyle(
-                            color: primaryColor, fontWeight: FontWeight.bold),
-                      ),
                       Center(
                         child: Container(
                           alignment: Alignment.center,
-                          height: size?.hp(6),
+                          height: size?.hp(4),
                           width: size?.wp(95),
                           decoration: BoxDecoration(
                               color: Color.fromRGBO(192, 235, 231, 1),
@@ -206,44 +212,11 @@ class _SadSplashState extends State<SadSplash> {
                             '"Every setback is a setup for a comeback"',
                             textScaleFactor: 1.2,
                             style: TextStyle(
-                                color: primaryColor, fontWeight: FontWeight.bold),
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 2),
-                            height: 10,
-                            width: 2,
-                            decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(.25)),
-                          ),
-                          Container(
-                            height: 15,
-                            width: 3,
-                            decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(.25)),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 2),
-                            height: 10,
-                            width: 2,
-                            decoration: BoxDecoration(
-                                color: secondaryColor,
-                                borderRadius: BorderRadius.circular(.25)),
-                          )
-                        ],
-                      ),
-                      Text(
-                        'Sad',
-                        style: TextStyle(
-                            color: primaryColor, fontWeight: FontWeight.bold),
-                      )
                     ],
                   ),
                 ),

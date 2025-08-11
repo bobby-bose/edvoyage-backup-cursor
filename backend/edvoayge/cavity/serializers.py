@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_joined']
 
     def get_full_name(self, obj):
+        print("NNNNNNNN",obj.first_name , obj.last_name , obj.username)
         return f"{obj.first_name} {obj.last_name}".strip() or obj.username
 
     def get_follower_count(self, obj):
@@ -40,6 +41,7 @@ class UserMinimalSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'full_name']
 
     def get_full_name(self, obj):
+        print("NNNNNNNN",obj.first_name , obj.last_name , obj.username)
         return f"{obj.first_name} {obj.last_name}".strip() or obj.username
 
 
@@ -224,12 +226,64 @@ class PostCreateSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['content', 'year', 'media_urls', 'is_anonymous', 'user_id']
 
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from .models import Comment, Post
 
-class CommentCreateSerializer(serializers.ModelSerializer):
-    """Serializer for creating comments"""
+User = get_user_model()
+
+class CommentSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.username', read_only=True)
+    user_name = serializers.CharField(source='user.username', read_only=True)
+    post_title = serializers.CharField(source='post.title', read_only=True)
+
     class Meta:
         model = Comment
-        fields = ['post', 'parent_comment', 'content']
+        fields = [
+            'id',
+            'post',
+            'post_title',
+            'author',
+            'author_name',
+            'user',
+            'user_name',
+            'content',
+            'parent_comment',
+            'is_edited',
+            'edit_history',
+            'created_at',
+            'updated_at',
+            'like_count'
+        ]
+        read_only_fields = [
+            'id',
+            'author',
+            'user',
+            'is_edited',
+            'edit_history',
+            'created_at',
+            'updated_at',
+            'like_count'
+        ]
+
+class CommentSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'post','content', 'parent_comment', 'email', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        email = validated_data.pop('email')
+        from django.contrib.auth.models import User
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"email": "No user found with this email"})
+        validated_data['author'] = user
+        return super().create(validated_data)
+
 
 
 class NotificationSerializer(serializers.ModelSerializer):

@@ -6,6 +6,7 @@ import 'package:frontend/_env/env.dart';
 
 class CoursesScreenTab extends StatefulWidget {
   final int universityId;
+
   const CoursesScreenTab({super.key, required this.universityId});
   @override
   State<CoursesScreenTab> createState() => _CoursesScreenTabState();
@@ -13,7 +14,7 @@ class CoursesScreenTab extends StatefulWidget {
 
 class _CoursesScreenTabState extends State<CoursesScreenTab> {
   late Future<List<dynamic>> coursesFuture;
-
+  late Map<int, bool> favouriteStatus = {};
   @override
   void initState() {
     super.initState();
@@ -202,217 +203,287 @@ class _CoursesScreenTabState extends State<CoursesScreenTab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Course Name
-                      Text(
-                        course['name'] ?? 'Unknown Course',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontSize: 16,
-                          color: Cprimary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-
-                      // Course Code
-                      if (course['code'] != null)
-                        Text(
-                          'Code: ${course['code']}',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 12,
-                            color: grey3,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      SizedBox(height: 5),
-
-                      // University Name
-                      if (course['university_name'] != null)
-                        Text(
-                          'University: ${course['university_name']}',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 12,
-                            color: grey3,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      SizedBox(height: 5),
-
-                      // Level and Duration
+                      // Row 1: Name, Code, Rating
                       Row(
                         children: [
-                          if (course['level'] != null)
-                            Expanded(
-                              child: Text(
-                                'Level: ${formatLevel(course['level'])}',
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 12,
-                                  color: grey3,
-                                ),
-                              ),
-                            ),
-                          if (course['duration'] != null)
-                            Expanded(
-                              child: Text(
-                                'Duration: ${formatDuration(course['duration'])}',
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 12,
-                                  color: grey3,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-
-                      // Description
-                      if (course['description'] != null ||
-                          course['short_description'] != null)
-                        Text(
-                          course['short_description'] ??
-                              course['description'] ??
-                              '',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 13,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      SizedBox(height: 5),
-
-                      // Tuition Fee and Currency
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (course['tuition_fee'] != null)
-                            Text(
-                              'Tuition: \$${course['tuition_fee']} ${course['currency'] ?? 'USD'}',
+                          Expanded(
+                            child: Text(
+                              course['name'] ?? 'Unknown Course',
                               style: TextStyle(
                                 fontFamily: 'Roboto',
-                                fontSize: 12,
+                                fontSize: 16,
                                 color: Cprimary,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          if (course['credits'] != null)
+                          ),
+                          if (course['code'] != null)
                             Text(
-                              'Credits: ${course['credits']}',
+                              course['code'],
                               style: TextStyle(
-                                fontFamily: 'Roboto',
                                 fontSize: 12,
                                 color: grey3,
                               ),
                             ),
+                          SizedBox(width: 10),
+                          if (course['average_rating'] != null)
+                            Row(
+                              children: [
+                                Icon(Icons.star,
+                                    size: 14, color: Colors.orange),
+                                SizedBox(width: 3),
+                                Text(
+                                  '${course['average_rating']}/5',
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.orange),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
+                      SizedBox(height: 8),
 
-                      // Additional Information
-                      if (course['average_rating'] != null ||
-                          course['total_applications'] != null) ...[
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            if (course['average_rating'] != null)
-                              Expanded(
-                                child: Text(
-                                  'Rating: ${course['average_rating']}/5',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 12,
-                                    color: Colors.orange,
-                                  ),
-                                ),
+                      // Row 2: University, Level
+                      Row(
+                        children: [
+                          if (course['university_name'] != null)
+                            Expanded(
+                              child: Text(
+                                course['university_name'],
+                                style: TextStyle(fontSize: 12, color: grey3),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            if (course['total_applications'] != null)
-                              Expanded(
-                                child: Text(
-                                  'Applications: ${course['total_applications']}',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 12,
-                                    color: grey3,
-                                  ),
-                                ),
+                            ),
+                          if (course['level'] != null)
+                            Expanded(
+                              child: Text(
+                                'Level: ${formatLevel(course['level'])}',
+                                style: TextStyle(fontSize: 12, color: grey3),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                          ],
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+
+                      // Row 3: Duration, Applications
+                      Row(
+                        children: [
+                          if (course['duration'] != null)
+                            Expanded(
+                              child: Text(
+                                'Duration: ${formatDuration(course['duration'])}',
+                                style: TextStyle(fontSize: 12, color: grey3),
+                              ),
+                            ),
+                          if (course['total_applications'] != null)
+                            Expanded(
+                              child: Text(
+                                'Applications: ${course['total_applications']}',
+                                style: TextStyle(fontSize: 12, color: grey3),
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+
+                      // Row 4: Remaining details
+                      if (course['short_description'] != null ||
+                          course['description'] != null)
+                        Text(
+                          course['short_description'] ??
+                              course['description'] ??
+                              '',
+                          style: TextStyle(fontSize: 13),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
+                      SizedBox(height: 8),
 
-                      // Status and Features
-                      if (course['status'] != null ||
-                          course['is_featured'] == true ||
-                          course['is_popular'] == true) ...[
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            if (course['status'] != null)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: course['status'] == 'active'
+                      // Tuition & Credits
+                      Row(
+                        children: [
+                          if (course['tuition_fee'] != null)
+                            Expanded(
+                              child: Text(
+                                'Tuition: \$${course['tuition_fee']} ${course['currency'] ?? 'USD'}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Cprimary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          if (course['credits'] != null)
+                            Expanded(
+                              child: Text(
+                                'Credits: ${course['credits']}',
+                                style: TextStyle(fontSize: 12, color: grey3),
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+
+                      // Badges
+                      SizedBox(height: 10),
+
+                      // Action Buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              if (course['status'] != null)
+                                Chip(
+                                  label: Text(course['status'].toUpperCase(),
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                  backgroundColor: course['status'] == 'active'
                                       ? Colors.green
                                       : Colors.grey,
-                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Text(
-                                  course['status'].toUpperCase(),
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              if (course['is_featured'] == true)
+                                Chip(
+                                  label: Text('FEATURED',
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                  backgroundColor: Colors.blue,
                                 ),
-                              ),
-                            if (course['is_featured'] == true) ...[
-                              SizedBox(width: 8),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(12),
+                              if (course['is_popular'] == true)
+                                Chip(
+                                  label: Text('POPULAR',
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                  backgroundColor: Colors.orange,
                                 ),
-                                child: Text(
-                                  'FEATURED',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
                             ],
-                            if (course['is_popular'] == true) ...[
-                              SizedBox(width: 8),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  'POPULAR',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                          ),
+                          (favouriteStatus[course['id']] ?? false)
+                              ? OutlinedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.redAccent),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ],
+                                  onPressed: () async {
+                                    final courseId = course['id'];
+                                    final currentlyFollowed =
+                                        favouriteStatus[courseId] ?? false;
+
+                                    try {
+                                      final response = await http.post(
+                                        Uri.parse(
+                                            'http://192.168.1.4:8000/api/v1/bookmarks/add-favourite-course/'),
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: jsonEncode({'course': courseId}),
+                                      );
+
+                                      if (response.statusCode == 200 ||
+                                          response.statusCode == 201) {
+                                        final data = jsonDecode(response.body);
+                                        final action = data['action'];
+
+                                        setState(() {
+                                          favouriteStatus[courseId] =
+                                              (action == 'added');
+                                        });
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(action == 'added'
+                                                ? 'Course followed'
+                                                : 'Course unfollowed'),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  'Failed: ${response.body}')),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text('Error: $e')),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    'Unfollow',
+                                    style: TextStyle(color: whiteColor),
+                                  ),
+                                )
+                              : OutlinedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              primaryColor)),
+                                  onPressed: () async {
+                                    final courseId = course['id'];
+                                    final currentlyFollowed =
+                                        favouriteStatus[courseId] ?? false;
+
+                                    try {
+                                      final response = await http.post(
+                                        Uri.parse(
+                                            'http://192.168.1.4:8000/api/v1/bookmarks/add-favourite-course/'),
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: jsonEncode({'course': courseId}),
+                                      );
+
+                                      if (response.statusCode == 200 ||
+                                          response.statusCode == 201) {
+                                        final data = jsonDecode(response.body);
+                                        final action = data['action'];
+
+                                        setState(() {
+                                          favouriteStatus[courseId] =
+                                              (action == 'added');
+                                        });
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(action == 'added'
+                                                ? 'Course followed'
+                                                : 'Course unfollowed'),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  'Failed: ${response.body}')),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text('Error: $e')),
+                                      );
+                                    }
+                                  },
+                                  child: Text('Follow',
+                                      style: TextStyle(color: whiteColor)),
+                                )
+                        ],
+                      ),
                     ],
                   ),
                 ),

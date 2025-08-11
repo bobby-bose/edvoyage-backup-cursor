@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    UserViewSet, PostViewSet, CommentViewSet, 
+    CommentViewSet, UserViewSet, PostViewSet,
     NotificationViewSet, SearchViewSet
 )
 
@@ -9,7 +9,7 @@ from .views import (
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'posts', PostViewSet, basename='post')
-router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'comments', CommentViewSet, basename='comments')
 router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'search', SearchViewSet, basename='search')
 
@@ -18,6 +18,7 @@ app_name = 'cavity'
 urlpatterns = [
     # Include router URLs
     path('api/', include(router.urls)),
+   
     
     # Additional custom endpoints
     path('api/auth/profile/', UserViewSet.as_view({'get': 'profile', 'put': 'update_profile', 'patch': 'update_profile'}), name='auth-profile'),
@@ -28,9 +29,7 @@ urlpatterns = [
     path('api/posts/<uuid:pk>/likes/', PostViewSet.as_view({'get': 'likes'}), name='post-likes'),
     path('api/posts/<uuid:pk>/like/', PostViewSet.as_view({'post': 'like', 'delete': 'like'}), name='post-like'),
     path('api/posts/<uuid:pk>/share/', PostViewSet.as_view({'post': 'share'}), name='post-share'),
-    path('api/comments/<uuid:pk>/replies/', CommentViewSet.as_view({'get': 'replies'}), name='comment-replies'),
-    path('api/comments/<uuid:pk>/likes/', CommentViewSet.as_view({'get': 'likes'}), name='comment-likes'),
-    path('api/comments/<uuid:pk>/like/', CommentViewSet.as_view({'post': 'like', 'delete': 'like'}), name='comment-like'),
+    
     path('api/notifications/<uuid:pk>/read/', NotificationViewSet.as_view({'put': 'read', 'patch': 'read'}), name='notification-read'),
     path('api/notifications/read-all/', NotificationViewSet.as_view({'put': 'read_all'}), name='notifications-read-all'),
     path('api/notifications/unread-count/', NotificationViewSet.as_view({'get': 'unread_count'}), name='notifications-unread-count'),

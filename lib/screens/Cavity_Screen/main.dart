@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/services/cavity_api_service.dart';
+import 'package:frontend/utils/session_manager.dart';
 
 class CavityScreen extends StatefulWidget {
   const CavityScreen({super.key});
@@ -263,9 +264,10 @@ class _CavityScreenState extends State<CavityScreen> {
       if (postIndex < allPosts.length) {
         Map<String, dynamic> post = allPosts[postIndex];
         String postId = post['id']?.toString() ?? '';
-
+        String email = await SessionManager.getStoredEmail() ?? '';
         if (postId.isNotEmpty) {
-          bool success = await CavityApiService.addComment(postId, comment);
+          bool success =
+              await CavityApiService.addComment(postId, comment, email);
 
           if (success) {
             setState(() {
@@ -569,6 +571,8 @@ class _CavityScreenState extends State<CavityScreen> {
     if (userData != null) {
       userName =
           userData['full_name'] ?? userData['username'] ?? 'Unknown User';
+      // userName = userName as String;
+      // userName = userName.split('_');
       print('🔍 DEBUG: User data: $userData');
       print('🔍 DEBUG: User name: $userName');
     } else {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:frontend/widgets/botttom_nav.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/utils/responsive.dart';
@@ -27,6 +28,7 @@ class _profilecoursesState extends State<profilecourses> {
   }
 
   Future<void> fetchFavouriteCourses() async {
+    if (!mounted) return; // Prevent running when widget is gone
     setState(() {
       isLoading = true;
       hasError = false;
@@ -40,10 +42,13 @@ class _profilecoursesState extends State<profilecourses> {
         },
       );
 
+      if (!mounted) return; // ⬅ Check again before updating UI
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         if (responseData['status'] == 'success') {
           final List<dynamic> data = responseData['data'];
+          if (!mounted) return;
           setState(() {
             courses = data
                 .map((courseData) => Course.fromJson(courseData['course']))
@@ -51,6 +56,7 @@ class _profilecoursesState extends State<profilecourses> {
             isLoading = false;
           });
         } else {
+          if (!mounted) return;
           setState(() {
             hasError = true;
             errorMessage = responseData['message'] ?? 'Failed to load courses';
@@ -58,6 +64,7 @@ class _profilecoursesState extends State<profilecourses> {
           });
         }
       } else {
+        if (!mounted) return;
         setState(() {
           hasError = true;
           errorMessage = 'Failed to load courses (${response.statusCode})';
@@ -65,6 +72,7 @@ class _profilecoursesState extends State<profilecourses> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         hasError = true;
         errorMessage = 'Network error: ${e.toString()}';
@@ -72,6 +80,53 @@ class _profilecoursesState extends State<profilecourses> {
       });
     }
   }
+
+  // Future<void> fetchFavouriteCourses() async {
+  //   setState(() {
+  //     isLoading = true;
+  //     hasError = false;
+  //   });
+
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse(BaseUrl.favouriteCourses),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = json.decode(response.body);
+  //       if (responseData['status'] == 'success') {
+  //         final List<dynamic> data = responseData['data'];
+  //         setState(() {
+  //           courses = data
+  //               .map((courseData) => Course.fromJson(courseData['course']))
+  //               .toList();
+  //           isLoading = false;
+  //         });
+  //       } else {
+  //         setState(() {
+  //           hasError = true;
+  //           errorMessage = responseData['message'] ?? 'Failed to load courses';
+  //           isLoading = false;
+  //         });
+  //       }
+  //     } else {
+  //       setState(() {
+  //         hasError = true;
+  //         errorMessage = 'Failed to load courses (${response.statusCode})';
+  //         isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       hasError = true;
+  //       errorMessage = 'Network error: ${e.toString()}';
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   Future<void> removeFromFavourites(int courseId) async {
     try {
@@ -118,6 +173,10 @@ class _profilecoursesState extends State<profilecourses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomButton(
+        onTap: () {},
+        selectedIndex: 0,
+      ),
       backgroundColor: play,
       body: RefreshIndicator(
         onRefresh: fetchFavouriteCourses,
@@ -191,45 +250,48 @@ class _profilecoursesState extends State<profilecourses> {
     }
 
     if (courses.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.favorite_border,
-              size: 64,
-              color: grey3,
-            ),
-            vGap(20),
-            Text(
-              'No favourite courses yet',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Cprimary,
-              ),
-            ),
-            vGap(10),
-            Text(
-              'Start exploring courses and add them to your favourites!',
-              style: TextStyle(
-                fontSize: 14,
+      return SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.favorite_border,
+                size: 64,
                 color: grey3,
               ),
-              textAlign: TextAlign.center,
-            ),
-            vGap(20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to courses list
-                Navigator.pushNamed(context, '/courses');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Cprimary,
+              vGap(20),
+              Text(
+                'No favourite courses yet',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Cprimary,
+                ),
               ),
-              child: Text('Explore Courses'),
-            ),
-          ],
+              vGap(10),
+              Text(
+                'Start exploring courses and add them to your favourites!',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: grey3,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              vGap(20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to courses list
+                  Navigator.pushNamed(context, '/courses');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Cprimary,
+                ),
+                child: Text('Explore Courses'),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -253,44 +315,6 @@ class _profilecoursesState extends State<profilecourses> {
                   Expanded(
                     child: Row(
                       children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          width: getWidth(context) / 6,
-                          height: getHeight(context) / 15,
-                          child: (course.image.isNotEmpty)
-                              ? Image.network(
-                                  course.image,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.book,
-                                          color: Colors.white,
-                                          size: 24,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.book,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-                        ),
                         vGap(10),
                         Expanded(
                           child: Column(
@@ -345,15 +369,14 @@ class _profilecoursesState extends State<profilecourses> {
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  if (course.tuitionFee > 0)
-                                    Text(
-                                      " • \$${course.tuitionFee.toStringAsFixed(0)}",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: grey3,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                  Text(
+                                    " • \$${course.tuitionFee}",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: grey3,
+                                      fontWeight: FontWeight.w500,
                                     ),
+                                  ),
                                 ],
                               ),
                               vGap(5),
@@ -395,40 +418,6 @@ class _profilecoursesState extends State<profilecourses> {
                       ],
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () => removeFromFavourites(course.id),
-                        icon: Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                          size: 20,
-                        ),
-                        tooltip: 'Remove from favourites',
-                      ),
-                      vGap(10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CourseDetails(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: secondaryColor,
-                          elevation: 2.0,
-                          textStyle: TextStyle(
-                            fontFamily: 'Roboto',
-                            color: Colors.white,
-                          ),
-                        ),
-                        child: const Text('View'),
-                      )
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -450,7 +439,7 @@ class Course {
   final String universityCity;
   final String level;
   final String duration;
-  final double tuitionFee;
+  final String tuitionFee;
   final String currency;
   final String image;
   final String status;
@@ -494,13 +483,15 @@ class Course {
       universityCity: json['university_city'] ?? '',
       level: json['level'] ?? '',
       duration: json['duration'] ?? '',
-      tuitionFee: (json['tuition_fee'] ?? 0).toDouble(),
+      tuitionFee: json['tuition_fee']?.toString() ?? '',
       currency: json['currency'] ?? 'USD',
       image: json['image'],
       status: json['status'] ?? 'active',
       isFeatured: json['is_featured'] ?? false,
       isPopular: json['is_popular'] ?? false,
-      averageRating: json['average_rating']?.toDouble(),
+      averageRating: json['average_rating'] != null
+          ? (json['average_rating'] as num).toDouble()
+          : null,
       totalApplications: json['total_applications'],
       subjectsCount: json['subjects_count'],
     );

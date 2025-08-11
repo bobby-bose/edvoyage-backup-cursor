@@ -9,7 +9,7 @@ from .serializers import SimpleEducationSerializer, SimpleWorkSerializer, Simple
 class SimpleEducationViewSet(viewsets.ModelViewSet):
     """Simple education viewset"""
     serializer_class = SimpleEducationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     
     def get_queryset(self):
         """Get education records for current user"""
@@ -29,28 +29,50 @@ class SimpleEducationViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': 'No education record found'}, status=status.HTTP_404_NOT_FOUND)
     
+
+
     @action(detail=False, methods=['post'])
     def update_education(self, request):
-        """Update or create education record"""
-        education = self.get_queryset().first()
-        
+        user_data = request.data.get("user")
+        user_id = user_data.get("id") if isinstance(user_data, dict) else user_data
+        print(f"Received user id: {user_id}")
+        education = SimpleEducation.objects.filter(user_id=user_id).first()
         if education:
-            # Update existing record
-            serializer = self.get_serializer(education, data=request.data, partial=True)
+                # Extract old values
+                higher_start_year = education.higher_start_year
+                higher_end_year = education.higher_end_year
+                higher_gpa = education.higher_gpa
+                lower_start_year = education.lower_start_year
+                lower_end_year = education.lower_end_year
+                lower_gpa = education.lower_gpa
+
+                # Update only if new value provided
+                education.higher_start_year = request.data.get("higher_start_year", higher_start_year)
+                education.higher_end_year = request.data.get("higher_end_year", higher_end_year)
+                education.higher_gpa = request.data.get("higher_gpa", higher_gpa)
+                education.lower_start_year = request.data.get("lower_start_year", lower_start_year)
+                education.lower_end_year = request.data.get("lower_end_year", lower_end_year)
+                education.lower_gpa = request.data.get("lower_gpa", lower_gpa)
+                education.save()
+
+                return Response({"message": "Education updated successfully"}, status=status.HTTP_200_OK)
+
         else:
-            # Create new record
-            serializer = self.get_serializer(data=request.data)
+                serializer = SimpleEducationSerializer(data=request.data)
+                if serializer.is_valid():
+                    serializer.save(user_id=user_id)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
         
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SimpleWorkViewSet(viewsets.ModelViewSet):
     """Simple work viewset"""
     serializer_class = SimpleWorkSerializer
-    # Removed permission_classes = [IsAuthenticated] - no authentication required
+    # Removed permission_classes = [] - no authentication required
     
     def get_queryset(self):
         """Get work records for current user"""
@@ -102,7 +124,7 @@ class SimpleWorkViewSet(viewsets.ModelViewSet):
 class SimpleSocialViewSet(viewsets.ModelViewSet):
     """Simple social viewset"""
     serializer_class = SimpleSocialSerializer
-    # Removed permission_classes = [IsAuthenticated] - no authentication required
+    # Removed permission_classes = [] - no authentication required
     
     def get_queryset(self):
         """Get social records for current user"""

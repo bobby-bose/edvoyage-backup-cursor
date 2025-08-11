@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, status, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from datetime import datetime, timedelta
 import logging
-
+from django.contrib.auth import get_user_model
 # Set up logging
 logger = logging.getLogger(__name__)
 
@@ -17,8 +18,8 @@ from .models import (
     PostShare, Notification, UserFollow
 )
 from .serializers import (
-    UserSerializer, UserMinimalSerializer, PostSerializer, PostCreateSerializer,
-    CommentSerializer, CommentCreateSerializer, PostLikeSerializer,
+   UserSerializer, UserMinimalSerializer, PostSerializer, PostCreateSerializer,
+    CommentSerializer,  PostLikeSerializer,
     CommentLikeSerializer, PostShareSerializer, NotificationSerializer,
     UserFollowSerializer, PostLikeCreateSerializer, CommentLikeCreateSerializer,
     PostShareCreateSerializer
@@ -357,122 +358,42 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+User = get_user_model()
+from rest_framework import generics
+
 class CommentViewSet(viewsets.ModelViewSet):
-    """ViewSet for Comment management"""
-    queryset = Comment.objects.all().order_by('created_at')
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = []  # Temporarily remove authentication requirement
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['post', 'user', 'parent_comment']
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return CommentCreateSerializer
+        if self.action == 'create_comment':
+            return CommentSerializer
         return CommentSerializer
 
-    def create(self, request, *args, **kwargs):
-        print(f"🔍 DEBUG: CommentViewSet.create called")
-        print(f"🔍 DEBUG: Request method: {request.method}")
-        print(f"🔍 DEBUG: Request data: {request.data}")
-        print(f"🔍 DEBUG: Request user: {request.user}")
-        print(f"🔍 DEBUG: User authenticated: {request.user.is_authenticated}")
+    @action(detail=False, methods=['post'], url_path='create')
+    def create_comment(self, request):
         
-        return super().create(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
-        print(f"🔍 DEBUG: CommentViewSet.perform_create called")
-        print(f"🔍 DEBUG: Serializer validated data: {serializer.validated_data}")
-        print(f"🔍 DEBUG: User authenticated: {self.request.user.is_authenticated}")
-        print(f"🔍 DEBUG: Current user: {self.request.user}")
-        
-        # Handle case where no user is authenticated
-        if self.request.user.is_authenticated:
-            user = self.request.user
-            print(f"🔍 DEBUG: Using authenticated user: {user}")
-        else:
-            # Use a default user for testing
-            from django.contrib.auth import get_user_model
-            User = get_user_model()
-            user = User.objects.first()  # Get the first user as default
-            if not user:
-                # If no users exist, create a default user
-                user = User.objects.create_user(
-                    username='default_user',
-                    email='default@example.com',
-                    password='defaultpass123'
-                )
-            print(f"🔍 DEBUG: Using default user: {user}")
-        
-        # Save the comment with the author
-        comment = serializer.save(author=user)
-        print(f"🔍 DEBUG: Comment saved successfully: {comment}")
-        print(f"🔍 DEBUG: Comment ID: {comment.id}")
-        print(f"🔍 DEBUG: Comment content: {comment.content}")
-        print(f"🔍 DEBUG: Comment author: {comment.author}")
-        
-        # Create notification for post owner (only if user is authenticated)
-        if self.request.user.is_authenticated:
-            post = comment.post
-            if self.request.user != post.author:
-                Notification.objects.create(
-                    recipient=post.author,
-                    sender=self.request.user,
-                    notification_type='comment',
-                    post=post,
-                    message=f"{self.request.user.username} commented on your post"
-                )
 
-    def perform_update(self, serializer):
-        serializer.save(is_edited=True)
 
-    @action(detail=True, methods=['get'])
-    def replies(self, request, pk=None):
-        """Get replies to a comment"""
-        comment = self.get_object()
-        replies = Comment.objects.filter(
-            parent_comment=comment
-        ).order_by('created_at')
-        serializer = CommentSerializer(replies, many=True, context={'request': request})
-        return Response(serializer.data)
 
-    @action(detail=True, methods=['get'])
-    def likes(self, request, pk=None):
-        """Get likes for a comment"""
-        comment = self.get_object()
-        likes = CommentLike.objects.filter(comment=comment).order_by('-created_at')
-        serializer = CommentLikeSerializer(likes, many=True)
-        return Response(serializer.data)
 
-    @action(detail=True, methods=['post', 'delete'])
-    def like(self, request, pk=None):
-        """Like/unlike a comment"""
-        comment = self.get_object()
-        user = request.user
 
-        if request.method == 'POST':
-            # Like comment - create if doesn't exist
-            like, created = CommentLike.objects.get_or_create(
-                user=user,
-                comment=comment
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            print("ggggggggg")
+            print("ggggggggg")
+            print("ggggggggg")
+            print("ggggggggg")
+            print("ggggggggg")
+            print(request.data['email'])
+            comment = serializer.save()
+            return Response(
+                CommentSerializer(comment).data,
+                status=status.HTTP_201_CREATED
             )
-            if created:
-                # Create notification
-                if user != comment.author:
-                    Notification.objects.create(
-                        recipient=comment.author,
-                        sender=user,
-                        notification_type='like',
-                        comment=comment,
-                        message=f"{user.username} liked your comment"
-                    )
-            
-            return Response({'message': 'Comment liked successfully'}, status=status.HTTP_201_CREATED)
-        
-        elif request.method == 'DELETE':
-            # Unlike comment - delete the like
-            CommentLike.objects.filter(user=user, comment=comment).delete()
-            return Response({'message': 'Comment unliked successfully'}, status=status.HTTP_200_OK)
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for Notification management"""

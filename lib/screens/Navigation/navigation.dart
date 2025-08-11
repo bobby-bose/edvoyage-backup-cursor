@@ -92,7 +92,7 @@ class Navigation extends StatelessWidget {
 
                   if (shouldLogout == true) {
                     // Perform logout
-                    await SessionManager.logout();
+                    await SessionManager.clearEmail();
                     Toasty.showtoast('Logged out successfully');
 
                     // Navigate to onboarding screen

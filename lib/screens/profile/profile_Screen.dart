@@ -158,24 +158,12 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   ProfileNotifier() : super(ProfileState(isLoading: false));
 
   Future<void> fetchProfile(String token) async {
+    final userData = await SessionManager.fetchUserData();
+    final phoneNumber = await SessionManager.getStoredEmail();
     state = state.copyWith(isLoading: true, error: null);
     try {
-      // Get current user data from session
-      final userData = await SessionManager.getUserData();
-      final userId = await SessionManager.getUserId();
-
-      print('🔍 DEBUG: Fetching profile for current user');
-      print('🔍 DEBUG: User ID: $userId');
-      print('🔍 DEBUG: User data: $userData');
-      print('🔍 DEBUG: This is the Riverpod implementation');
-
-      if (userId == null || userId == 0) {
-        print('❌ DEBUG: No valid user ID found in session');
-        state = state.copyWith(
-            error: 'User not authenticated. Please login again.',
-            isLoading: false);
-        return;
-      }
+      var user = await SessionManager.fetchUserData();
+      int userId = user?['id'] ?? 0;
 
       // Fetch real profile data from the backend API for current user
       final response = await http.get(
@@ -249,17 +237,13 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
           }
         } else {
           print('❌ DEBUG: No profile data found for current user');
-          // Create a debug profile based on session data
-          final sessionUserData = await SessionManager.getUserData();
-          final phoneNumber = await SessionManager.getPhoneNumber();
 
           final debugProfileData = {
             'id': userId,
-            'user_email': sessionUserData?['email'] ?? '$phoneNumber@temp.com',
-            'user_username':
-                sessionUserData?['username'] ?? 'user_$phoneNumber',
-            'user_first_name': sessionUserData?['first_name'] ?? '',
-            'user_last_name': sessionUserData?['last_name'] ?? '',
+            'user_email': phoneNumber,
+            'user_username': userData?['username'] ?? 'user_$phoneNumber',
+            'user_first_name': userData?['first_name'] ?? '',
+            'user_last_name': userData?['last_name'] ?? '',
             'phone_number': phoneNumber ?? 'Unknown',
             'date_of_birth': null,
             'gender': '',
@@ -279,7 +263,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
             'is_email_verified': false,
             'is_profile_complete': false,
             'age': null,
-            'full_name': sessionUserData?['full_name'] ?? 'User $phoneNumber',
+            'full_name': userData?['full_name'] ?? 'User $phoneNumber',
             'last_active': DateTime.now().toIso8601String(),
             'created_at': DateTime.now().toIso8601String(),
             'updated_at': DateTime.now().toIso8601String(),
@@ -302,18 +286,12 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
         // If user doesn't exist (404), create an empty profile for them to fill
         if (response.statusCode == 404) {
-          print(
-              '🔍 DEBUG: User profile not found (404), creating empty profile');
-          final sessionUserData = await SessionManager.getUserData();
-          final phoneNumber = await SessionManager.getPhoneNumber();
-
           final emptyProfileData = {
             'id': int.tryParse(userId.toString()) ?? 1, // Convert to int safely
-            'user_email': sessionUserData?['email'] ?? '$phoneNumber@temp.com',
-            'user_username':
-                sessionUserData?['username'] ?? 'user_$phoneNumber',
-            'user_first_name': sessionUserData?['first_name'] ?? '',
-            'user_last_name': sessionUserData?['last_name'] ?? '',
+            'user_email': userData?['email'] ?? '$phoneNumber@temp.com',
+            'user_username': userData?['username'] ?? 'user_$phoneNumber',
+            'user_first_name': userData?['first_name'] ?? '',
+            'user_last_name': userData?['last_name'] ?? '',
             'phone_number': phoneNumber ?? 'Unknown',
             'date_of_birth': null,
             'gender': '',
@@ -333,7 +311,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
             'is_email_verified': false,
             'is_profile_complete': false,
             'age': null,
-            'full_name': sessionUserData?['full_name'] ?? 'User $phoneNumber',
+            'full_name': userData?['full_name'] ?? 'User $phoneNumber',
             'last_active': DateTime.now().toIso8601String(),
             'created_at': DateTime.now().toIso8601String(),
             'updated_at': DateTime.now().toIso8601String(),
@@ -364,12 +342,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> updateAvatar(String token, String filePath) async {
     try {
+      var user = await SessionManager.fetchUserData();
+      int userId = user?['id'] ?? 0;
       // Get current user ID from session
-      final userId = await SessionManager.getUserId();
-
-      if (userId == null || userId == 0) {
-        throw Exception('User not authenticated. Please login again.');
-      }
 
       print(
           '🔍 DEBUG: Updating avatar for current user ID: $userId with file: $filePath');
@@ -421,9 +396,8 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> updateProfile(String token, Map<String, dynamic> data) async {
     try {
-      // Get current user ID from session
-      final userId = await SessionManager.getUserId();
-
+      var user = await SessionManager.fetchUserData();
+      int userId = user?['id'] ?? 0;
       if (userId == null || userId == 0) {
         throw Exception('User not authenticated. Please login again.');
       }
@@ -499,13 +473,13 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
   }
 
   Future<void> _loadProfile() async {
-    // Get current user data from session
-    final userData = await SessionManager.getUserData();
-    final userId = await SessionManager.getUserId();
+    var user = await SessionManager.fetchUserData();
+    print('🔍 DEBUG: Fetched user data: $user');
+    int userId = user!['results'][0]['id'];
 
     print('🔍 DEBUG: Loading profile for current user');
     print('🔍 DEBUG: User ID: $userId');
-    print('🔍 DEBUG: User data: $userData');
+    print('🔍 DEBUG: User data: $user');
     print('🔍 DEBUG: This is the StatefulWidget implementation');
 
     setState(() {
@@ -600,18 +574,17 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
           }
         } else {
           print('❌ DEBUG: No profile data found for current user');
-          // Create a debug profile based on session data
-          final sessionUserData = await SessionManager.getUserData();
-          final phoneNumber = await SessionManager.getPhoneNumber();
+          var user = await SessionManager.fetchUserData();
+          int userId = user?['id'] ?? 0;
+          final email = await SessionManager.getStoredEmail();
 
           final debugProfileData = {
             'id': userId,
-            'user_email': sessionUserData?['email'] ?? '$phoneNumber@temp.com',
-            'user_username':
-                sessionUserData?['username'] ?? 'user_$phoneNumber',
-            'user_first_name': sessionUserData?['first_name'] ?? '',
-            'user_last_name': sessionUserData?['last_name'] ?? '',
-            'phone_number': phoneNumber ?? 'Unknown',
+            'user_email': email,
+            'user_username': email,
+            'user_first_name': user?['first_name'] ?? '',
+            'user_last_name': user?['last_name'] ?? '',
+            'phone_number': user?['phone_number'] ?? 'Unknown',
             'date_of_birth': null,
             'gender': '',
             'marital_status': '',
@@ -630,7 +603,7 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
             'is_email_verified': false,
             'is_profile_complete': false,
             'age': null,
-            'full_name': sessionUserData?['full_name'] ?? 'User $phoneNumber',
+            'full_name': email,
             'last_active': DateTime.now().toIso8601String(),
             'created_at': DateTime.now().toIso8601String(),
             'updated_at': DateTime.now().toIso8601String(),
@@ -660,17 +633,18 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
         if (response.statusCode == 404) {
           print(
               '🔍 DEBUG: User profile not found (404), creating empty profile');
-          final sessionUserData = await SessionManager.getUserData();
-          final phoneNumber = await SessionManager.getPhoneNumber();
+          var user = await SessionManager.fetchUserData();
+          int userId = user?['id'] ?? 0;
+          String? email = await SessionManager.getStoredEmail();
+          final sessionUserData = await SessionManager.fetchUserData();
 
           final emptyProfileData = {
             'id': int.tryParse(userId.toString()) ?? 1, // Convert to int safely
-            'user_email': sessionUserData?['email'] ?? '$phoneNumber@temp.com',
-            'user_username':
-                sessionUserData?['username'] ?? 'user_$phoneNumber',
+            'user_email': email,
+            'user_username': sessionUserData?['username'] ?? email,
             'user_first_name': sessionUserData?['first_name'] ?? '',
             'user_last_name': sessionUserData?['last_name'] ?? '',
-            'phone_number': phoneNumber ?? 'Unknown',
+            'phone_number': 'Unknown',
             'date_of_birth': null,
             'gender': '',
             'marital_status': '',
@@ -689,7 +663,7 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
             'is_email_verified': false,
             'is_profile_complete': false,
             'age': null,
-            'full_name': sessionUserData?['full_name'] ?? 'User $phoneNumber',
+            'full_name': sessionUserData?['full_name'] ?? email,
             'last_active': DateTime.now().toIso8601String(),
             'created_at': DateTime.now().toIso8601String(),
             'updated_at': DateTime.now().toIso8601String(),
@@ -756,7 +730,7 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
         print('🔍 DEBUG: Platform: ${kIsWeb ? 'Web' : 'Mobile'}');
 
         // Get current user ID from session
-        final userId = await SessionManager.getUserId();
+        final userId = await SessionManager.fetchUserData();
 
         if (userId == null || userId == 0) {
           throw Exception('User not authenticated. Please login again.');

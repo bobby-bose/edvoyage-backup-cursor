@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/_env/env.dart';
+import 'package:frontend/screens/login/sign_up.dart';
 import 'package:frontend/utils/responsive.dart';
+import 'package:frontend/utils/session_manager.dart';
 import 'package:frontend/widgets/botttom_nav.dart';
 import '../../../utils/avatar.dart';
 import '../../../utils/colors/colors.dart';
@@ -35,6 +37,9 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
   Measurements? size;
   HomeData? homeData;
   int universityLength = 0;
+  bool isLoadingUniversityCount = false;
+  int coursesLength = 0;
+  bool isLoadingCoursesCount = false;
 
   @override
   void initState() {
@@ -42,27 +47,102 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
     // Call fetchData when the widget is first created
     fetchData();
     getLengthOfAllUniversities();
+    getLengthOfAllCourses();
   }
 
   // GET THE LENGTH OF ALL THE uNIVERSITIES FROM THE API BaseUrl.universityList;
   // Fetch data from API
+  Future<void> refreshUniversityCount() async {
+    await getLengthOfAllUniversities();
+  }
+
+  // Method to refresh courses count (can be called on pull-to-refresh or error)
+  Future<void> refreshCoursesCount() async {
+    await getLengthOfAllCourses();
+  }
 
   Future<void> getLengthOfAllUniversities() async {
-    try {
-      var response = await http.get(Uri.parse(BaseUrl.universityList));
-      if (response.statusCode == 200) {
-        List<dynamic> responseData = json.decode(response.body);
-        print("The Response Data is: $responseData");
-        print('Length of University List: ${responseData.length}');
+    setState(() {
+      isLoadingUniversityCount = true;
+    });
 
-        setState(() {
-          universityLength = responseData.length;
-        });
+    try {
+      var response = await http.get(Uri.parse(BaseUrl.universityStats));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        print("The Response Data is: $responseData");
+
+        if (responseData['success'] == true && responseData['data'] != null) {
+          int totalUniversities =
+              responseData['data']['total_universities'] ?? 0;
+          print('Total Universities Count: $totalUniversities');
+
+          setState(() {
+            universityLength = totalUniversities;
+            isLoadingUniversityCount = false;
+          });
+        } else {
+          print('Invalid response format or success is false');
+          setState(() {
+            universityLength = 0;
+            isLoadingUniversityCount = false;
+          });
+        }
       } else {
         print('Failed to load data: ${response.statusCode}');
+        setState(() {
+          universityLength = 0;
+          isLoadingUniversityCount = false;
+        });
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error fetching university count: $e');
+      setState(() {
+        universityLength = 0;
+        isLoadingUniversityCount = false;
+      });
+    }
+  }
+
+  Future<void> getLengthOfAllCourses() async {
+    setState(() {
+      isLoadingCoursesCount = true;
+    });
+
+    try {
+      var response = await http.get(Uri.parse(BaseUrl.coursesStats));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        print("The Courses Response Data is: $responseData");
+
+        if (responseData['success'] == true && responseData['data'] != null) {
+          int totalCourses = responseData['data']['total_courses'] ?? 0;
+          print('Total Courses Count: $totalCourses');
+
+          setState(() {
+            coursesLength = totalCourses;
+            isLoadingCoursesCount = false;
+          });
+        } else {
+          print('Invalid courses response format or success is false');
+          setState(() {
+            coursesLength = 0;
+            isLoadingCoursesCount = false;
+          });
+        }
+      } else {
+        print('Failed to load courses data: ${response.statusCode}');
+        setState(() {
+          coursesLength = 0;
+          isLoadingCoursesCount = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching courses count: $e');
+      setState(() {
+        coursesLength = 0;
+        isLoadingCoursesCount = false;
+      });
     }
   }
 
@@ -105,6 +185,23 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
     }
   }
 
+  Future<void> _performLogout() async {
+    try {
+      // Clear the stored email
+      await SessionManager.clearEmail();
+
+      // Navigate to the SignUp screen
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SignUp()),
+        (route) => false, // Remove all previous routes
+      );
+    } catch (e) {
+      print('Error during logout: $e');
+      // Handle any errors that occur during logout
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     size = Measurements(MediaQuery.of(context).size);
@@ -117,6 +214,17 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
           bottomNavigationBar: BottomButton(onTap: () {}, selectedIndex: 2),
           backgroundColor: Colors.grey.shade200,
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: primaryColor,
+                size: size!.hp(3.5), // Slightly larger than default
+                weight: 700, // For a little thickness (Flutter 3.7+)
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             backgroundColor: Colors.white,
             elevation: 0.2,
             automaticallyImplyLeading: false,
@@ -162,6 +270,129 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
                       ),
                     ),
                   ),
+
+                  // Center(
+                  //   child: Container(
+                  //     margin: EdgeInsets.symmetric(vertical: 10),
+                  //     height: size?.hp(30),
+                  //     width: size?.wp(95),
+                  //     decoration: BoxDecoration(
+                  //         color: thirdColor,
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         boxShadow: [
+                  //           BoxShadow(
+                  //               offset: Offset(1, 1),
+                  //               blurRadius: 2,
+                  //               color: grey2,
+                  //               spreadRadius: 2)
+                  //         ]),
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         Text(
+                  //           'Explore Courses & Universities',
+                  //           textScaleFactor: 1.6,
+                  //           style: TextStyle(
+                  //             color: primaryColor,
+                  //             fontWeight: FontWeight.w800,
+                  //           ),
+                  //         ),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //           children: [
+                  //             Container(
+                  //               height: size?.hp(14),
+                  //               width: size?.wp(42),
+                  //               decoration: BoxDecoration(
+                  //                   color: thirdColor,
+                  //                   borderRadius: BorderRadius.circular(10),
+                  //                   boxShadow: [
+                  //                     BoxShadow(
+                  //                         offset: Offset(0, 0),
+                  //                         spreadRadius: 1,
+                  //                         color: grey2)
+                  //                   ]),
+                  //               child: Column(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   SizedBox(
+                  //                     height: size?.hp(4.5),
+                  //                     width: size?.wp(9.6),
+                  //                     child: Image.asset(
+                  //                       universityimage,
+                  //                     ),
+                  //                   ),
+                  //                   Text(
+                  //                     universityLength.toString(),
+                  //                     textScaleFactor: 1.5,
+                  //                     style: TextStyle(
+                  //                       fontWeight: FontWeight.w900,
+                  //                     ),
+                  //                   ),
+                  //                   Text(
+                  //                     'Universities',
+                  //                     style: TextStyle(
+                  //                       fontWeight: FontWeight.w800,
+                  //                     ),
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //             Container(
+                  //               height: size?.hp(14),
+                  //               width: size?.wp(42),
+                  //               decoration: BoxDecoration(
+                  //                   color: thirdColor,
+                  //                   borderRadius: BorderRadius.circular(10),
+                  //                   boxShadow: [
+                  //                     BoxShadow(
+                  //                         offset: Offset(0, 0),
+                  //                         spreadRadius: 1,
+                  //                         color: grey2)
+                  //                   ]),
+                  //               child: Column(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   SizedBox(
+                  //                     height: size?.hp(4.5),
+                  //                     width: size?.wp(9.6),
+                  //                     child: Image.asset(
+                  //                       coursesimage,
+                  //                     ),
+                  //                   ),
+                  //                   Text(
+                  //                     '30,000+',
+                  //                     textScaleFactor: 1.5,
+                  //                     style: TextStyle(
+                  //                       fontWeight: FontWeight.w900,
+                  //                     ),
+                  //                   ),
+                  //                   Text(
+                  //                     'Courses',
+                  //                     style: TextStyle(
+                  //                       fontWeight: FontWeight.w800,
+                  //                     ),
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             )
+                  //           ],
+                  //         ),
+                  //         LongButton(
+                  //             action: () {
+                  //               Navigator.push(
+                  //                   context,
+                  //                   MaterialPageRoute(
+                  //                       builder: (context) =>
+                  //                           ExploreUniversitiesScreen()));
+                  //             },
+                  //             text: 'Explore Now'),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // MCQQuestionWidget(),
+
                   Center(
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -213,15 +444,31 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
                                         universityimage,
                                       ),
                                     ),
+                                    isLoadingUniversityCount
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      primaryColor),
+                                            ),
+                                          )
+                                        : Text(
+                                            universityLength > 0
+                                                ? universityLength.toString()
+                                                : '--',
+                                            textScaleFactor: 1.5,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              color: universityLength > 0
+                                                  ? null
+                                                  : Colors.grey,
+                                            ),
+                                          ),
                                     Text(
-                                      universityLength.toString(),
-                                      textScaleFactor: 1.5,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Universities',
+                                      'Universiteis',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                       ),
@@ -251,13 +498,29 @@ class _HomeScreenState extends State<HomeScreenhappysplash> {
                                         coursesimage,
                                       ),
                                     ),
-                                    Text(
-                                      '30,000+',
-                                      textScaleFactor: 1.5,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
+                                    isLoadingCoursesCount
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      primaryColor),
+                                            ),
+                                          )
+                                        : Text(
+                                            coursesLength > 0
+                                                ? coursesLength.toString()
+                                                : '--',
+                                            textScaleFactor: 1.5,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              color: coursesLength > 0
+                                                  ? null
+                                                  : Colors.grey,
+                                            ),
+                                          ),
                                     Text(
                                       'Courses',
                                       style: TextStyle(

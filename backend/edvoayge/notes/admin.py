@@ -1,13 +1,24 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.db.models import Sum, Count
-
+from .mcq.models import MCQCategory, MCQTopic, MCQQuestion,Clinical_introduction,Clinical_closer_inspection,Clinical_final_examination,Clinical_gather_equipments,Clinical_general_inspection,Clinical_palpation,Clinical_references,Clinical_table_of_contents,ClinicalCategory
 from .models import (
     NotesCategory, NotesTopic, NotesModule, NotesVideo, 
     NotesMCQ, NotesMCQOption, NotesClinicalCase, 
     NotesQBank, NotesFlashCard, NotesStatistics
 )
 
+admin.site.register(MCQCategory)
+admin.site.register(MCQTopic)
+admin.site.register(MCQQuestion)
+
+admin.site.register(ClinicalCategory)
+admin.site.register(Clinical_closer_inspection)
+admin.site.register(Clinical_final_examination)
+admin.site.register(Clinical_gather_equipments)
+admin.site.register(Clinical_introduction)
+admin.site.register(Clinical_palpation)
+admin.site.register(Clinical_references)
 
 @admin.register(NotesCategory)
 class NotesCategoryAdmin(admin.ModelAdmin):

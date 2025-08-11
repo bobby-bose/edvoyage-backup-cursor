@@ -185,7 +185,7 @@ class _ProfileApplicationState extends State<ProfileApplication> {
                                               Text(
                                                 'Status: ${application.statusDisplay}',
                                                 style: TextStyle(
-                                                  color: Colors.green[700],
+                                                  color: primaryColor,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -196,16 +196,19 @@ class _ProfileApplicationState extends State<ProfileApplication> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 8, vertical: 4),
                                           decoration: BoxDecoration(
-                                            color: Colors.blue[100],
+                                            border: Border.all(
+                                              color: primaryColor,
+                                              width: 1.5,
+                                            ),
+                                            color: whiteColor,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Text(
                                             '${application.month} ${application.year}',
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.blue[800],
-                                            ),
+                                                fontWeight: FontWeight.bold,
+                                                color: primaryColor),
                                           ),
                                         ),
                                       ],
@@ -228,7 +231,7 @@ class _ProfileApplicationState extends State<ProfileApplication> {
                                           Row(
                                             children: [
                                               Icon(Icons.school,
-                                                  color: Colors.blue[600],
+                                                  color: primaryColor,
                                                   size: 20),
                                               SizedBox(width: 8),
                                               Expanded(
@@ -251,7 +254,7 @@ class _ProfileApplicationState extends State<ProfileApplication> {
                                           Row(
                                             children: [
                                               Icon(Icons.book,
-                                                  color: Colors.green[600],
+                                                  color: primaryColor,
                                                   size: 20),
                                               SizedBox(width: 8),
                                               Expanded(
@@ -263,7 +266,7 @@ class _ProfileApplicationState extends State<ProfileApplication> {
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 13,
-                                                    color: Colors.black54,
+                                                    color: Colors.black87,
                                                   ),
                                                 ),
                                               ),
@@ -275,33 +278,6 @@ class _ProfileApplicationState extends State<ProfileApplication> {
                                     SizedBox(height: 12),
 
                                     // View Button
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: primaryColor,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
-                                          textStyle: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UniversitHomeScreen(
-                                                        university: University(
-                                                            id: 0,
-                                                            name: '',
-                                                            city: '',
-                                                            country: ''))),
-                                          );
-                                        },
-                                        child: Text("View Details"),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),

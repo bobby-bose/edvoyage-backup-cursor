@@ -37,40 +37,12 @@ class _OtpState extends State<Otp> {
   @override
   void initState() {
     super.initState();
-    checkBlockStatus();
   }
 
   @override
   void dispose() {
     blockTimer?.cancel();
     super.dispose();
-  }
-
-  void checkBlockStatus() async {
-    bool blocked = await SessionManager.isDeviceBlocked();
-    if (blocked) {
-      int remainingTime = await SessionManager.getRemainingBlockTime();
-      setState(() {
-        isBlocked = true;
-        blockedUntil = DateTime.now().add(Duration(seconds: remainingTime));
-      });
-      startBlockTimer();
-    }
-  }
-
-  void startBlockTimer() {
-    if (blockedUntil != null) {
-      blockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (DateTime.now().isAfter(blockedUntil!)) {
-          setState(() {
-            isBlocked = false;
-            attempts = 0;
-          });
-          SessionManager.clearBlockTime();
-          timer.cancel();
-        }
-      });
-    }
   }
 
   void showBlockedMessage() {
@@ -158,7 +130,7 @@ class _OtpState extends State<Otp> {
     });
 
     try {
-      String deviceId = await SessionManager.getDeviceId();
+      String deviceId = '1';
 
       // Check if it's the backup OTP code for testing
       if (otps == '000000') {
@@ -191,9 +163,6 @@ class _OtpState extends State<Otp> {
 
         // Check if user exists and create if needed
         await _checkAndCreateUser(widget.mobile, otps);
-      } else if (response.statusCode == 429) {
-        // Blocked for 5 minutes
-        await handleBlockedResponse(data);
       } else {
         // Wrong OTP
         attempts++;
@@ -218,39 +187,13 @@ class _OtpState extends State<Otp> {
     try {
       print('🔍 DEBUG: Checking user existence for mobile: $mobile');
 
-      // First, try to get user data from the session (if user already exists)
-      final existingUserData = await SessionManager.getUserData();
-      final existingUserId = await SessionManager.getUserId();
-
-      print('🔍 DEBUG: Existing user data: $existingUserData');
-      print('🔍 DEBUG: Existing user ID: $existingUserId');
-
-      if (existingUserData != null &&
-          existingUserId != null &&
-          existingUserId != 0) {
-        print(
-            '✅ DEBUG: User already exists in session, proceeding with existing user');
-        print('🔍 DEBUG: User ID: $existingUserId');
-        print('🔍 DEBUG: Username: ${existingUserData['username']}');
-        print('🔍 DEBUG: Full name: ${existingUserData['full_name']}');
-
-        // Store session and proceed
-        await _storeUserSession(existingUserData, existingUserId);
-        return;
-      }
-
-      // User doesn't exist, verify OTP which will create user automatically
-      print('🔍 DEBUG: User does not exist, verifying OTP to create user...');
-      print('🔍 DEBUG: Mobile number: $mobile');
-      print('🔍 DEBUG: OTP code: $otpCode');
-
       final verifyOtpResponse = await http.post(
         Uri.parse('${BaseUrl.baseUrl}/users/otp/verify/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'otp_code': otpCode,
           'contact': mobile,
-          'device_id': await SessionManager.getDeviceId(),
+          'device_id': '1',
           'device_type': 'mobile',
         }),
       );
@@ -281,8 +224,12 @@ class _OtpState extends State<Otp> {
             print('✅ DEBUG: User created as NEW user');
           }
 
-          // Store session for user
-          await _storeUserSession(userData, userId);
+          await SessionManager.storeEmail(mobile);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+          Toasty.showtoast('OTP verified successfully!');
         } else {
           print(
               '❌ DEBUG: OTP verification failed: ${verifyOtpData['message']}');
@@ -293,7 +240,6 @@ class _OtpState extends State<Otp> {
             '❌ DEBUG: OTP verification failed with status: ${verifyOtpResponse.statusCode}');
         print('❌ DEBUG: Error response: ${verifyOtpResponse.body}');
 
-        // Try to parse error response
         try {
           final errorData = jsonDecode(verifyOtpResponse.body);
           print('❌ DEBUG: Error data: $errorData');
@@ -310,81 +256,55 @@ class _OtpState extends State<Otp> {
   }
 
   /// Store user session and navigate to home
-  Future<void> _storeUserSession(
-      Map<String, dynamic> userData, dynamic userId) async {
-    try {
-      print('🔍 DEBUG: Storing user session...');
-      print('🔍 DEBUG: User ID: $userId');
-      print('🔍 DEBUG: User data: $userData');
-
-      // Create session data
-      final sessionData = {
-        'session_key': 'session_${DateTime.now().millisecondsSinceEpoch}',
-        'user_id': userId,
-        'user_data': userData,
-        'success': true,
-      };
-
-      print('🔍 DEBUG: Session data to store: $sessionData');
-
-      // Store session
-      await SessionManager.storeUserSession(sessionData);
-      await SessionManager.storePhoneNumber(widget.mobile);
-
-      print('✅ DEBUG: User session stored successfully');
-
-      // Check if remember me was enabled during sign up
-      bool rememberMe = await SessionManager.isRememberMeEnabled();
-      if (rememberMe) {
-        print('🔍 DEBUG: Remember me enabled, storing persistent login');
-        // Store persistent login data
-        await SessionManager.storePersistentLogin({
-          'email': widget.mobile,
-          'session_key': sessionData['session_key'],
-          'user_id': userId,
-          'user_data': userData,
-          'remember_me': true,
-          'login_timestamp': DateTime.now().millisecondsSinceEpoch,
-        });
-        print('✅ DEBUG: Persistent login stored');
-      }
-
-      Toasty.showtoast('Login successful!');
-      print('✅ DEBUG: Navigating to HomeScreen');
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } catch (e) {
-      print('❌ DEBUG: Error storing user session: $e');
-      Toasty.showtoast('Error saving session. Please try again.');
-    }
-  }
-
-  Future<void> handleBlockedResponse(Map<String, dynamic> data) async {
-    if (data['blocked_until'] != null) {
-      DateTime blockedTime = DateTime.parse(data['blocked_until']);
-      await SessionManager.storeBlockTime(blockedTime);
-
-      setState(() {
-        isBlocked = true;
-        blockedUntil = blockedTime;
-      });
-
-      startBlockTimer();
-      showBlockedMessage();
-    }
-  }
 
   Future<void> handleMaxAttempts() async {
     DateTime blockUntil = DateTime.now().add(Duration(minutes: 5));
-    await SessionManager.storeBlockTime(blockUntil);
+    Future<void> storeBlockTime(DateTime blockUntil) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('blockUntil', blockUntil.toIso8601String());
+    }
+
+    Future<DateTime?> getBlockTime() async {
+      final prefs = await SharedPreferences.getInstance();
+      final blockUntilString = prefs.getString('blockUntil');
+      if (blockUntilString != null) {
+        return DateTime.parse(blockUntilString);
+      }
+      return null;
+    }
+
+    Future<void> clearBlockTime() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('blockUntil');
+    }
+
+    storeBlockTime(blockUntil);
 
     setState(() {
       isBlocked = true;
       blockedUntil = blockUntil;
     });
+    Future<void> startBlockTimer() async {
+      DateTime? blockUntil = await getBlockTime();
+      if (blockUntil != null) {
+        Duration remaining = blockUntil.difference(DateTime.now());
+        if (remaining.isNegative) {
+          await clearBlockTime();
+          setState(() {
+            isBlocked = false;
+            blockedUntil = null;
+          });
+        } else {
+          Timer(remaining, () async {
+            await clearBlockTime();
+            setState(() {
+              isBlocked = false;
+              blockedUntil = null;
+            });
+          });
+        }
+      }
+    }
 
     startBlockTimer();
     showBlockedMessage();
@@ -600,11 +520,4 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
-}
-
-// Function to set mobile number in SharedPreferences
-Future<void> setMobileNumber(String mobilenumber) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('mobilenumber', mobilenumber);
-  print("The mobile number saved is $mobilenumber");
 }

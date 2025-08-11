@@ -153,6 +153,17 @@ class _ExhuastedSplashState extends State<ExhuastedSplash> {
         elevation: 0.2,
         automaticallyImplyLeading: false,
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: primaryColor,
+            size: size!.hp(3.5), // Slightly larger than default
+            weight: 700, // For a little thickness (Flutter 3.7+)
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: SizedBox(
           height: 200,
           child: Image.asset(edvoyagelogo1),

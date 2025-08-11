@@ -2,14 +2,14 @@ class BaseUrl {
   // Choose the appropriate IP address based on your setup:
 
   // Option 1: Local network IP (if your device and computer are on same network)
-  static const String baseUrlApi = "http://localhost:8000";
+  // static const String baseUrlApi = "https://bobbykbose37.pythonanywhere.com";
 
   // Option 2: Use your computer's actual local IP address
-  // static const String baseUrlApi = "http://YOUR_COMPUTER_IP:8000";
+  static const String baseUrlApi = "http://192.168.1.4:8000";
 
-  // Option 3: Use localhost with port forwarding (for testing)
+  // Option 3: Use 192.168.137.1 with port forwarding (for testing)
   // static const String baseUrlApi = "http://10.0.2.2:8000"; // Android emulator
-  // static const String baseUrlApi = "http://localhost:8000"; // iOS simulator
+  // static const String baseUrlApi = "http://192.168.137.1:8000"; // iOS simulator
 
   // Option 4: Use a public IP if your server is accessible from internet
   // static const String baseUrlApi = "http://54.90.19.107:8000";

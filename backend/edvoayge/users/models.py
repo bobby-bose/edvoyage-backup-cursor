@@ -115,7 +115,7 @@ class UserSession(models.Model):
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sessions')
-    session_key = models.CharField(max_length=40, unique=True, verbose_name="Session Key")
+    session_key = models.CharField(max_length=40, verbose_name="Session Key")
     
     # Device Information
     device_type = models.CharField(max_length=50, blank=True, verbose_name="Device Type")

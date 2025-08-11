@@ -49,6 +49,7 @@ class UserPagination(PageNumberPagination):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    print("fffffffffffffffffff")
     """
     ViewSet for user management.
     Provides CRUD operations for users with authentication and profile management.
@@ -57,7 +58,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     pagination_class = UserPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['is_active', 'date_joined']
+    filterset_fields = ['is_active', 'date_joined','email']
     search_fields = ['username', 'email', 'first_name', 'last_name']
     ordering_fields = ['username', 'date_joined', 'last_login']
     ordering = ['-date_joined']
@@ -77,7 +78,6 @@ class UserViewSet(viewsets.ModelViewSet):
         # Only show active users in listing
         if self.action == 'list':
             queryset = queryset.filter(is_active=True)
-        
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -102,6 +102,27 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'success': False, 'message': f'Error retrieving users: {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+    @action(detail=False, methods=['get'], url_path='by-email')
+    def get_user_by_email(self, request):
+        email = request.query_params.get('email')
+        if not email:
+            return Response(
+                {'success': False, 'message': 'Email parameter is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.filter(email=email).first()
+        print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+        print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+        print("ggggggg")
+        print(user)
+        if not user:
+            return Response(
+                {'success': False, 'message': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = UserSerializer(user)
+        return Response({'success': True, 'data': serializer.data})
 
     @action(detail=False, methods=['post'], url_path='login')
     def login(self, request):
@@ -415,6 +436,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
+    print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
     """ViewSet for user profile management."""
     queryset = UserProfile.objects.select_related('user')
     serializer_class = UserProfileSerializer
@@ -424,6 +446,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     search_fields = ['user__username', 'user__email', 'email']
 
     def get_serializer_class(self):
+        print("11111")
         """Return appropriate serializer based on action."""
         if self.action == 'create':
             return UserProfileCreateSerializer
@@ -439,6 +462,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         return UserProfileSerializer
 
     def get_queryset(self):
+        print("22222")
         """Filter profiles by current authenticated user."""
         if hasattr(self.request, 'user') and self.request.user.is_authenticated:
             print(f"🔍 DEBUG: Using authenticated user: {self.request.user.username} (ID: {self.request.user.id})")
@@ -458,6 +482,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return UserProfile.objects.filter(user=test_user)
 
     def get_object(self):
+        print("33333")
         """Get or create profile for authenticated user."""
         if hasattr(self.request, 'user') and self.request.user.is_authenticated:
             user = self.request.user
@@ -506,6 +531,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return profile
 
     def list(self, request, *args, **kwargs):
+        print("55555")
         """List user profiles with enhanced filtering."""
         print("🔍 DEBUG: Entering UserProfileListView")
         try:
@@ -697,23 +723,16 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
                     print("✅ DEBUG: User exists as EXISTING user")
                     
                     # Create or update user profile
-                    profile, created = UserProfile.objects.get_or_create(
+                    profile= UserProfile.objects.get(
                         user=user,
-                        defaults={
-                            'email': contact,
-                            'is_email_verified': True,
-                            'is_profile_complete': False,
-                        }
+                        
                     )
                     
-                    if created:
-                        print(f"✅ DEBUG: User profile created for existing user")
-                    else:
-                        print(f"✅ DEBUG: User profile already exists")
+
                         # Update email verification status
-                        profile.is_email_verified = True
-                        profile.save()
-                        print(f"✅ DEBUG: Email verification status updated")
+                    profile.is_email_verified = True
+                    profile.save()
+                    print(f"✅ DEBUG: Email verification status updated")
                     
                     # Create user session
                     session = UserSession.objects.create(
@@ -725,15 +744,12 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
                     )
                     print(f"✅ DEBUG: User session created")
                     print(f"🔍 DEBUG: Session ID: {session.id}")
-                    
-                                    # Track user activity
                     UserActivity.objects.create(
                     user=user,
                     activity_type='login',
                     device_id=device_id,
                     ip_address=self.get_client_ip(request),
-                    description=f'Login via backup OTP verification'
-                    )
+                    description=f'Login via backup OTP verification')
                     print(f"✅ DEBUG: User activity tracked")
                     
                     # Prepare response data
@@ -765,16 +781,11 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
                     print(f"🔍 DEBUG: User does not exist, will create new user")
                     print("✅ DEBUG: User will be created as NEW user")
                     
-                    # Create new user
-                    base_username = f"user_{contact.replace('+', '').replace('-', '').replace(' ', '')}"
-                    username = base_username
+
+                    username = contact
                     counter = 1
                     
                     # Ensure username is unique
-                    while User.objects.filter(username=username).exists():
-                        username = f"{base_username}_{counter}"
-                        counter += 1
-                    
                     user = User.objects.create(
                         username=username,
                         email=contact,
@@ -867,160 +878,7 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
             print("✅ DEBUG: OTP marked as verified")
             
             # Check if user exists
-            try:
-                user = User.objects.get(email=contact)
-                print(f"✅ DEBUG: User already exists")
-                print(f"🔍 DEBUG: User ID: {user.id}")
-                print(f"🔍 DEBUG: Username: {user.username}")
-                print(f"🔍 DEBUG: Email: {user.email}")
-                print("✅ DEBUG: User exists as EXISTING user")
-                
-                # Create or update user profile
-                profile, created = UserProfile.objects.get_or_create(
-                    user=user,
-                    defaults={
-                        'email': contact,
-                        'is_email_verified': True,
-                        'is_profile_complete': False,
-                    }
-                )
-                
-                if created:
-                    print(f"✅ DEBUG: User profile created for existing user")
-                else:
-                    print(f"✅ DEBUG: User profile already exists")
-                    # Update email verification status
-                    profile.is_email_verified = True
-                    profile.save()
-                    print(f"✅ DEBUG: Email verification status updated")
-                
-                # Create user session
-                session = UserSession.objects.create(
-                    user=user,
-                    device_id=device_id,
-                    device_type=device_type,
-                    ip_address=self.get_client_ip(request),
-                    is_active=True
-                )
-                print(f"✅ DEBUG: User session created")
-                print(f"🔍 DEBUG: Session ID: {session.id}")
-                
-                # Track user activity
-                UserActivity.objects.create(
-                    user=user,
-                    activity_type='login',
-                    device_id=device_id,
-                    ip_address=self.get_client_ip(request),
-                    description=f'Login via OTP verification'
-                )
-                print(f"✅ DEBUG: User activity tracked")
-                
-                # Prepare response data
-                user_data = {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'full_name': f"{user.first_name} {user.last_name}".strip() or user.username,
-                    'phone': contact,
-                }
-                
-                response_data = {
-                    'success': True,
-                    'message': 'OTP verified successfully',
-                    'user_id': user.id,
-                    'user_data': user_data,
-                    'session_key': str(session.id),
-                    'user_exists': True,
-                }
-                
-                print(f"✅ DEBUG: Returning existing user data")
-                print(f"🔍 DEBUG: Response data: {response_data}")
-                
-                return Response(response_data, status=status.HTTP_200_OK)
-                
-            except User.DoesNotExist:
-                print(f"🔍 DEBUG: User does not exist, will create new user")
-                print("✅ DEBUG: User will be created as NEW user")
-                
-                # Create new user
-                base_username = f"user_{contact.replace('+', '').replace('-', '').replace(' ', '')}"
-                username = base_username
-                counter = 1
-                
-                # Ensure username is unique
-                while User.objects.filter(username=username).exists():
-                    username = f"{base_username}_{counter}"
-                    counter += 1
-                
-                user = User.objects.create(
-                    username=username,
-                    email=contact,
-                    first_name='',
-                    last_name='',
-                    is_active=True
-                )
-                print(f"✅ DEBUG: New user created")
-                print(f"🔍 DEBUG: New User ID: {user.id}")
-                print(f"🔍 DEBUG: New Username: {user.username}")
-                print(f"🔍 DEBUG: New Email: {user.email}")
-                
-                # Create user profile
-                profile = UserProfile.objects.create(
-                    user=user,
-                    email=contact,
-                    is_email_verified=True,
-                    is_profile_complete=False,
-                )
-                print(f"✅ DEBUG: User profile created for new user")
-                
-                # Create user session
-                session = UserSession.objects.create(
-                    user=user,
-                    device_id=device_id,
-                    device_type=device_type,
-                    ip_address=self.get_client_ip(request),
-                    is_active=True
-                )
-                print(f"✅ DEBUG: User session created for new user")
-                print(f"🔍 DEBUG: Session ID: {session.id}")
-                
-                # Track user activity
-                UserActivity.objects.create(
-                    user=user,
-                    activity_type='registration',
-                    device_id=device_id,
-                    ip_address=self.get_client_ip(request),
-                    description=f'Registration via OTP verification'
-                )
-                print(f"✅ DEBUG: User activity tracked for new user")
-                
-                # Prepare response data
-                user_data = {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'full_name': f"{user.first_name} {user.last_name}".strip() or user.username,
-                    'phone': contact,
-                }
-                
-                response_data = {
-                    'success': True,
-                    'message': 'User created and OTP verified successfully',
-                    'user_id': user.id,
-                    'user_data': user_data,
-                    'session_key': str(session.id),
-                    'user_exists': False,
-                }
-                
-                print(f"✅ DEBUG: Returning new user data")
-                print(f"🔍 DEBUG: Response data: {response_data}")
-                
-                return Response(response_data, status=status.HTTP_201_CREATED)
-                
+               
         except Exception as e:
             print(f"❌ DEBUG: Error in OTP verification: {e}")
             import traceback
@@ -1031,166 +889,7 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
                 'message': 'Internal server error'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(detail=False, methods=['post'], url_path='create')
-    def create_user(self, request):
-        """
-        Create a new user after OTP verification.
-        This endpoint is called after successful OTP verification to create a new user.
-        """
-        print("🔍 DEBUG: Entering user creation endpoint")
-        print(f"🔍 DEBUG: Request data: {request.data}")
-        
-        try:
-            email = request.data.get('email')
-            otp_code = request.data.get('otp_code')
-            device_id = request.data.get('device_id')
-            device_type = request.data.get('device_type', 'mobile')
-            
-            print(f"🔍 DEBUG: Email: {email}")
-            print(f"🔍 DEBUG: OTP Code: {otp_code}")
-            print(f"🔍 DEBUG: Device ID: {device_id}")
-            print(f"🔍 DEBUG: Device Type: {device_type}")
-            
-            if not all([email, otp_code, device_id]):
-                print("❌ DEBUG: Missing required fields")
-                return Response({
-                    'success': False,
-                    'message': 'Missing required fields: email, otp_code, device_id'
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Verify OTP first
-            try:
-                otp_verification = OTPVerification.objects.get(
-                    contact=email,
-                    otp_code=otp_code,
-                    is_verified=True,
-                    expires_at__gt=timezone.now()
-                )
-                print(f"✅ DEBUG: OTP verification confirmed")
-                print(f"🔍 DEBUG: OTP ID: {otp_verification.id}")
-                
-            except OTPVerification.DoesNotExist:
-                print("❌ DEBUG: Invalid or unverified OTP")
-                return Response({
-                    'success': False,
-                    'message': 'Invalid or unverified OTP code'
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Check if user already exists
-            try:
-                existing_user = User.objects.get(email=email)
-                print(f"✅ DEBUG: User already exists")
-                print(f"🔍 DEBUG: Existing User ID: {existing_user.id}")
-                print(f"🔍 DEBUG: Existing Username: {existing_user.username}")
-                print("✅ DEBUG: User exists as EXISTING user")
-                
-                # Return existing user data
-                user_data = {
-                    'id': existing_user.id,
-                    'username': existing_user.username,
-                    'email': existing_user.email,
-                    'first_name': existing_user.first_name,
-                    'last_name': existing_user.last_name,
-                    'full_name': f"{existing_user.first_name} {existing_user.last_name}".strip() or existing_user.username,
-                    'phone': email,
-                }
-                
-                response_data = {
-                    'success': True,
-                    'message': 'User already exists',
-                    'user_id': existing_user.id,
-                    'user_data': user_data,
-                    'user_exists': True,
-                }
-                
-                print(f"✅ DEBUG: Returning existing user data")
-                print(f"🔍 DEBUG: Response data: {response_data}")
-                
-                return Response(response_data, status=status.HTTP_200_OK)
-                
-            except User.DoesNotExist:
-                print(f"🔍 DEBUG: User does not exist, creating new user")
-                print("✅ DEBUG: User will be created as NEW user")
-                
-                # Create new user
-                username = f"user_{email.replace('+', '').replace('-', '').replace(' ', '')}"
-                user = User.objects.create(
-                    username=username,
-                    email=email,
-                    first_name='',
-                    last_name='',
-                    is_active=True
-                )
-                print(f"✅ DEBUG: New user created")
-                print(f"🔍 DEBUG: New User ID: {user.id}")
-                print(f"🔍 DEBUG: New Username: {user.username}")
-                print(f"🔍 DEBUG: New Email: {user.email}")
-                
-                # Create user profile
-                profile = UserProfile.objects.create(
-                    user=user,
-                    email=email,
-                    is_email_verified=True,
-                    is_profile_complete=False,
-                )
-                print(f"✅ DEBUG: User profile created for new user")
-                
-                # Create user session
-                session = UserSession.objects.create(
-                    user=user,
-                    device_id=device_id,
-                    device_type=device_type,
-                    ip_address=self.get_client_ip(request),
-                    is_active=True
-                )
-                print(f"✅ DEBUG: User session created for new user")
-                print(f"🔍 DEBUG: Session ID: {session.id}")
-                
-                # Track user activity
-                UserActivity.objects.create(
-                    user=user,
-                    activity_type='registration',
-                    device_id=device_id,
-                    ip_address=self.get_client_ip(request),
-                    description=f'Registration via OTP verification'
-                )
-                print(f"✅ DEBUG: User activity tracked for new user")
-                
-                # Prepare response data
-                user_data = {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'full_name': f"{user.first_name} {user.last_name}".strip() or user.username,
-                    'phone': email,
-                }
-                
-                response_data = {
-                    'success': True,
-                    'message': 'User created successfully',
-                    'user_id': user.id,
-                    'user_data': user_data,
-                    'session_key': str(session.id),
-                    'user_exists': False,
-                }
-                
-                print(f"✅ DEBUG: Returning new user data")
-                print(f"🔍 DEBUG: Response data: {response_data}")
-                
-                return Response(response_data, status=status.HTTP_201_CREATED)
-                
-        except Exception as e:
-            print(f"❌ DEBUG: Error in user creation: {e}")
-            import traceback
-            print(f"❌ DEBUG: Full traceback: {traceback.format_exc()}")
-            logger.error(f"Error in user creation: {e}")
-            return Response({
-                'success': False,
-                'message': 'Internal server error'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+   
     def get_client_ip(self, request):
         """Get client IP address."""
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

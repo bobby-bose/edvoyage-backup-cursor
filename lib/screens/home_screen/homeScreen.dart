@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/_env/env.dart';
+import 'package:frontend/screens/home_screen/homescreenreplaceable/homeScreen_happysplash.dart';
 import 'package:frontend/utils/responsive.dart';
 import 'package:frontend/widgets/botttom_nav.dart';
 import 'package:frontend/utils/avatar.dart';
@@ -63,10 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await getLengthOfAllCourses();
   }
 
-  // GET THE COUNT OF ALL UNIVERSITIES FROM THE API BaseUrl.universityStats;
-  // Fetch university count from stats endpoint (more efficient than fetching full list)
-  // Returns: {"success": true, "data": {"total_universities": 123, ...}}
-
   Future<void> getLengthOfAllUniversities() async {
     setState(() {
       isLoadingUniversityCount = true;
@@ -109,10 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
-
-  // GET THE COUNT OF ALL COURSES FROM THE API BaseUrl.coursesStats;
-  // Fetch courses count from stats endpoint (more efficient than fetching full list)
-  // Returns: {"success": true, "data": {"total_courses": 123, ...}}
 
   Future<void> getLengthOfAllCourses() async {
     setState(() {
@@ -196,113 +189,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _performLogout() async {
-    try {
-      print('🔍 DEBUG: Starting logout process');
+    // Clear the stored email
+    await SessionManager.clearEmail();
 
-      // Get actual session data
-      String? sessionKey = await SessionManager.getSessionKey();
-      String deviceId = await SessionManager.getDeviceId();
-
-      print('🔍 DEBUG: Session key: $sessionKey');
-      print('🔍 DEBUG: Device ID: $deviceId');
-
-      if (sessionKey == null) {
-        print('🔍 DEBUG: No session key found, clearing local data only');
-        await SessionManager.logout();
-
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Logged out successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate to sign-up screen
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => SignUp()),
-          (route) => false,
-        );
-        return;
-      }
-
-      // Call logout API endpoint
-      var response = await http.post(
-        Uri.parse('${BaseUrl.baseUrlApi}/api/v1/users/users/logout/'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'session_key': sessionKey,
-          'device_id': deviceId,
-        }),
-      );
-
-      print('🔍 DEBUG: Logout response status: ${response.statusCode}');
-      print('🔍 DEBUG: Logout response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        // Clear stored user data using SessionManager
-        await SessionManager.logout();
-
-        // Clear persistent login data
-        await SessionManager.clearPersistentLogin();
-
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Logged out successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        print('🔍 DEBUG: Logout successful');
-
-        // Navigate to sign-up screen
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => SignUp()),
-          (route) => false,
-        );
-      } else {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to logout. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        print('🔍 DEBUG: Logout failed with status: ${response.statusCode}');
-
-        // Still clear local data even if API call failed
-        await SessionManager.logout();
-        await SessionManager.clearPersistentLogin();
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => SignUp()),
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      print('🔍 DEBUG: Error during logout: $e');
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error during logout. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-
-      // Still clear local data even if API call failed
-      await SessionManager.logout();
-      await SessionManager.clearPersistentLogin();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => SignUp()),
-        (route) => false,
-      );
-    }
+    // Navigate to the SignUp screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignUp()),
+    );
   }
 
   @override
@@ -445,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               PageRouteBuilder(
                                                   pageBuilder: (_, __, ___) =>
-                                                      HappySplash()));
+                                                      HomeScreenhappysplash()));
                                         },
                                         child: Image.asset(
                                           'assets/happy.png',

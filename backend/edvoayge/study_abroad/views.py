@@ -26,7 +26,7 @@ class StudyAbroadProgramViewSet(viewsets.ModelViewSet):
     """ViewSet for StudyAbroadProgram model"""
     queryset = StudyAbroadProgram.objects.all()
     serializer_class = StudyAbroadProgramSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['program_type', 'status', 'country', 'city', 'is_active', 'is_featured']
     search_fields = ['name', 'description', 'institution', 'field_of_study']
@@ -132,7 +132,7 @@ class StudyAbroadProgramViewSet(viewsets.ModelViewSet):
 class StudyAbroadApplicationViewSet(viewsets.ModelViewSet):
     """ViewSet for StudyAbroadApplication model"""
     serializer_class = StudyAbroadApplicationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'program', 'status']
     search_fields = ['current_institution', 'current_major', 'academic_goals']
@@ -223,7 +223,7 @@ class StudyAbroadApplicationViewSet(viewsets.ModelViewSet):
 class StudyAbroadExperienceViewSet(viewsets.ModelViewSet):
     """ViewSet for StudyAbroadExperience model"""
     serializer_class = StudyAbroadExperienceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'program', 'experience_type', 'is_approved', 'is_featured']
     search_fields = ['title', 'content']
@@ -305,7 +305,7 @@ class StudyAbroadResourceViewSet(viewsets.ModelViewSet):
     """ViewSet for StudyAbroadResource model"""
     queryset = StudyAbroadResource.objects.all()
     serializer_class = StudyAbroadResourceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['resource_type', 'is_active', 'is_featured', 'requires_authentication']
     search_fields = ['title', 'description', 'content', 'categories', 'tags']
@@ -376,7 +376,7 @@ class StudyAbroadEventViewSet(viewsets.ModelViewSet):
     """ViewSet for StudyAbroadEvent model"""
     queryset = StudyAbroadEvent.objects.all()
     serializer_class = StudyAbroadEventSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['event_type', 'is_active', 'is_featured', 'is_virtual']
     search_fields = ['title', 'description', 'location']
@@ -441,7 +441,7 @@ class StudyAbroadEventViewSet(viewsets.ModelViewSet):
 class StudyAbroadEventRegistrationViewSet(viewsets.ModelViewSet):
     """ViewSet for StudyAbroadEventRegistration model"""
     serializer_class = StudyAbroadEventRegistrationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'event', 'status']
     search_fields = ['dietary_restrictions', 'special_accommodations', 'questions']

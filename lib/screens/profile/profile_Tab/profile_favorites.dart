@@ -713,8 +713,9 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
           ),
           // Content area
           Expanded(
-            child:
-                _selectedTabIndex == 0 ? profileuniversity() : profilecourses(),
+            child: _selectedTabIndex == 0
+                ? UniversityFavouritesPage()
+                : profilecourses(),
           ),
         ],
       ),

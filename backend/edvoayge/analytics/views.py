@@ -27,7 +27,7 @@ class EventTypeViewSet(viewsets.ModelViewSet):
     """ViewSet for EventType model"""
     queryset = EventType.objects.all()
     serializer_class = EventTypeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name', 'category', 'is_active']
     search_fields = ['name', 'description', 'category']
@@ -39,7 +39,7 @@ class PageTypeViewSet(viewsets.ModelViewSet):
     """ViewSet for PageType model"""
     queryset = PageType.objects.all()
     serializer_class = PageTypeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name', 'category', 'is_active']
     search_fields = ['name', 'description', 'category']
@@ -51,7 +51,7 @@ class SessionTypeViewSet(viewsets.ModelViewSet):
     """ViewSet for SessionType model"""
     queryset = SessionType.objects.all()
     serializer_class = SessionTypeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name', 'category', 'is_active']
     search_fields = ['name', 'description', 'category']
@@ -63,7 +63,7 @@ class AnalyticsEventViewSet(viewsets.ModelViewSet):
     """ViewSet for AnalyticsEvent model"""
     queryset = AnalyticsEvent.objects.select_related('user', 'event_type').all()
     serializer_class = AnalyticsEventSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'event_type', 'session_id', 'created_at']
     search_fields = ['event_name', 'event_type__name', 'user__email']
@@ -148,7 +148,7 @@ class PageViewViewSet(viewsets.ModelViewSet):
     """ViewSet for PageView model"""
     queryset = PageView.objects.select_related('user', 'page_type').all()
     serializer_class = PageViewSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'page_type', 'session_id', 'created_at']
     search_fields = ['page_url', 'page_title', 'page_type__name', 'user__email']
@@ -237,7 +237,7 @@ class UserSessionViewSet(viewsets.ModelViewSet):
     """ViewSet for UserSession model"""
     queryset = UserSession.objects.select_related('user', 'session_type').all()
     serializer_class = UserSessionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'session_type', 'start_time', 'end_time']
     search_fields = ['user__email', 'session_type__name', 'ip_address']
@@ -348,7 +348,7 @@ class UserSessionViewSet(viewsets.ModelViewSet):
 # Analytics API ViewSet for combined stats
 class AnalyticsAPIViewSet(viewsets.ViewSet):
     """ViewSet for combined analytics API endpoints"""
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     
     @action(detail=False, methods=['get'])
     def overview(self, request):

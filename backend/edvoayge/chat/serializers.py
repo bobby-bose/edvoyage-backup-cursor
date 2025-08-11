@@ -27,6 +27,7 @@ class ChatUserSerializer(serializers.ModelSerializer):
         ]
     
     def get_full_name(self, obj):
+        print("NNNNNNNN",obj.full_name)
         return obj.full_name
 
 

@@ -45,34 +45,22 @@ class _SplashScreenState extends State<SplashScreen> {
     // Add a small delay to show splash screen
     await Future.delayed(Duration(milliseconds: 500));
 
-    if (mounted) {
-      // Check if user is already logged in
-      bool isLoggedIn = await SessionManager.isLoggedIn();
+    if (!mounted) return; // Ensure widget is still in tree
 
-      if (isLoggedIn) {
-        // User is logged in, go to home screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      } else {
-        // Check for persistent login
-        bool autoLoginSuccess = await SessionManager.autoLogin();
+    bool isLoggedIn = await SessionManager.isLoggedIn();
 
-        if (autoLoginSuccess) {
-          // Auto-login successful, go to home screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-        } else {
-          // No persistent login, go to sign up screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SignUp()),
-          );
-        }
-      }
+    if (isLoggedIn) {
+      // User is logged in, go to home screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // No persistent login, go to sign up screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignUp()),
+      );
     }
   }
 

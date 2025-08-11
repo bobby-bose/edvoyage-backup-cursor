@@ -118,7 +118,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   ),
-                  SizedBox(height: size.hp(4)),
+                  SizedBox(height: size.hp(1)),
                   // Remember Me checkbox
                   Row(
                     children: [
@@ -141,49 +141,56 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
-                  SizedBox(height: size.hp(2)),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: Text('By signing up, you agree to our ',
-                                style: TextStyle(
-                                  color: grey2,
-                                  fontSize: size.hp(1.7),
-                                )),
-                          ),
-                          TextButton(
-                            onPressed: () => Get.to(() => terms_condition()),
-                            child: Text('Terms & Conditions',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontSize: size.hp(1.7))),
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: Text('and ',
-                                style: TextStyle(
-                                    color: grey2, fontSize: size.hp(1.7))),
-                          ),
-                          TextButton(
-                            onPressed: () => Get.to(() => privacy()),
-                            child: Text('Privacy Policy',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontSize: size.hp(1.7))),
-                          ),
-                        ],
-                      ),
-                    ],
+                  SizedBox(height: size.hp(1)),
+                  // Container(
+                  //   height: size.hp(2),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Wrap(
+                  //         children: [
+                  //           TextButton(
+                  //             onPressed: () {},
+                  //             child: Text('By signing up, you agree to our ',
+                  //                 style: TextStyle(
+                  //                   color: grey2,
+                  //                   fontSize: size.hp(1.7),
+                  //                 )),
+                  //           ),
+                  //           TextButton(
+                  //             onPressed: () => Get.to(() => terms_condition()),
+                  //             child: Text('Terms & Conditions',
+                  //                 style: TextStyle(
+                  //                     color: primaryColor,
+                  //                     fontSize: size.hp(1.7))),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       Wrap(
+                  //         children: [
+                  //           TextButton(
+                  //             onPressed: () {},
+                  //             child: Text('and ',
+                  //                 style: TextStyle(
+                  //                     color: grey2, fontSize: size.hp(1.7))),
+                  //           ),
+                  //           TextButton(
+                  //             onPressed: () => Get.to(() => privacy()),
+                  //             child: Text('Privacy Policy',
+                  //                 style: TextStyle(
+                  //                     color: primaryColor,
+                  //                     fontSize: size.hp(1.7))),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  Text(
+                    "By Signing Up you agree to our terms and Conditions and Privacy Policy",
+                    style: TextStyle(fontSize: size.hp(2.2)),
                   ),
-                  SizedBox(height: size.hp(3)),
+                  SizedBox(height: size.hp(6)),
                   Center(
                     child: LongButton(
                       action: isLoading
@@ -228,17 +235,14 @@ Future<void> sendOtp(
   }
 
   try {
-    String deviceId = await SessionManager.getDeviceId();
-    String deviceType = SessionManager.getDeviceType();
-
     final response = await http.post(
       Uri.parse('${BaseUrl.baseUrl}/users/otp/create/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'otp_type': 'register',
         'contact': email,
-        'device_id': deviceId,
-        'device_type': deviceType,
+        'device_id': '1',
+        'device_type': 'mobile',
       }),
     );
 
@@ -263,24 +267,7 @@ Future<void> sendOtp(
           Toasty.showtoast('Welcome back! Logging you in...');
 
           // Store user session data
-          await SessionManager.storePhoneNumber(email);
-          await SessionManager.storeUserSession({
-            'session_key': data['session_key'] ?? '',
-            'user_id': data['user_id'] ?? 0,
-            'user_data': data['user_data'] ?? {},
-          });
-
-          // Store persistent login data if remember me is checked
-          if (rememberMe) {
-            await SessionManager.storePersistentLogin({
-              'email': email,
-              'session_key': data['session_key'] ?? '',
-              'user_id': data['user_id'] ?? 0,
-              'user_data': data['user_data'] ?? {},
-              'remember_me': true,
-              'login_timestamp': DateTime.now().millisecondsSinceEpoch,
-            });
-          }
+          await SessionManager.storeEmail(email);
 
           // Navigate to home screen
           if (context.mounted) {
@@ -293,12 +280,9 @@ Future<void> sendOtp(
           // New user - send OTP
           Toasty.showtoast('OTP sent successfully to your email');
 
-          // Store email
-          await SessionManager.storePhoneNumber(email);
-
           // Store remember me preference for OTP verification
           if (rememberMe) {
-            await SessionManager.storeRememberMePreference(true);
+            await SessionManager.storeEmail(email);
           }
 
           // Navigate to OTP screen

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class NotesApiService {
-  static const String baseUrl = 'http://localhost:8000/api/v1/notes';
+  static const String baseUrl = 'http://192.168.1.4:8000/api/v1/notes';
 
   /// Fetch video lectures for a specific category
   static Future<List<Map<String, dynamic>>> fetchVideoLectures({
@@ -10,7 +10,7 @@ class NotesApiService {
   }) async {
     final url = '$baseUrl/topics/$topicId/video-lectures/';
     print('🔍 DEBUG: Fetching video lectures from: $url');
-    
+
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -40,7 +40,8 @@ class NotesApiService {
       } else {
         print('❌ API request failed with status: ${response.statusCode}');
         print('❌ Error response: ${response.body}');
-        throw Exception('Failed to load video lectures: ${response.statusCode}');
+        throw Exception(
+            'Failed to load video lectures: ${response.statusCode}');
       }
     } catch (e) {
       print('❌ Error fetching video lectures from API: $e');

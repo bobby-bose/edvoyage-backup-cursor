@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/timer/main.dart';
 import 'package:frontend/widgets/botttom_nav.dart';
 
 class StudyAbroadScreen extends StatefulWidget {
@@ -169,7 +170,10 @@ class _StudyAbroadScreenState extends State<StudyAbroadScreen> {
       child: ElevatedButton(
         onPressed: () {
           // TODO: Navigate to course finder or slot booking screen
-          print('Begin button pressed');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TimerScreen()),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFFFF5E5B), // Coral red

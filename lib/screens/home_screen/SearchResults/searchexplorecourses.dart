@@ -285,48 +285,54 @@ class _ExploreCoursesState extends ConsumerState<SearchExploreCourses> {
                                     ),
                                   ],
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.bookmark_outline_sharp,
-                                        color: Colors.grey,
-                                        size: 30,
+                                Container(
+                                  color: Colors.amber,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.bookmark_outline_sharp,
+                                          color: Colors.grey,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {},
                                       ),
-                                      onPressed: () {},
-                                    ),
-                                    Container(
-                                      height: size?.hp(4),
-                                      width: size?.wp(25),
-                                      decoration: BoxDecoration(
-                                        color: secondaryColor,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UniversitHomeScreen(
-                                                        university:
-                                                            university)),
-                                          );
-                                        },
-                                        child: const Text(
-                                          'View',
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'Roboto',
-                                            color: Colors.white,
+                                      Container(
+                                        height: size?.hp(4),
+                                        width: size?.wp(25),
+                                        decoration: BoxDecoration(
+                                          color: secondaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UniversitHomeScreen(
+                                                          university:
+                                                              university)),
+                                            );
+                                          },
+                                          child: const Text(
+                                            'View',
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Roboto',
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           ),

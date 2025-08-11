@@ -489,93 +489,99 @@ class _ExploreCoursesState extends State<ExploreUniversitiesScreen> {
                                 ),
                               ),
                               // Action buttons
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Material(
-                                      type: MaterialType.transparency,
-                                      child: Ink(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.white, width: 2.5),
-                                          color: state.loadingBookmarks
-                                                  .contains(university.id)
-                                              ? Colors.grey // Loading state
-                                              : (state.bookmarkStates[
-                                                          university.id] ??
-                                                      false)
-                                                  ? Colors.red // Bookmarked
-                                                  : Colors
-                                                      .green, // Not bookmarked
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(1000.0),
-                                          onTap: state.loadingBookmarks
-                                                  .contains(university.id)
-                                              ? null // Disable tap when loading
-                                              : () => notifier
-                                                  .toggleBookmark(university),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: state.loadingBookmarks
+                              Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Material(
+                                        type: MaterialType.transparency,
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white,
+                                                width: 2.5),
+                                            color: state.loadingBookmarks
                                                     .contains(university.id)
-                                                ? SizedBox(
-                                                    width: 16,
-                                                    height: 16,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                              Colors.white),
-                                                    ),
-                                                  )
-                                                : Icon(
-                                                    (state.bookmarkStates[
-                                                                university
-                                                                    .id] ??
-                                                            false)
-                                                        ? Icons.bookmark
-                                                        : Icons
-                                                            .bookmark_add_outlined,
-                                                    size: 20.0,
-                                                    color: Colors.white,
-                                                  ),
+                                                ? Colors.grey // Loading state
+                                                : (state.bookmarkStates[
+                                                            university.id] ??
+                                                        false)
+                                                    ? Colors.red // Bookmarked
+                                                    : Colors
+                                                        .green, // Not bookmarked
+                                            shape: BoxShape.circle,
                                           ),
-                                        ),
-                                      )),
-                                  Container(
-                                    height: size?.hp(4),
-                                    width: size?.wp(22),
-                                    decoration: BoxDecoration(
-                                      color: secondaryColor,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UniversitHomeScreen(
-                                                      university: university)),
-                                        );
-                                      },
-                                      child: const Text(
-                                        'View',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Roboto',
-                                          color: Colors.white,
+                                          child: InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(1000.0),
+                                            onTap: state.loadingBookmarks
+                                                    .contains(university.id)
+                                                ? null // Disable tap when loading
+                                                : () => notifier
+                                                    .toggleBookmark(university),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: state.loadingBookmarks
+                                                      .contains(university.id)
+                                                  ? SizedBox(
+                                                      width: 16,
+                                                      height: 16,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation<
+                                                                    Color>(
+                                                                Colors.white),
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      (state.bookmarkStates[
+                                                                  university
+                                                                      .id] ??
+                                                              false)
+                                                          ? Icons.bookmark
+                                                          : Icons
+                                                              .bookmark_add_outlined,
+                                                      size: 20.0,
+                                                      color: Colors.white,
+                                                    ),
+                                            ),
+                                          ),
+                                        )),
+                                    SizedBox(height: 25),
+                                    Container(
+                                      height: size?.hp(4),
+                                      width: size?.wp(22),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UniversitHomeScreen(
+                                                        university:
+                                                            university)),
+                                          );
+                                        },
+                                        child: const Text(
+                                          'View',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Roboto',
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           );

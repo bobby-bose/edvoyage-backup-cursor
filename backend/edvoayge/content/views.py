@@ -591,7 +591,7 @@ class ContentViewSet(viewsets.ModelViewSet):
 class ContentRatingViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for content ratings (read-only)"""
     serializer_class = ContentRatingSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['content', 'rating', 'is_helpful']
     ordering_fields = ['created_at', 'rating']
@@ -604,7 +604,7 @@ class ContentRatingViewSet(viewsets.ReadOnlyModelViewSet):
 class ContentCommentViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for content comments (read-only)"""
     serializer_class = ContentCommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['content', 'is_approved', 'parent']
     ordering_fields = ['created_at', 'updated_at']
@@ -617,7 +617,7 @@ class ContentCommentViewSet(viewsets.ReadOnlyModelViewSet):
 class ContentShareViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for content shares (read-only)"""
     serializer_class = ContentShareSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['content', 'share_type', 'is_viewed']
     ordering_fields = ['created_at']
@@ -630,7 +630,7 @@ class ContentShareViewSet(viewsets.ReadOnlyModelViewSet):
 class ContentDownloadViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for content downloads (read-only)"""
     serializer_class = ContentDownloadSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['content']
     ordering_fields = ['created_at']
@@ -643,7 +643,7 @@ class ContentDownloadViewSet(viewsets.ReadOnlyModelViewSet):
 class ContentBookmarkViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for content bookmarks (read-only)"""
     serializer_class = ContentBookmarkSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['content']
     ordering_fields = ['created_at']
@@ -656,7 +656,7 @@ class ContentBookmarkViewSet(viewsets.ReadOnlyModelViewSet):
 class ContentAnalyticsViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for content analytics (read-only)"""
     serializer_class = ContentAnalyticsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['content', 'action_type']
     ordering_fields = ['created_at']

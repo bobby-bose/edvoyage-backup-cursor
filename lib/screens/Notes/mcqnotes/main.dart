@@ -28,99 +28,36 @@ class _MCQNotesScreenState extends State<MCQNotesScreen> {
   Future<List<Map<String, dynamic>>> fetchMCQTopics() async {
     try {
       final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/categories/mcq/topics/'),
+        Uri.parse('${BaseUrl.baseUrl}/notes/mcq/categories/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
       );
 
-      print('MCQ Topics API Response Status: ${response.statusCode}');
-      print('MCQ Topics API Response Body: ${response.body}');
+      print('MCQ Categories API Response Status: ${response.statusCode}');
+      print('MCQ Categories API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final List<dynamic> data = json.decode(response.body);
 
-        if (data['status'] == 'success' && data['data'] != null) {
-          print('Successfully fetched MCQ topics from API');
-          return List<Map<String, dynamic>>.from(data['data']);
-        } else {
-          print('API Response structure unexpected: $data');
-          throw Exception('Invalid API response structure');
-        }
+        return data.map<Map<String, dynamic>>((item) {
+          return {
+            'id': item['id'],
+            'title': item['name'],
+            'description': '${item['question_count']} Questions',
+            'modules_count': item['question_count'],
+            'is_featured': false,
+            'order': item['id'],
+          };
+        }).toList();
       } else {
-        print('API Error: ${response.statusCode} - ${response.body}');
-        throw Exception('Failed to load MCQ topics: ${response.statusCode}');
+        print('❌ API Error: ${response.statusCode}');
+        return [];
       }
     } catch (e) {
-      print('Error fetching MCQ topics: $e');
-      // Return default data structure if API fails
-      return [
-        {
-          'id': 1,
-          'title': 'Anatomy MCQs',
-          'description': 'Comprehensive anatomy MCQs for medical students',
-          'modules_count': 15,
-          'is_featured': true,
-          'order': 1
-        },
-        {
-          'id': 2,
-          'title': 'Physiology MCQs',
-          'description': 'Physiology MCQs and practice questions',
-          'modules_count': 12,
-          'is_featured': false,
-          'order': 2
-        },
-        {
-          'id': 3,
-          'title': 'Biochemistry MCQs',
-          'description': 'Biochemistry MCQs and molecular concepts',
-          'modules_count': 18,
-          'is_featured': false,
-          'order': 3
-        },
-        {
-          'id': 4,
-          'title': 'Pharmacology MCQs',
-          'description': 'Drug mechanisms and therapeutic MCQs',
-          'modules_count': 20,
-          'is_featured': false,
-          'order': 4
-        },
-        {
-          'id': 5,
-          'title': 'Pathology MCQs',
-          'description': 'Disease mechanisms and diagnostic MCQs',
-          'modules_count': 14,
-          'is_featured': false,
-          'order': 5
-        },
-        {
-          'id': 6,
-          'title': 'Microbiology MCQs',
-          'description': 'Microbial organisms and infectious disease MCQs',
-          'modules_count': 16,
-          'is_featured': false,
-          'order': 6
-        },
-        {
-          'id': 7,
-          'title': 'Forensic Medicine MCQs',
-          'description': 'Forensic science and toxicological MCQs',
-          'modules_count': 10,
-          'is_featured': false,
-          'order': 7
-        },
-        {
-          'id': 8,
-          'title': 'Community Medicine MCQs',
-          'description': 'Public health and community healthcare MCQs',
-          'modules_count': 13,
-          'is_featured': false,
-          'order': 8
-        },
-      ];
+      print('❌ Error fetching MCQ topics: $e');
+      return [];
     }
   }
 
@@ -298,62 +235,33 @@ class _MCQNotesScreenState extends State<MCQNotesScreen> {
                   }
 
                   if (snapshot.hasError) {
+                    print('❌ Snapshot Error: ${snapshot.error}');
                     return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 48,
-                            color: grey3,
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Failed to load content',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: grey3,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Please check your connection',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: grey3,
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                mcqTopicsFuture = fetchMCQTopics();
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'Retry',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: whiteColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        'Failed to load MCQs',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: grey3,
+                        ),
                       ),
                     );
                   }
 
                   final topics = snapshot.data ?? [];
-
+                  if (topics.isEmpty) {
+                    print('⚠️ No MCQ data received from API');
+                    return Center(
+                      child: Text(
+                        'NoDataReceived', // Your desired placeholder
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: grey3,
+                        ),
+                      ),
+                    );
+                  }
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     itemCount: topics.length,

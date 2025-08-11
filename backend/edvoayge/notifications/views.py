@@ -621,7 +621,7 @@ class NotificationScheduleViewSet(viewsets.ModelViewSet):
 class NotificationStatsViewSet(viewsets.ViewSet):
     """ViewSet for notification statistics"""
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     
     @action(detail=False, methods=['get'])
     def overview(self, request):

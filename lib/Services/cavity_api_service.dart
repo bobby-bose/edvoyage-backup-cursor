@@ -4,7 +4,7 @@ import '../_env/env.dart';
 import '../utils/session_manager.dart';
 
 class CavityApiService {
-  static String get baseUrl => BaseUrl.baseUrlApi + '/api/v1/cavity/api';
+  static String get baseUrl => BaseUrl.baseUrlApi + '/api/v1/cavity';
 
   /// Get API headers with authentication
   static Future<Map<String, String>> _getHeaders() async {
@@ -13,27 +13,6 @@ class CavityApiService {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-    print('🔍 DEBUG: Basic headers created: $headers');
-
-    print('🔍 DEBUG: About to get session key');
-    String? sessionKey = await SessionManager.getSessionKey();
-    print('🔍 DEBUG: Session key retrieved: $sessionKey');
-
-    print('🔍 DEBUG: About to get device ID');
-    String deviceId = await SessionManager.getDeviceId();
-    print('🔍 DEBUG: Device ID retrieved: $deviceId');
-
-    print('🔍 DEBUG: Checking if session key exists');
-    if (sessionKey != null) {
-      print('🔍 DEBUG: Session key exists, adding authentication headers');
-      headers['Authorization'] = 'Bearer $sessionKey';
-      print('🔍 DEBUG: Authorization header added');
-      headers['Device-ID'] = deviceId;
-      print('🔍 DEBUG: Device-ID header added');
-      print('🔍 DEBUG: Authentication headers added successfully');
-    } else {
-      print('🔍 DEBUG: No session key available, using basic headers only');
-    }
 
     print('🔍 DEBUG: Final headers: $headers');
     print('🔍 DEBUG: Returning headers');
@@ -51,7 +30,7 @@ class CavityApiService {
       print('🔍 DEBUG: Headers received: $headers');
 
       print('🔍 DEBUG: About to construct URL');
-      final url = '$baseUrl/posts/?year=$year';
+      final url = '$baseUrl/api/posts/?year=$year';
       print('🔍 DEBUG: Constructed URL: $url');
 
       print('🔍 DEBUG: About to make HTTP GET request');
@@ -63,7 +42,7 @@ class CavityApiService {
 
       print('🔍 DEBUG: Response status code: ${response.statusCode}');
       print('🔍 DEBUG: Response headers: ${response.headers}');
-      print('🔍 DEBUG: Response body: ${response.body}');
+      print('🔍 DEBUG: Response body POSTTTTTSSS: ${response.body}');
 
       if (response.statusCode == 200) {
         print('🔍 DEBUG: Status code is 200, processing response');
@@ -175,7 +154,7 @@ class CavityApiService {
       // Check if it's a network error
       if (e.toString().contains('Failed to fetch')) {
         print('❌ This appears to be a network connectivity issue');
-        print('❌ Check if the backend server is running on localhost:8000');
+        print('❌ Check if the backend server is running on 192.168.137.1:8000');
       }
 
       return false;
@@ -233,7 +212,7 @@ class CavityApiService {
       // Check if it's a network error
       if (e.toString().contains('Failed to fetch')) {
         print('❌ This appears to be a network connectivity issue');
-        print('❌ Check if the backend server is running on localhost:8000');
+        print('❌ Check if the backend server is running on 192.168.137.1:8000');
       }
 
       return false;
@@ -301,7 +280,7 @@ class CavityApiService {
       // Check if it's a network error
       if (e.toString().contains('Failed to fetch')) {
         print('❌ This appears to be a network connectivity issue');
-        print('❌ Check if the backend server is running on localhost:8000');
+        print('❌ Check if the backend server is running on 192.168.137.1:8000');
       }
 
       return null;
@@ -369,7 +348,7 @@ class CavityApiService {
       // Check if it's a network error
       if (e.toString().contains('Failed to fetch')) {
         print('❌ This appears to be a network connectivity issue');
-        print('❌ Check if the backend server is running on localhost:8000');
+        print('❌ Check if the backend server is running on 192.168.137.1:8000');
       }
 
       return null;
@@ -377,23 +356,22 @@ class CavityApiService {
   }
 
   /// Add comment to post
-  static Future<bool> addComment(String postId, String content) async {
+  static Future<bool> addComment(
+      String postId, String content, String email) async {
     try {
       print('🔍 DEBUG: Starting addComment method');
       print('🔍 DEBUG: Post ID: $postId');
       print('🔍 DEBUG: Content: $content');
 
-      final headers = await _getHeaders();
-      print('🔍 DEBUG: Headers: $headers');
-
       final requestBody = {
         'post': postId,
         'content': content,
+        'email': email, // Include email in the request body
       };
 
       print('🔍 DEBUG: Creating comment with data: $requestBody');
       print('🔍 DEBUG: Base URL: $baseUrl');
-      print('🔍 DEBUG: Full URL: $baseUrl/comments/');
+      print('🔍 DEBUG: Full URL: $baseUrl/comments/create/');
 
       // Log the exact JSON being sent
       final jsonBody = jsonEncode(requestBody);
@@ -401,8 +379,11 @@ class CavityApiService {
 
       print('🔍 DEBUG: About to make HTTP POST request');
       final response = await http.post(
-        Uri.parse('$baseUrl/comments/'),
-        headers: headers,
+        Uri.parse('$baseUrl/api/comments/create/'),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
         body: jsonBody,
       );
 
@@ -442,7 +423,7 @@ class CavityApiService {
       // Check if it's a network error
       if (e.toString().contains('Failed to fetch')) {
         print('❌ This appears to be a network connectivity issue');
-        print('❌ Check if the backend server is running on localhost:8000');
+        print('❌ Check if the backend server is running on 192.168.137.1:8000');
       }
 
       return false;
@@ -520,7 +501,11 @@ class CavityApiService {
 
       // Get current user ID
       print('🔍 DEBUG: About to get current user ID');
-      String? currentUserId = await SessionManager.getUserId();
+      Map<String, dynamic>? currentUserId =
+          await SessionManager.fetchUserData();
+      if (currentUserId != null) {
+        currentUserId = currentUserId['id'];
+      }
       print('🔍 DEBUG: Current user ID: $currentUserId');
 
       // Handle case where user is not logged in
@@ -590,7 +575,7 @@ class CavityApiService {
       // Check if it's a network error
       if (e.toString().contains('Failed to fetch')) {
         print('❌ This appears to be a network connectivity issue');
-        print('❌ Check if the backend server is running on localhost:8000');
+        print('❌ Check if the backend server is running on 192.168.137.1:8000');
       }
 
       return false;

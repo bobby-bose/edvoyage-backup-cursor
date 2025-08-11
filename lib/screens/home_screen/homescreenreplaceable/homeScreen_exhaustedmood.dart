@@ -206,6 +206,17 @@ class _HomeScreenState extends State<HomeScreenexhaustedmood> {
             elevation: 0.2,
             automaticallyImplyLeading: false,
             centerTitle: true,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: primaryColor,
+                size: size!.hp(2), // Slightly larger than default
+                weight: 700, // For a little thickness (Flutter 3.7+)
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             title: SizedBox(
               height: 250, // Set the width of the container
               width: 200, // Set the height of the container

@@ -102,9 +102,7 @@ class _NotesSectionState extends State<NotesSection> {
   void _navigateToClinicalNotes() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ClinicalNotesScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => MCQNotesScreen()),
     );
   }
 
