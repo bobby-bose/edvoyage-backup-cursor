@@ -30,7 +30,7 @@ class SessionManager {
 
     // Use the exact URL with the email parameter
     final uri =
-        Uri.parse("http://192.168.1.4:8000/api/v1/users/users/?email=$email");
+        Uri.parse("http://localhost:8000/api/v1/users/users/?email=$email");
 
     final response = await http.get(
       uri,

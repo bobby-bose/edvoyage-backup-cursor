@@ -5,7 +5,8 @@ class BaseUrl {
   // static const String baseUrlApi = "https://bobbykbose37.pythonanywhere.com";
 
   // Option 2: Use your computer's actual local IP address
-  static const String baseUrlApi = "http://192.168.1.4:8000";
+  // static const String baseUrlApi = "http://localhost:8000";
+  static const String baseUrlApi = "http://127.0.0.1:8000";
 
   // Option 3: Use 192.168.137.1 with port forwarding (for testing)
   // static const String baseUrlApi = "http://10.0.2.2:8000"; // Android emulator

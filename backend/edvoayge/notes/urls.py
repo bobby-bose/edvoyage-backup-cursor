@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .mcq import views as mcqviews
+
 app_name = 'notes'
 
 urlpatterns = [
@@ -12,10 +12,8 @@ urlpatterns = [
     path('mcq/track-attempt/', views.track_mcq_attempt, name='track_mcq_attempt'),
     path('statistics/', views.statistics_view, name='statistics'),
     path('featured-content/', views.featured_content_view, name='featured_content'),
-    # ================================================
 
-    path('mcq/categories/', mcqviews.get_categories),
-    path('mcq/topics/<int:category_id>/', mcqviews.get_topics_by_category),
-    path('mcq/questions/<int:topic_id>/', mcqviews.get_questions_by_topic),
-path('clinical-notes/', mcqviews.get_clinical_categories_with_notes, name='clinical-notes'),
+
+    path('notesvideos/',views.VideoLectureListView.as_view(), name='notes_videos'),
+
 ] 

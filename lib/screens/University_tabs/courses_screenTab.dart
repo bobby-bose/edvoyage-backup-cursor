@@ -381,7 +381,7 @@ class _CoursesScreenTabState extends State<CoursesScreenTab> {
                                     try {
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://192.168.1.4:8000/api/v1/bookmarks/add-favourite-course/'),
+                                            'http://localhost:8000/api/v1/bookmarks/add-favourite-course/'),
                                         headers: {
                                           'Content-Type': 'application/json'
                                         },
@@ -439,7 +439,7 @@ class _CoursesScreenTabState extends State<CoursesScreenTab> {
                                     try {
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://192.168.1.4:8000/api/v1/bookmarks/add-favourite-course/'),
+                                            'http://localhost:8000/api/v1/bookmarks/add-favourite-course/'),
                                         headers: {
                                           'Content-Type': 'application/json'
                                         },

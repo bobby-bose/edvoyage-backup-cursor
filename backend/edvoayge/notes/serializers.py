@@ -7,28 +7,29 @@ from .models import (
 
 
 class VideoLectureSerializer(serializers.ModelSerializer):
-    """
-    Serializer for video lectures that maps to frontend requirements.
-    """
-    # Map backend fields to frontend requirements
-    doctor = serializers.CharField(source='instructor', read_only=True)
+    doctor = serializers.CharField(source='module.instructor', read_only=True)
+    title = serializers.CharField(source='module.title', read_only=True)
+    description = serializers.CharField(source='module.description', read_only=True)
+    accessType = serializers.CharField(source='module.access_type', read_only=True)
+    is_premium = serializers.BooleanField(source='module.is_premium', read_only=True)
+
     duration = serializers.SerializerMethodField()
-    thumbnailUrl = serializers.CharField(source='video.thumbnail_url', read_only=True)
-    accessType = serializers.CharField(source='access_type', read_only=True)
-    videoId = serializers.CharField(source='video.video_url', read_only=True)
-    
+    thumbnailUrl = serializers.CharField(source='thumbnail_url', read_only=True)
+    videoId = serializers.CharField(source='video_url', read_only=True)
+
     class Meta:
-        model = NotesModule
+        model = NotesVideo
         fields = [
-            'id', 'title', 'doctor', 'duration', 'thumbnailUrl', 
-            'accessType', 'videoId', 'description', 'views_count', 
+            'id', 'title', 'doctor', 'duration', 'thumbnailUrl',
+            'accessType', 'videoId', 'description', 'views_count',
             'likes_count', 'is_premium'
         ]
-    
+
     def get_duration(self, obj):
-        """Convert duration_minutes to frontend format."""
-        if obj.duration_minutes:
-            return f"{obj.duration_minutes} Min"
+        """Convert duration_seconds to minutes format."""
+        if obj.duration_seconds:
+            minutes = obj.duration_seconds // 60
+            return f"{minutes} Min"
         return "0 Min"
 
 

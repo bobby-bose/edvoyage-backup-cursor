@@ -829,205 +829,220 @@ class _ProfileScreen extends ConsumerState<ProfileScreen>
     }
 
     return WillPopScope(
-      onWillPop: () async {
-        SystemNavigator.pop();
-        return false;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
+        onWillPop: () async {
+          SystemNavigator.pop();
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back),
+            ),
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            elevation: 3,
+            centerTitle: true,
+            title: SizedBox(
+              height: 250,
+              width: 200,
+              child: Image.asset(edvoyagelogo1),
+            ),
           ),
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          elevation: 3,
-          centerTitle: true,
-          title: SizedBox(
-            height: 250,
-            width: 200,
-            child: Image.asset(edvoyagelogo1),
-          ),
-        ),
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : error != null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(error!, style: TextStyle(color: Colors.red)),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _loadProfile,
-                          child: Text('Retry'),
-                        ),
-                        SizedBox(height: 16),
-                        // Show a simple profile for testing
-                        Text('Showing test profile for debugging'),
-                        Text('User: user_7012085349'),
-                        Text('Phone: 7012085349'),
-                      ],
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Stack(
+          body: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : error != null
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            height: size?.hp(24),
-                            width: double.infinity,
-                            color: thirdColor,
+                          Text(error!, style: TextStyle(color: Colors.red)),
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _loadProfile,
+                            child: Text('Retry'),
                           ),
-                          Container(
-                            height: size?.hp(14),
-                            decoration: BoxDecoration(color: primaryColor),
-                          ),
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: size?.hp(5),
-                              ),
-                              Container(
-                                alignment: const Alignment(-0.8, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                          SizedBox(height: 16),
+                          // Show a simple profile for testing
+                          Text('Showing test profile for debugging'),
+                          Text('User: user_7012085349'),
+                          Text('Phone: 7012085349'),
+                        ],
+                      ),
+                    )
+                  : SafeArea(
+                      child: SizedBox.expand(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // ---------- PROFILE HEADER ----------
+                            Stack(
+                              children: [
+                                Container(
+                                  height: size?.hp(24),
+                                  width: double.infinity,
+                                  color: thirdColor,
+                                ),
+                                Container(
+                                  height: size?.hp(14),
+                                  decoration:
+                                      BoxDecoration(color: primaryColor),
+                                ),
+                                Column(
                                   children: [
-                                    Stack(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 60,
-                                          backgroundColor: Colors.grey[300],
-                                          backgroundImage: profile != null
-                                              ? NetworkImage(
-                                                  profile!.avatarUrl,
-                                                  headers: {
-                                                    'User-Agent': 'Flutter App'
-                                                  },
-                                                )
-                                              : null,
-                                          onBackgroundImageError:
-                                              (exception, stackTrace) {
-                                            print(
-                                                '❌ DEBUG: Failed to load profile image: $exception');
-                                          },
-                                          child:
-                                              profile?.profilePicture == null ||
-                                                      profile!.profilePicture!
-                                                          .isEmpty
-                                                  ? Icon(
-                                                      Icons.person,
-                                                      size: 60,
-                                                      color: Colors.grey[600],
-                                                    )
-                                                  : null,
-                                        ),
-                                        Positioned(
-                                          top: 70,
-                                          left: 85,
-                                          child: Container(
-                                            width: size?.wp(8),
-                                            height: size?.hp(8),
-                                            decoration: BoxDecoration(
-                                              color: thirdColor,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey,
-                                                  blurRadius: 5,
-                                                ),
-                                              ],
-                                            ),
-                                            child: isUploadingImage
-                                                ? Center(
-                                                    child: SizedBox(
-                                                      width: 16,
-                                                      height: 16,
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                        valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                                Colors.black),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : TextButton(
-                                                    onPressed: _pickImage,
-                                                    child: const Icon(
-                                                      Icons.camera_alt_outlined,
-                                                      size: 18,
-                                                      color: Color.fromARGB(
-                                                          255, 0, 0, 0),
-                                                    ),
+                                    SizedBox(height: size?.hp(5)),
+                                    Container(
+                                      alignment: const Alignment(-0.8, 0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Stack(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 60,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                backgroundImage: profile != null
+                                                    ? NetworkImage(
+                                                        profile!.avatarUrl,
+                                                        headers: {
+                                                          'User-Agent':
+                                                              'Flutter App'
+                                                        },
+                                                      )
+                                                    : null,
+                                                onBackgroundImageError:
+                                                    (exception, stackTrace) {
+                                                  print(
+                                                      '❌ DEBUG: Failed to load profile image: $exception');
+                                                },
+                                                child:
+                                                    profile?.profilePicture ==
+                                                                null ||
+                                                            profile!
+                                                                .profilePicture!
+                                                                .isEmpty
+                                                        ? Icon(Icons.person,
+                                                            size: 60,
+                                                            color: Colors
+                                                                .grey[600])
+                                                        : null,
+                                              ),
+                                              Positioned(
+                                                top: 70,
+                                                left: 85,
+                                                child: Container(
+                                                  width: size?.wp(8),
+                                                  height: size?.hp(8),
+                                                  decoration: BoxDecoration(
+                                                    color: thirdColor,
+                                                    shape: BoxShape.circle,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.grey,
+                                                          blurRadius: 5),
+                                                    ],
                                                   ),
+                                                  child: isUploadingImage
+                                                      ? Center(
+                                                          child: SizedBox(
+                                                            width: 16,
+                                                            height: 16,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              strokeWidth: 2,
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                          Color>(
+                                                                      Colors
+                                                                          .black),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : TextButton(
+                                                          onPressed: _pickImage,
+                                                          child: const Icon(
+                                                            Icons
+                                                                .camera_alt_outlined,
+                                                            size: 18,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    vGap(5),
-                                    Text(
-                                      profile?.displayName ?? 'User',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
+                                          vGap(5),
+                                          Text(
+                                            profile?.displayName ?? 'User',
+                                            style: const TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
+                              ],
+                            ),
+
+                            // ---------- TABBAR ----------
+                            Container(
+                              color: whiteColor,
+                              child: TabBar(
+                                controller: _tabController,
+                                labelPadding: EdgeInsets.zero,
+                                unselectedLabelColor: Colors.grey,
+                                labelColor: secondaryColor,
+                                indicatorColor: Cprimary,
+                                labelStyle: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.orange,
+                                    ),
+                                unselectedLabelStyle: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey[200],
+                                    ),
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                tabs: const [
+                                  Tab(child: Text('Feed')),
+                                  Tab(child: Text('About')),
+                                  Tab(child: Text('Favourites')),
+                                  Tab(child: Text('Applications')),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Container(
-                        color: whiteColor,
-                        child: TabBar(
-                          labelPadding: EdgeInsets.zero,
-                          unselectedLabelColor: Colors.grey,
-                          labelColor: secondaryColor,
-                          controller: _tabController,
-                          indicatorColor: Cprimary,
-                          labelStyle:
-                              Theme.of(context).textTheme.titleSmall!.copyWith(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.orange,
-                                  ),
-                          unselectedLabelStyle:
-                              Theme.of(context).textTheme.titleSmall!.copyWith(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey[200],
-                                  ),
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          tabs: const [
-                            Tab(child: Text('Feed ')),
-                            Tab(child: Text('About')),
-                            Tab(child: Text('Favourites')),
-                            Tab(child: Text('Applications')),
+                            ),
+
+                            // ---------- TABBAR VIEW ----------
+                            Expanded(
+                              child: TabBarView(
+                                controller: _tabController,
+                                children: const [
+                                  ProfileFeed(),
+                                  ProfileAbout(),
+                                  ProfileFevourites(),
+                                  ProfileApplication(),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            ProfileFeed(),
-                            ProfileAbout(),
-                            ProfileFevourites(),
-                            ProfileApplication(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-      ),
-    );
+                    ),
+        ));
   }
 }

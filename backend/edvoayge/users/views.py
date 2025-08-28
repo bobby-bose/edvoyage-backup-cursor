@@ -597,6 +597,16 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
     queryset = OTPVerification.objects.select_related('user')
     serializer_class = OTPVerificationSerializer
     pagination_class = UserPagination
+    otp=None
+
+    @classmethod
+    def generate_otp(cls):
+        cls.otp = str(random.randint(100000, 999999))  # 6-digit OTP
+        return cls.otp
+
+    @classmethod
+    def verify_otp_code(cls, user_input):
+        return cls.otp == user_input
 
     def get_queryset(self):
         """Filter OTP verifications by current user."""
@@ -635,16 +645,18 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
                 }, status=status.HTTP_429_TOO_MANY_REQUESTS)
             
             # Generate 6-digit OTP for ALL users (new and existing)
-            otp_code = ''.join(random.choices(string.digits, k=6))
+            otp_code = self.generate_otp()
+            
             print(f"🔍 DEBUG: Generated OTP: {otp_code} for email: {contact} | Type: {otp_type}")
-
+            from datetime import timedelta
             # Create OTP record
             otp = OTPVerification.objects.create(
                 otp_type=otp_type,
                 contact=contact,
                 otp_code=otp_code,
                 device_id=device_id,
-                device_type=device_type
+                device_type=device_type,
+                expires_at=timezone.now() + timedelta(minutes=5)
             )
             
             print(f"🔍 DEBUG: OTP created successfully for email: {contact} | Type: {otp_type} | ID: {otp.pk}")
@@ -684,211 +696,30 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], url_path='verify')
     def verify_otp(self, request):
         """
-        Verify OTP code and authenticate user.
-        Enhanced with device tracking and security measures.
+        Simple OTP verification.
         """
-        print("🔍 DEBUG: Entering OTP verification endpoint")
-        print(f"🔍 DEBUG: Request data: {request.data}")
-        
-        try:
-            otp_code = request.data.get('otp_code')
-            contact = request.data.get('contact')
-            device_id = request.data.get('device_id')
-            device_type = request.data.get('device_type', 'mobile')
-            
-            print(f"🔍 DEBUG: OTP Code: {otp_code}")
-            print(f"🔍 DEBUG: Contact: {contact}")
-            print(f"🔍 DEBUG: Device ID: {device_id}")
-            print(f"🔍 DEBUG: Device Type: {device_type}")
-            
-            if not all([otp_code, contact, device_id]):
-                print("❌ DEBUG: Missing required fields")
-                return Response({
-                    'success': False,
-                    'message': 'Missing required fields: otp_code, contact, device_id'
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Handle backup OTP code for testing
-            if otp_code == '000000':
-                print("🔍 DEBUG: Using backup OTP code for testing")
-                print("✅ DEBUG: Backup OTP code accepted")
-                
-                # Check if user exists
-                try:
-                    user = User.objects.get(email=contact)
-                    print(f"✅ DEBUG: User already exists")
-                    print(f"🔍 DEBUG: User ID: {user.id}")
-                    print(f"🔍 DEBUG: Username: {user.username}")
-                    print(f"🔍 DEBUG: Email: {user.email}")
-                    print("✅ DEBUG: User exists as EXISTING user")
-                    
-                    # Create or update user profile
-                    profile= UserProfile.objects.get(
-                        user=user,
-                        
-                    )
-                    
+        otp_code = request.data.get('otp_code')
+        contact = request.data.get('contact')
 
-                        # Update email verification status
-                    profile.is_email_verified = True
-                    profile.save()
-                    print(f"✅ DEBUG: Email verification status updated")
-                    
-                    # Create user session
-                    session = UserSession.objects.create(
-                        user=user,
-                        device_id=device_id,
-                        device_type=device_type,
-                        ip_address=self.get_client_ip(request),
-                        is_active=True
-                    )
-                    print(f"✅ DEBUG: User session created")
-                    print(f"🔍 DEBUG: Session ID: {session.id}")
-                    UserActivity.objects.create(
-                    user=user,
-                    activity_type='login',
-                    device_id=device_id,
-                    ip_address=self.get_client_ip(request),
-                    description=f'Login via backup OTP verification')
-                    print(f"✅ DEBUG: User activity tracked")
-                    
-                    # Prepare response data
-                    user_data = {
-                        'id': user.id,
-                        'username': user.username,
-                        'email': user.email,
-                        'first_name': user.first_name,
-                        'last_name': user.last_name,
-                        'full_name': f"{user.first_name} {user.last_name}".strip() or user.username,
-                        'phone': contact,
-                    }
-                    
-                    response_data = {
-                        'success': True,
-                        'message': 'Backup OTP verified successfully',
-                        'user_id': user.id,
-                        'user_data': user_data,
-                        'session_key': str(session.id),
-                        'user_exists': True,
-                    }
-                    
-                    print(f"✅ DEBUG: Returning existing user data")
-                    print(f"🔍 DEBUG: Response data: {response_data}")
-                    
-                    return Response(response_data, status=status.HTTP_200_OK)
-                    
-                except User.DoesNotExist:
-                    print(f"🔍 DEBUG: User does not exist, will create new user")
-                    print("✅ DEBUG: User will be created as NEW user")
-                    
+        if not otp_code or not contact:
+            return Response(
+                {'success': False, 'message': 'otp_code and contact are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        print("The values are:")
+        print(f"OTP Code: {otp_code}")
+        print(f"Contact: {contact}")
+       
+        if not self.verify_otp_code(otp_code):
+            return Response(
+                {'success': False, 'message': 'Invalid or expired OTP'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-                    username = contact
-                    counter = 1
-                    
-                    # Ensure username is unique
-                    user = User.objects.create(
-                        username=username,
-                        email=contact,
-                        first_name='',
-                        last_name='',
-                        is_active=True
-                    )
-                    print(f"✅ DEBUG: New user created")
-                    print(f"🔍 DEBUG: New User ID: {user.id}")
-                    print(f"🔍 DEBUG: New Username: {user.username}")
-                    print(f"🔍 DEBUG: New Email: {user.email}")
-                    
-                    # Create user profile
-                    profile = UserProfile.objects.create(
-                        user=user,
-                        email=contact,
-                        is_profile_complete=False,
-                    )
-                    print(f"✅ DEBUG: User profile created for new user")
-                    
-                    # Create user session
-                    session = UserSession.objects.create(
-                        user=user,
-                        device_id=device_id,
-                        device_type=device_type,
-                        ip_address=self.get_client_ip(request),
-                        is_active=True
-                    )
-                    print(f"✅ DEBUG: User session created for new user")
-                    print(f"🔍 DEBUG: Session ID: {session.id}")
-                    
-                    # Track user activity
-                    UserActivity.objects.create(
-                        user=user,
-                        activity_type='registration',
-                        device_id=device_id,
-                        ip_address=self.get_client_ip(request),
-                        description=f'Registration via backup OTP verification'
-                    )
-                    print(f"✅ DEBUG: User activity tracked for new user")
-                    
-                    # Prepare response data
-                    user_data = {
-                        'id': user.id,
-                        'username': user.username,
-                        'email': user.email,
-                        'first_name': user.first_name,
-                        'last_name': user.last_name,
-                        'full_name': f"{user.first_name} {user.last_name}".strip() or user.username,
-                        'phone': contact,
-                    }
-                    
-                    response_data = {
-                        'success': True,
-                        'message': 'User created and backup OTP verified successfully',
-                        'user_id': user.id,
-                        'user_data': user_data,
-                        'session_key': str(session.id),
-                        'user_exists': False,
-                    }
-                    
-                    print(f"✅ DEBUG: Returning new user data")
-                    print(f"🔍 DEBUG: Response data: {response_data}")
-                    
-                    return Response(response_data, status=status.HTTP_201_CREATED)
-            
-            # Find the OTP verification record for real OTP codes
-            try:
-                otp_verification = OTPVerification.objects.get(
-                    contact=contact,
-                    otp_code=otp_code,
-                    is_verified=False,
-                    expires_at__gt=timezone.now()
-                )
-                print(f"✅ DEBUG: OTP verification record found")
-                print(f"🔍 DEBUG: OTP ID: {otp_verification.id}")
-                print(f"🔍 DEBUG: OTP expires at: {otp_verification.expires_at}")
-                
-            except OTPVerification.DoesNotExist:
-                print("❌ DEBUG: Invalid or expired OTP")
-                return Response({
-                    'success': False,
-                    'message': 'Invalid or expired OTP code'
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Mark OTP as verified
-            otp_verification.is_verified = True
-            otp_verification.verified_at = timezone.now()
-            otp_verification.save()
-            print("✅ DEBUG: OTP marked as verified")
-            
-            # Check if user exists
-               
-        except Exception as e:
-            print(f"❌ DEBUG: Error in OTP verification: {e}")
-            import traceback
-            print(f"❌ DEBUG: Full traceback: {traceback.format_exc()}")
-            logger.error(f"Error in OTP verification: {e}")
-            return Response({
-                'success': False,
-                'message': 'Internal server error'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        return Response(
+            {'success': True, 'message': 'OTP verified successfully'},
+            status=status.HTTP_200_OK
+        )
    
     def get_client_ip(self, request):
         """Get client IP address."""

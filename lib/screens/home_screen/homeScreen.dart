@@ -275,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Center(
                     child: Container(
                       padding: EdgeInsets.only(top: 5),
-                      height: size?.hp(26),
+                      height: size?.hp(30),
                       width: size?.wp(95),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),

@@ -27,19 +27,27 @@ class _UniversityFavouritesPageState extends State<UniversityFavouritesPage> {
     try {
       final response = await http.get(Uri.parse(BaseUrl.favouriteUniversities));
 
+      print("Status code: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
-        final List<dynamic> data = json['data']; // ✅ Extracting 'data' list
 
-        setState(() {
-          _favourites = data;
-          _isLoading = false;
-        });
+        // Check if 'data' exists
+        if (json.containsKey('data')) {
+          final List<dynamic> data = json['data'];
+          setState(() {
+            _favourites = data;
+          });
+        } else {
+          print("⚠️ 'data' key not found in JSON");
+        }
       } else {
         throw Exception('Failed to load favourites');
       }
     } catch (e) {
       print("Error fetching favourites: $e");
+    } finally {
       setState(() {
         _isLoading = false;
       });
@@ -49,9 +57,8 @@ class _UniversityFavouritesPageState extends State<UniversityFavouritesPage> {
   Widget _buildCard(dynamic favItem) {
     final university = favItem['university'];
     final String logoUrl = university['logo_url'] ?? '';
-    final String fullImageUrl = logoUrl.startsWith('http')
-        ? logoUrl
-        : 'http://192.168.1.4:8000/$logoUrl';
+    final String fullImageUrl =
+        logoUrl.startsWith('http') ? logoUrl : 'http://localhost:8000/$logoUrl';
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

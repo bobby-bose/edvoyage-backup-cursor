@@ -137,6 +137,34 @@ class NotesModule(models.Model):
         return f"{self.topic.title} - {self.title}"
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# -----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 class NotesVideo(models.Model):
     """
     Model for video content specifically.

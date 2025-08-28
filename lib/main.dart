@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/screens/login/sign_up.dart';
 import 'package:frontend/screens/profile/profile_Screen.dart';
-import 'package:frontend/screens/splash/splash_screen.dart';
 import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/utils/session_manager.dart';
+import 'package:frontend/screens/Notes/main.dart';
 
 void main() {
   runApp(
@@ -22,7 +22,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Edvoyage',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
+        textTheme: TextTheme(
+          bodyMedium: TextStyle(fontSize: 16),
+        ),
       ),
       home: SplashScreen(),
     );
@@ -30,6 +33,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -42,56 +47,69 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkLoginStatus() async {
-    // Add a small delay to show splash screen
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
 
-    if (!mounted) return; // Ensure widget is still in tree
+    if (!mounted) return;
 
     bool isLoggedIn = await SessionManager.isLoggedIn();
 
     if (isLoggedIn) {
-      // User is logged in, go to home screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } else {
-      // No persistent login, go to sign up screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SignUp()),
+        MaterialPageRoute(builder: (context) => const SignUp()),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Screen size
+    final Size screenSize = MediaQuery.of(context).size;
+    final double iconSize = screenSize.width * 0.25; // 25% of width
+    final double fontSize = screenSize.width * 0.07; // 7% of width
+    final double spacing = screenSize.height * 0.03; // 3% of height
+    final double horizontalPadding = screenSize.width * 0.1; // 10% padding
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Add your app logo here
-            Icon(
-              Icons.school,
-              size: 100,
-              color: Colors.teal,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'EdVoyage',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.school,
+                size: iconSize,
                 color: Colors.teal,
               ),
-            ),
-            SizedBox(height: 20),
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.teal),
-            ),
-          ],
+              SizedBox(height: spacing),
+              Text(
+                'EdVoyage',
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: spacing),
+              SizedBox(
+                width:
+                    iconSize * 0.6, // responsive width for progress indicator
+                height: iconSize * 0.06, // responsive height
+                child: const CircularProgressIndicator(
+                  color: Colors.teal,
+                  strokeWidth: 4,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

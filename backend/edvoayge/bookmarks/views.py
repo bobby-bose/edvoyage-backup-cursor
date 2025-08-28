@@ -16,25 +16,9 @@ class FavouriteUniversityView(APIView):
         """Get all favourite universities for the current user"""
         try:
             print("🔍 DEBUG: Starting FavouriteUniversityView.get()")
-            
-            # # For testing purposes, use user ID = 1
-            # print("🔍 DEBUG: Attempting to get user with ID=1")
-            # try:
-            #     test_user = User.objects.get(id=1)
-            #     print(f"✅ DEBUG: Found test user: {test_user.username} (ID: {test_user.id})")
-            # except User.DoesNotExist:
-            #     print("❌ DEBUG: User with ID=1 does not exist")
-            #     return Response({
-            #         'status': 'error',
-            #         'message': 'Test user not found. Please create a user with ID=1'
-            #     }, status=status.HTTP_404_NOT_FOUND)
-            # except Exception as e:
-            #     print(f"❌ DEBUG: Error getting user: {str(e)}")
-            #     print(f"❌ DEBUG: Traceback: {traceback.format_exc()}")
-            #     return Response({
-            #         'status': 'error',
-            #         'message': f'Error getting user: {str(e)}'
-            #     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+           
+           
+    
             
             print("🔍 DEBUG: Attempting to filter FavouriteUniversity objects")
             try:
@@ -263,17 +247,11 @@ class FavouriteUniversityView(APIView):
 class FavouriteCourseView(APIView):
     def get(self, request):
         """Get all favourite courses for the current user"""
-        # For testing purposes, use user ID = 1
-        # try:
-        #     test_user = User.objects.get(id=1)
-        # except User.DoesNotExist:
-        #     return Response({
-        #         'status': 'error',
-        #         'message': 'Test user not found. Please create a user with ID=1'
-        #     }, status=status.HTTP_404_NOT_FOUND)
         
         favourites = FavouriteCourse.objects.all()
+        print("🔍 DEBUG: Favourites found:", favourites)
         serializer = FavouriteCourseSerializer(favourites, many=True)
+        print("🔍 DEBUG: Serialized data:", serializer.data)
         return Response({
             'status': 'success',
             'data': serializer.data,
@@ -296,8 +274,7 @@ class FavouriteCourseView(APIView):
                 'status': 'error',
                 'message': 'Course not found'
             }, status=status.HTTP_404_NOT_FOUND)
-        
-        # For testing purposes, use user ID = 1
+
         try:
             test_user = User.objects.get(id=1)
         except User.DoesNotExist:
@@ -315,6 +292,7 @@ class FavouriteCourseView(APIView):
         
         favourite = FavouriteCourse.objects.create(user=test_user, course=course)
         serializer = FavouriteCourseSerializer(favourite)
+        print("The data for the favourite serializers are", serializer.data)
         return Response({
             'status': 'success',
             'message': 'Course added to favourites',

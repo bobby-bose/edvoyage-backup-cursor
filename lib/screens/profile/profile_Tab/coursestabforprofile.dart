@@ -28,26 +28,33 @@ class _profilecoursesState extends State<profilecourses> {
   }
 
   Future<void> fetchFavouriteCourses() async {
-    if (!mounted) return; // Prevent running when widget is gone
+    if (!mounted) return;
+    print("🚀 DEBUG: fetchFavouriteCourses() started");
+
     setState(() {
       isLoading = true;
       hasError = false;
     });
 
     try {
+      print("🌐 DEBUG: Sending request to ${BaseUrl.favouriteCourses}");
       final response = await http.get(
         Uri.parse(BaseUrl.favouriteCourses),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
+      print("✅ DEBUG: Response received with status ${response.statusCode}");
+      debugPrint("📝 DEBUG Body: ${response.body}");
 
-      if (!mounted) return; // ⬅ Check again before updating UI
+      if (!mounted) return;
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        print("📦 DEBUG: Decoded response: $responseData");
+
         if (responseData['status'] == 'success') {
           final List<dynamic> data = responseData['data'];
+          print("🎓 DEBUG: ${data.length} courses fetched");
+
           if (!mounted) return;
           setState(() {
             courses = data
@@ -56,6 +63,7 @@ class _profilecoursesState extends State<profilecourses> {
             isLoading = false;
           });
         } else {
+          print("⚠️ DEBUG: API returned failure: ${responseData['message']}");
           if (!mounted) return;
           setState(() {
             hasError = true;
@@ -64,6 +72,7 @@ class _profilecoursesState extends State<profilecourses> {
           });
         }
       } else {
+        print("❌ DEBUG: Non-200 response: ${response.statusCode}");
         if (!mounted) return;
         setState(() {
           hasError = true;
@@ -71,7 +80,10 @@ class _profilecoursesState extends State<profilecourses> {
           isLoading = false;
         });
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print("💥 DEBUG: Exception occurred: $e");
+      debugPrintStack(label: "STACK TRACE", stackTrace: stack);
+
       if (!mounted) return;
       setState(() {
         hasError = true;
@@ -80,53 +92,6 @@ class _profilecoursesState extends State<profilecourses> {
       });
     }
   }
-
-  // Future<void> fetchFavouriteCourses() async {
-  //   setState(() {
-  //     isLoading = true;
-  //     hasError = false;
-  //   });
-
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(BaseUrl.favouriteCourses),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> responseData = json.decode(response.body);
-  //       if (responseData['status'] == 'success') {
-  //         final List<dynamic> data = responseData['data'];
-  //         setState(() {
-  //           courses = data
-  //               .map((courseData) => Course.fromJson(courseData['course']))
-  //               .toList();
-  //           isLoading = false;
-  //         });
-  //       } else {
-  //         setState(() {
-  //           hasError = true;
-  //           errorMessage = responseData['message'] ?? 'Failed to load courses';
-  //           isLoading = false;
-  //         });
-  //       }
-  //     } else {
-  //       setState(() {
-  //         hasError = true;
-  //         errorMessage = 'Failed to load courses (${response.statusCode})';
-  //         isLoading = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       hasError = true;
-  //       errorMessage = 'Network error: ${e.toString()}';
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
 
   Future<void> removeFromFavourites(int courseId) async {
     try {
@@ -301,120 +266,120 @@ class _profilecoursesState extends State<profilecourses> {
       itemBuilder: (context, index) {
         final Course course = courses[index];
         return Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
-            elevation: 1,
+            elevation: 3,
+            shadowColor: Colors.black26,
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // LEFT SIDE - Course and College Info
                   Expanded(
-                    child: Row(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        vGap(10),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Text(
+                          course.name,
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 18,
+                            color: Cprimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          course.universityName,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          course.universityCountry,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: grey3,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // RIGHT SIDE - Course Details
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          course.level,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          course.duration,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: grey3,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          "\$${course.tuitionFee}",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        if (course.averageRating != null &&
+                            course.averageRating! > 0)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                course.name,
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 16,
-                                  color: Cprimary,
-                                  fontWeight: FontWeight.w500,
+                              RatingBar.builder(
+                                initialRating: course.averageRating!,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemSize: 14,
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                                onRatingUpdate: (rating) {},
                               ),
+                              SizedBox(width: 5),
                               Text(
-                                course.universityName,
+                                "(${course.totalApplications ?? 0})",
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'Roboto',
-                                  color: Cprimary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Text(
-                                "${course.universityCity}, ${course.universityCountry}",
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
                                   fontSize: 10,
                                   color: grey3,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              vGap(5),
-                              Row(
-                                children: [
-                                  Text(
-                                    course.level,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: grey3,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    " • ${course.duration}",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: grey3,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Text(
-                                    " • \$${course.tuitionFee}",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: grey3,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              vGap(5),
-                              if (course.averageRating != null &&
-                                  course.averageRating! > 0)
-                                Row(
-                                  children: [
-                                    RatingBar.builder(
-                                      initialRating: course.averageRating!,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemSize: 8,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 0),
-                                      itemBuilder: (context, _) => Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      onRatingUpdate: (rating) {
-                                        // Rating update logic can be added here
-                                      },
-                                    ),
-                                    hGap(5),
-                                    Text(
-                                      "(${course.totalApplications ?? 0} applications)",
-                                      style: TextStyle(
-                                        fontSize: 8,
-                                        color: grey3,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                             ],
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -436,7 +401,7 @@ class Course {
   final String shortDescription;
   final String universityName;
   final String universityCountry;
-  final String universityCity;
+
   final String level;
   final String duration;
   final String tuitionFee;
@@ -457,7 +422,6 @@ class Course {
     required this.shortDescription,
     required this.universityName,
     required this.universityCountry,
-    required this.universityCity,
     required this.level,
     required this.duration,
     required this.tuitionFee,
@@ -480,7 +444,6 @@ class Course {
       shortDescription: json['short_description'] ?? '',
       universityName: json['university_name'] ?? '',
       universityCountry: json['university_country'] ?? '',
-      universityCity: json['university_city'] ?? '',
       level: json['level'] ?? '',
       duration: json['duration'] ?? '',
       tuitionFee: json['tuition_fee']?.toString() ?? '',

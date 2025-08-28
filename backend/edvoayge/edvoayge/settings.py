@@ -81,7 +81,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'edvoayge.middleware.CustomAuthenticationMiddleware',  # Add custom authentication middleware
-    'edvoayge.middleware.RequestLoggingMiddleware',  # Add custom logging middleware
+    
 ]
 
 ROOT_URLCONF = 'edvoayge.urls'
@@ -234,6 +234,7 @@ CORS_ALLOWED_ORIGINS = [
     # Chrome debug ports
     "http://192.168.137.1:9102",
     "http://127.0.0.1:9102",
+    "http://localhost:5000",
 ]
 
 # CSRF Settings for development

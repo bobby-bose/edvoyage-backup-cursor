@@ -336,7 +336,7 @@ class _MCQNotesSubScreenState extends State<MCQNotesSubScreen> {
   /// Fetches MCQ modules data from API using the categoryId
   Future<List<Map<String, dynamic>>> fetchMCQModules() async {
     final String apiUrl =
-        'http://192.168.1.4:8000/api/v1/notes/mcq/topics/${widget.categoryId}';
+        'http://localhost:8000/api/v1/notes/mcq/topics/${widget.categoryId}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:frontend/_env/env.dart';
 import 'package:frontend/utils/colors/colors.dart';
+import 'package:http/http.dart' as http;
 import 'coursestabforprofile.dart';
 import 'universitytabforprofile.dart';
 import '../../exploreUniversity_screen/exploreUniversitiesScreen.dart';
@@ -29,18 +33,20 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
   final Map<int, String> _tabSearchQuery = {0: '', 1: ''};
   final Map<int, String> _tabSortOption = {0: 'Recent', 1: 'Recent'};
 
+  int universityCount = 0;
+  int courseCount = 0;
+  bool isLoading = false;
+
   // Tab data with badges
   final List<Map<String, dynamic>> _tabs = [
     {
       'title': 'University',
       'icon': Icons.school,
-      'badge': 12,
       'color': primaryColor,
     },
     {
       'title': 'Courses',
       'icon': Icons.book,
-      'badge': 8,
       'color': secondaryColor,
     },
   ];
@@ -55,6 +61,7 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
   @override
   void initState() {
     super.initState();
+    fetchBookmarksCount();
     _tabController = TabController(length: 2, vsync: this);
     _animationController = AnimationController(
       duration: Duration(milliseconds: 300),
@@ -285,6 +292,48 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
     );
   }
 
+  Future<void> fetchBookmarksCount() async {
+    try {
+      int universityCount = 0;
+      int courseCount = 0;
+      // 1. Fetch Universities
+      final uniResponse = await http.get(
+        Uri.parse("${BaseUrl.baseUrlApi}/api/v1/bookmarks/universities/"),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (uniResponse.statusCode == 200) {
+        final Map<String, dynamic> uniData = json.decode(uniResponse.body);
+        if (uniData['status'] == 'success') {
+          universityCount = (uniData['data'] as List).length;
+          print("🎓 University Count = $universityCount");
+        }
+      }
+
+      // 2. Fetch Courses
+      final courseResponse = await http.get(
+        Uri.parse("${BaseUrl.baseUrlApi}/api/v1/bookmarks/courses/"),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (courseResponse.statusCode == 200) {
+        final Map<String, dynamic> courseData =
+            json.decode(courseResponse.body);
+        if (courseData['status'] == 'success') {
+          courseCount = (courseData['data'] as List).length;
+          print("📘 Course Count = $courseCount");
+        }
+      }
+
+      // 3. Update UI if inside a widget
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      print("❌ Error fetching bookmarks: $e");
+    }
+  }
+
   Widget _buildTabSortOption(String option, int tabIndex) {
     final isSelected = option == (_tabSortOption[tabIndex] ?? 'Recent');
     return GestureDetector(
@@ -478,6 +527,7 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
         children: _tabs.asMap().entries.map((entry) {
           int index = entry.key;
           Map<String, dynamic> tab = entry.value;
+          print(tab);
           bool isSelected = index == _selectedTabIndex;
 
           return Expanded(
@@ -583,7 +633,9 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
                       ),
                     ),
                     Text(
-                      '${_tabs[tabIndex]['badge']} items',
+                      tabIndex == 0
+                          ? '$universityCount items'
+                          : '$courseCount items',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 14,
@@ -692,7 +744,7 @@ class _ProfileFevouritesState extends State<ProfileFevourites>
                 size: 20,
               ),
               label: Text(
-                'Explore Universities',
+                'Explore $title',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 16,

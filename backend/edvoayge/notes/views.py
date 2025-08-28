@@ -12,7 +12,8 @@ from drf_yasg import openapi
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
+# import API_VIEW
+from rest_framework.views import APIView
 from .models import (
     NotesCategory, NotesTopic, NotesModule, NotesVideo, 
     NotesMCQ, NotesMCQOption, NotesClinicalCase, 
@@ -852,3 +853,31 @@ def featured_content_view(request):
             'status': 'error',
             'message': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+
+# -------------------------- new part
+
+class VideoLectureListView(APIView):
+    """
+    API view to fetch all NotesVideo objects along with related NotesModule data.
+    Returns JSON response for frontend consumption.
+    """
+    
+    def get(self, request):
+        try:
+            # Fetch all NotesVideo objects, including related module to reduce DB queries
+            videos = NotesVideo.objects.select_related('module').all()
+            
+            # Serialize the queryset
+            serializer = VideoLectureSerializer(videos, many=True)
+            
+            # Return JSON response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            # In case of any error
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

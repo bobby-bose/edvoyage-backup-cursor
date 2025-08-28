@@ -32,8 +32,6 @@ class _OtpState extends State<Otp> {
   Timer? blockTimer;
   bool isLoading = false;
 
-  Measurements? size;
-
   @override
   void initState() {
     super.initState();
@@ -312,7 +310,7 @@ class _OtpState extends State<Otp> {
 
   @override
   Widget build(BuildContext context) {
-    size = Measurements(MediaQuery.of(context).size);
+    Measurements size = Measurements(MediaQuery.of(context).size);
     return Scaffold(
       backgroundColor: thirdColor,
       body: SingleChildScrollView(
