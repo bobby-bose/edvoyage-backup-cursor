@@ -1,428 +1,163 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:frontend/utils/colors/colors.dart';
-import 'package:frontend/_env/env.dart';
-import 'package:frontend/screens/Notes/videonotes/main.dart';
-import 'package:frontend/screens/Notes/mcqnotes/main.dart';
 import 'package:frontend/screens/Notes/clinicalnotes/main.dart';
-import 'package:frontend/screens/Notes/questionbanknotes/main.dart';
 import 'package:frontend/screens/Notes/flashcardnotes/main.dart';
+import 'package:frontend/screens/Notes/mcqnotes/main.dart';
+import 'package:frontend/screens/Notes/questionbanknotes/main.dart';
+import 'package:frontend/screens/Notes/videonotes/main.dart';
+import 'package:frontend/screens/notification/notification.dart';
+import 'package:frontend/utils/avatar.dart';
+import 'package:frontend/utils/colors/colors.dart';
+import 'package:frontend/utils/responsive.dart';
 import 'package:frontend/widgets/botttom_nav.dart';
+import 'package:http/http.dart' as http;
 
 class NotesSection extends StatefulWidget {
   const NotesSection({super.key});
 
   @override
-  _NotesSectionState createState() => _NotesSectionState();
+  State<NotesSection> createState() => _NotesDashboardPageState();
 }
 
-class _NotesSectionState extends State<NotesSection> {
-  late Future<Map<String, dynamic>> notesDataFuture;
-  int _selectedIndex = 3; // Notes tab is active
+class _NotesDashboardPageState extends State<NotesSection> {
+  Measurements? size;
+  bool isLoading = true;
+  Map<String, dynamic> counts = {
+    'video': {'topics': 0, 'videos': 0},
+    'mcq': {'topics': 0, 'modules': 0},
+    'clinical_case': {'topics': 0, 'modules': 0},
+    'q_bank': {'topics': 0, 'modules': 0},
+    'flash_card': {'topics': 0, 'modules': 0},
+  };
 
   @override
   void initState() {
     super.initState();
-    notesDataFuture = fetchNotesData();
+    fetchCounts();
   }
 
-  /// Fetches notes categories data from the API
-  /// API Endpoint: GET /api/v1/notes/categories/
-  Future<Map<String, dynamic>> fetchNotesData() async {
+  Future<void> fetchCounts() async {
     try {
-      final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/categories/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+      final responses = await Future.wait([
+        http.get(Uri.parse("http://localhost:8000/api/v1/notes/notesvideos/")),
+        http.get(Uri.parse("http://localhost:8000/api/v1/notes/notesmcqs/")),
+        http.get(Uri.parse(
+            "http://localhost:8000/api/v1/notes/notesclinicalcases/")),
+        http.get(Uri.parse("http://localhost:8000/api/v1/notes/notesqbank/")),
+        http.get(
+            Uri.parse("http://localhost:8000/api/v1/notes/notesflashcards/")),
+      ]);
 
-      print('Notes API Response Status: ${response.statusCode}');
-      print('Notes API Response Body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        // Check if the response has the expected structure
-        if (data['status'] == 'success' && data['data'] != null) {
-          print('Successfully fetched notes data from API');
-          return data['data'];
-        } else {
-          print('API Response structure unexpected: $data');
-          throw Exception('Invalid API response structure');
-        }
-      } else {
-        print('API Error: ${response.statusCode} - ${response.body}');
-        throw Exception('Failed to load notes data: ${response.statusCode}');
-      }
+      setState(() {
+        counts['video']['videos'] = jsonDecode(responses[0].body).length;
+        counts['mcq']['modules'] = jsonDecode(responses[1].body).length;
+        counts['clinical_case']['modules'] =
+            jsonDecode(responses[2].body).length;
+        counts['q_bank']['modules'] = jsonDecode(responses[3].body).length;
+        counts['flash_card']['modules'] = jsonDecode(responses[4].body).length;
+        isLoading = false;
+      });
     } catch (e) {
-      print('Error fetching notes data: $e');
-      // Return default data structure if API fails
-      return {
-        'video': {'topics': 0, 'videos': 0},
-        'mcq': {'topics': 0, 'modules': 0},
-        'clinical_case': {'topics': 0, 'modules': 0},
-        'q_bank': {'topics': 0, 'modules': 0},
-        'flash_card': {'topics': 0, 'modules': 0},
-      };
+      setState(() {
+        isLoading = false;
+      });
+      debugPrint("Error fetching counts: $e");
     }
   }
 
-  /// Formats count values for display
-  /// Returns '-' for null/empty, '0' for zero, or the actual count
-  String _formatCount(dynamic count) {
-    if (count == null || count == '') return '-';
-    if (count == 0) return '0';
-    return count.toString();
-  }
+  Widget buildCard(String title, String key, String subKey, String label,
+      Widget navigateTo) {
+    final countValue = counts[key]?[subKey]?.toString() ?? "0";
 
-  /// Navigate to Video Notes screen
-  void _navigateToVideoNotes() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VideoNotesScreen(),
-      ),
-    );
-  }
-
-  /// Navigate to MCQ Notes screen
-  void _navigateToMCQNotes() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MCQNotesScreen(),
-      ),
-    );
-  }
-
-  /// Navigate to Clinical Notes screen
-  void _navigateToClinicalNotes() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MCQNotesScreen()),
-    );
-  }
-
-  /// Navigate to Q-Bank Notes screen
-  void _navigateToQBankNotes() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => QuestionBankNotesScreen(),
-      ),
-    );
-  }
-
-  /// Navigate to Flash Card Notes screen
-  void _navigateToFlashCardNotes() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FlashCardNotesScreen(),
-      ),
-    );
-  }
-
-  /// Builds individual content cards for each category
-  Widget _buildContentCard({
-    required String title,
-    required String topicsCount,
-    required String modulesCount,
-    required String modulesLabel,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        decoration: BoxDecoration(
-          color: whiteColor,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: titlecolor,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      '$topicsCount Topics',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        color: grey3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    '$modulesCount $modulesLabel',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      color: primaryColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: grey3,
-                    size: 16,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Builds bottom navigation bar
-  Widget _buildBottomNavigation() {
-    return Container(
-      height: 250,
-      decoration: BoxDecoration(
-        color: primaryColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildNavItem(0, Icons.person_outline, 'Profile'),
-          _buildNavItem(1, Icons.diamond_outlined, 'Diamond'),
-          _buildNavItem(2, Icons.text_fields, 'Y'),
-          _buildNavItem(3, Icons.book, 'Notes', isActive: true),
-          _buildNavItem(4, Icons.flight, 'Travel'),
-        ],
-      ),
-    );
-  }
-
-  /// Builds individual navigation items
-  Widget _buildNavItem(int index, IconData icon, String label,
-      {bool isActive = false}) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => navigateTo),
+        );
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? secondaryColor : whiteColor,
-            size: 24,
-          ),
-          if (isActive)
-            Container(
-              margin: EdgeInsets.only(top: 4),
-              height: 2,
-              width: 20,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(1),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 5,
+        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+        child: ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-            ),
-        ],
+              const SizedBox(height: 3),
+              isLoading
+                  ? const Text("Loading...")
+                  : Text(
+                      "$countValue $label",
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black87),
+                    ),
+            ],
+          ),
+          trailing: const Icon(Icons.arrow_forward_ios, color: Colors.teal),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    size = Measurements(MediaQuery.of(context).size);
     return Scaffold(
-      backgroundColor: color3,
+      bottomNavigationBar: BottomButton(onTap: () {}, selectedIndex: 3),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.blue),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Image.asset(
-          'assets/logo.png',
-          height: 250,
-          width: 250,
-          fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(
-              Icons.book,
-              color: Colors.blue,
-              size: 24,
-            );
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: primaryColor,
+            size: size!.hp(3.5), // Slightly larger than default
+            weight: 700, // For a little thickness (Flutter 3.7+)
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
           },
         ),
+        backgroundColor: Colors.white,
+        elevation: 0.2,
+        automaticallyImplyLeading: false,
         centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: FutureBuilder<Map<String, dynamic>>(
-                future: notesDataFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            color: primaryColor,
-                            strokeWidth: 2,
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Loading Notes...',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: grey3,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 48,
-                            color: grey3,
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Failed to load content',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: grey3,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Please check your connection',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: grey3,
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                notesDataFuture = fetchNotesData();
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'Retry',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: whiteColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  final data = snapshot.data ?? {};
-
-                  return ListView(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    children: [
-                      _buildContentCard(
-                        title: 'Video',
-                        topicsCount: _formatCount(data['video']?['topics']),
-                        modulesCount: _formatCount(data['video']?['videos']),
-                        modulesLabel: 'Videos',
-                        onTap: _navigateToVideoNotes,
-                      ),
-                      _buildContentCard(
-                        title: 'MCQ',
-                        topicsCount: _formatCount(data['mcq']?['topics']),
-                        modulesCount: _formatCount(data['mcq']?['modules']),
-                        modulesLabel: 'Modules',
-                        onTap: _navigateToMCQNotes,
-                      ),
-                      _buildContentCard(
-                        title: 'Clinical Case',
-                        topicsCount:
-                            _formatCount(data['clinical_case']?['topics']),
-                        modulesCount:
-                            _formatCount(data['clinical_case']?['modules']),
-                        modulesLabel: 'Modules',
-                        onTap: _navigateToClinicalNotes,
-                      ),
-                      _buildContentCard(
-                        title: 'Q-Bank',
-                        topicsCount: _formatCount(data['q_bank']?['topics']),
-                        modulesCount: _formatCount(data['q_bank']?['modules']),
-                        modulesLabel: 'Modules',
-                        onTap: _navigateToQBankNotes,
-                      ),
-                      _buildContentCard(
-                        title: 'Flash Card',
-                        topicsCount:
-                            _formatCount(data['flash_card']?['topics']),
-                        modulesCount:
-                            _formatCount(data['flash_card']?['modules']),
-                        modulesLabel: 'Modules',
-                        onTap: _navigateToFlashCardNotes,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            BottomButton(onTap: () {}, selectedIndex: 3),
-          ],
+        title: SizedBox(
+          height: 250, // Set the width of the container
+          width: 200, // Set the height of the container
+          child:
+              Image.asset(edvoyagelogo1), // Replace with the actual image path
         ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: primaryColor,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationScreen()));
+              })
+        ],
+      ),
+      body: ListView(
+        children: [
+          buildCard("Videos", "video", "videos", "Videos", VideoNotesScreen()),
+          buildCard("MCQs", "mcq", "modules", "MCQs", MCQNotesScreen()),
+          buildCard("Clinical Cases", "clinical_case", "modules",
+              "Clinical Cases", ClinicalCasesScreen()),
+          buildCard("Q Bank", "q_bank", "modules", "Q Bank", QBankScreen()),
+          buildCard("Flash Cards", "flash_card", "modules", "Flash Cards",
+              FlashCardModulesScreen()),
+        ],
       ),
     );
   }

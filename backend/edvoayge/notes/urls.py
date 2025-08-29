@@ -15,5 +15,9 @@ urlpatterns = [
 
 
     path('notesvideos/',views.VideoLectureListView.as_view(), name='notes_videos'),
+    path('notesmcqs/',views.get_all_mcqs, name='notes_mcqs'),
+    path('notesclinicalcases/', views.get_all_clinical_cases, name='notes_clinical_cases'),
+    path('notesqbank/', views.get_all_qbank, name='notes_qbank'),
+    path('notesflashcards/', views.get_all_flashcards, name='notes_flashcards'),
 
 ] 

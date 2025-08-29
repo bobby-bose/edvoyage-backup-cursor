@@ -20,7 +20,7 @@ from .models import (
     NotesQBank, NotesFlashCard, NotesStatistics
 )
 from .serializers import (
-    NotesCategorySerializer, NotesTopicSerializer, NotesModuleSerializer,
+    NotesCategorySerializer, NotesFlashCardSerializer, NotesMCQSerializer, NotesTopicSerializer, NotesModuleSerializer,
     NotesStatisticsSerializer, TrackViewRequestSerializer, TrackMCQAttemptRequestSerializer,
     CategoriesResponseSerializer, TopicsResponseSerializer, ModulesResponseSerializer,
     StatisticsResponseSerializer, FeaturedContentResponseSerializer, VideoLectureSerializer,
@@ -881,3 +881,160 @@ class VideoLectureListView(APIView):
                 {"error": str(e)}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+@api_view(['GET'])
+def get_all_mcqs(request):
+    """
+    Fetch all MCQs along with their module info and options in JSON format.
+    """
+    try:
+        mcqs = NotesMCQ.objects.all().prefetch_related('options', 'module')
+        serializer = NotesMCQSerializer(mcqs, many=True)
+        return Response({
+            "status": "success",
+            "count": mcqs.count(),
+            "data": serializer.data
+        })
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "message": str(e)
+        }, status=500)
+    
+
+@api_view(['GET'])
+def get_all_clinical_cases(request):
+    """
+    Fetch all clinical cases along with their module info and count.
+    """
+    try:
+        # Fetch all clinical cases with related module
+        clinical_cases = NotesClinicalCase.objects.select_related('module').all()
+
+        # Prepare a dict to group by module
+        modules_dict = {}
+
+        for case in clinical_cases:
+            module_id = case.module.id
+            if module_id not in modules_dict:
+                modules_dict[module_id] = {
+                    "module_id": module_id,
+                    "module_title": case.module.title,
+                    "module_description": case.module.description,
+                    "clinical_cases_count": 0,
+                    "clinical_cases": []
+                }
+
+            modules_dict[module_id]["clinical_cases_count"] += 1
+            modules_dict[module_id]["clinical_cases"].append({
+                "id": case.id,
+                "case_title": case.case_title,
+                "patient_history": case.patient_history,
+                "clinical_findings": case.clinical_findings,
+                "diagnosis": case.diagnosis,
+                "treatment": case.treatment,
+                "views_count": case.views_count
+            })
+
+        response_data = list(modules_dict.values())
+
+        return Response({
+            "status": "success",
+            "count": len(response_data),
+            "data": response_data
+        })
+
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "message": str(e)
+        }, status=500)
+    
+
+@api_view(['GET'])
+def get_all_qbank(request):
+    """
+    Fetch all Q-Bank questions grouped by module, including module title,
+    description, and count of questions per module.
+    """
+    try:
+        # Fetch all Q-Bank entries and prefetch related module
+        qbanks = NotesQBank.objects.select_related('module').all()
+
+        # Group Q-Bank questions by module
+        modules_map = {}
+        for q in qbanks:
+            module = q.module
+            module_id = module.id
+            if module_id not in modules_map:
+                modules_map[module_id] = {
+                    "module_id": module_id,
+                    "module_title": module.title,
+                    "module_description": module.description,
+                    "questions_count": 0,
+                    "questions": []
+                }
+            
+            modules_map[module_id]["questions_count"] += 1
+            modules_map[module_id]["questions"].append({
+                "id": q.id,
+                "question_text": q.question_text,
+                "explanation": q.explanation,
+                "difficulty_level": q.difficulty_level,
+                "attempts_count": q.attempts_count,
+                "correct_answers_count": q.correct_answers_count
+            })
+
+        # Convert to list for JSON response
+        modules_list = list(modules_map.values())
+
+        return Response({
+            "status": "success",
+            "count": len(modules_list),
+            "data": modules_list
+        })
+
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "message": str(e)
+        }, status=500)
+    
+
+@api_view(['GET'])
+def get_all_flashcards(request):
+    """
+    Fetch all Flash Cards grouped by their module in JSON format.
+    """
+    try:
+        # Fetch all flash cards with related module to avoid N+1 queries
+        flashcards = NotesFlashCard.objects.select_related('module').all()
+
+        # Group flashcards by module
+        modules_map = {}
+        for fc in flashcards:
+            module = fc.module
+            if module.id not in modules_map:
+                modules_map[module.id] = {
+                    'module_id': module.id,
+                    'module_title': module.title,
+                    'module_description': module.description,
+                    'flash_cards_count': 1,
+                    'flash_cards': [NotesFlashCardSerializer(fc).data]
+                }
+            else:
+                modules_map[module.id]['flash_cards_count'] += 1
+                modules_map[module.id]['flash_cards'].append(NotesFlashCardSerializer(fc).data)
+
+        # Prepare final response
+        return Response({
+            "status": "success",
+            "count": len(modules_map),
+            "data": list(modules_map.values())
+        })
+
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "message": str(e)
+        }, status=500)

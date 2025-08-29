@@ -41,10 +41,22 @@ class NotesMCQOptionSerializer(serializers.ModelSerializer):
 
 class NotesMCQSerializer(serializers.ModelSerializer):
     options = NotesMCQOptionSerializer(many=True, read_only=True)
-    
+    module_title = serializers.CharField(source='module.title', read_only=True)
+    module_description = serializers.CharField(source='module.description', read_only=True)
+
     class Meta:
         model = NotesMCQ
-        fields = ['id', 'question_text', 'explanation', 'attempts_count', 'correct_answers_count', 'options']
+        fields = [
+            'id',
+            'question_text',
+            'explanation',
+            'attempts_count',
+            'correct_answers_count',
+            'options',
+            'module_title',
+            'module_description',
+        ]
+
 
 
 class NotesVideoSerializer(serializers.ModelSerializer):

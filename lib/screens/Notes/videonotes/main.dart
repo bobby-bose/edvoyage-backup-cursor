@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/notification/notification.dart';
+import 'package:frontend/utils/avatar.dart';
+import 'package:frontend/utils/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/_env/env.dart';
@@ -14,255 +17,179 @@ class VideoNotesScreen extends StatefulWidget {
 }
 
 class _VideoNotesScreenState extends State<VideoNotesScreen> {
-  late Future<List<Map<String, dynamic>>> videoTopicsFuture;
+  Measurements? size;
+  late Future<List<Map<String, dynamic>>> videoListFuture;
   int _selectedIndex = 3; // Notes tab is active
 
   @override
   void initState() {
     super.initState();
-    videoTopicsFuture = fetchVideoTopics();
+    videoListFuture = fetchVideos();
   }
 
-  /// Fetches video topics data from the API
-  /// API Endpoint: GET /api/v1/notes/categories/video/topics/
-  Future<List<Map<String, dynamic>>> fetchVideoTopics() async {
+  /// Fetches all videos from the API
+  Future<List<Map<String, dynamic>>> fetchVideos() async {
     try {
       final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/categories/video/topics/'),
+        Uri.parse('${BaseUrl.baseUrl}/notes/notesvideos/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
       );
 
-      print('Video Topics API Response Status: ${response.statusCode}');
-      print('Video Topics API Response Body: ${response.body}');
+      print('Video API Response Status: ${response.statusCode}');
+      print('Video API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        if (data['status'] == 'success' && data['data'] != null) {
-          print('Successfully fetched video topics from API');
-          return List<Map<String, dynamic>>.from(data['data']);
-        } else {
-          print('API Response structure unexpected: $data');
-          throw Exception('Invalid API response structure');
-        }
+        final List<dynamic> data = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(data);
       } else {
-        print('API Error: ${response.statusCode} - ${response.body}');
-        throw Exception('Failed to load video topics: ${response.statusCode}');
+        throw Exception('Failed to load videos: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching video topics: $e');
-      // Return default data structure if API fails - using category ID 1 for all topics
-      return [
-        {
-          'id': 1, // Use category ID 1 since that's what exists in database
-          'title': 'Human Anatomy',
-          'description': 'Comprehensive anatomy content for medical students',
-          'videos_count': 10,
-          'is_featured': true,
-          'order': 1
-        },
-        {
-          'id': 1, // Use category ID 1 since that's what exists in database
-          'title': 'Physiology',
-          'description': 'Physiology fundamentals and concepts',
-          'videos_count': 8,
-          'is_featured': false,
-          'order': 2
-        },
-        {
-          'id': 1, // Use category ID 1 since that's what exists in database
-          'title': 'Biochemistry',
-          'description': 'Biochemistry principles and applications',
-          'videos_count': 12,
-          'is_featured': false,
-          'order': 3
-        },
-        {
-          'id': 1, // Use category ID 1 since that's what exists in database
-          'title': 'Pharmacology',
-          'description': 'Drug mechanisms and therapeutic applications',
-          'videos_count': 15,
-          'is_featured': false,
-          'order': 4
-        },
-        {
-          'id': 1, // Use category ID 1 since that's what exists in database
-          'title': 'Pathology',
-          'description': 'Disease mechanisms and diagnostic approaches',
-          'videos_count': 9,
-          'is_featured': false,
-          'order': 5
-        },
-        {
-          'id': 1, // Use category ID 1 since that's what exists in database
-          'title': 'Psychology Fundamentals',
-          'description': 'Basic psychology concepts and theories',
-          'videos_count': 7,
-          'is_featured': false,
-          'order': 6
-        },
-      ];
+      print('Error fetching videos: $e');
+      // Return empty list if API fails
+      return [];
     }
   }
 
   /// Navigate to video sub screen
-  void _navigateToVideoSubScreen(Map<String, dynamic> topic) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VideoNotesSubScreen(
-          categoryTitle: topic['title'] ?? 'Unknown Topic',
-          categoryId: topic['id'] ?? 1, // Use topic ID to filter videos by topic
-        ),
-      ),
-    );
+  void _navigateToVideoSubScreen(Map<String, dynamic> video) {
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => VideoNotesSubScreen(
+    //       categoryTitle: video['title'] ?? 'Unknown Video',
+    //       categoryId: video['id'] ?? 0, // Or pass videoId if needed
+    //       videoUrl: video[
+    //         'videoId'], // Make sure VideoNotesSubScreen accepts videoUrl
+    //   ),
+    // ),
+    // );
+    print('Navigating to video: ${video['title']}');
   }
 
-  /// Builds individual video topic cards
-  Widget _buildVideoTopicCard(Map<String, dynamic> topic) {
+  /// Builds individual video cards
+  Widget _buildVideoCard(Map<String, dynamic> video) {
     return GestureDetector(
-      onTap: () => _navigateToVideoSubScreen(topic),
+      onTap: () => _navigateToVideoSubScreen(video),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: whiteColor,
-          borderRadius: BorderRadius.circular(8),
-          border: Border(
-            bottom: BorderSide(
-              color: grey1,
-              width: 1,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: grey3.withOpacity(0.2),
+              blurRadius: 4,
+              offset: Offset(0, 2),
             ),
-          ),
+          ],
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  topic['title'] ?? 'Unknown Topic',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: titlecolor,
-                  ),
-                ),
-              ),
-              Row(
+        child: Row(
+          children: [
+            // Thumbnail
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(8),
+            //   child: Image.network(
+            //     video['thumbnailUrl'] ?? '',
+            //     width: 100,
+            //     height: 60,
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
+            SizedBox(width: 12),
+            // Video info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${topic['videos_count'] ?? 0} Videos',
+                    video['title'] ?? 'Unknown Video',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: titlecolor,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    video['doctor'] ?? '',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 14,
                       color: grey3,
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: grey3,
-                    size: 16,
+                  SizedBox(height: 2),
+                  Text(
+                    video['duration'] ?? '0 Min',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 12,
+                      color: grey3,
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Builds bottom navigation bar
-  Widget _buildBottomNavigation() {
-    return Container(
-      height: 250,
-      decoration: BoxDecoration(
-        color: primaryColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildNavItem(0, 'assets/frame.png', 'Profile'),
-          _buildNavItem(1, 'assets/diamonds.png', 'Diamond'),
-          _buildNavItem(2, 'assets/Group 98.png', 'Y'),
-          _buildNavItem(3, 'assets/book.png', 'Notes', isActive: true),
-          _buildNavItem(4, 'assets/airplane.png', 'Travel'),
-        ],
-      ),
-    );
-  }
-
-  /// Builds individual navigation items
-  Widget _buildNavItem(int index, String iconPath, String label,
-      {bool isActive = false}) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ImageIcon(
-            AssetImage(iconPath),
-            color: isActive ? secondaryColor : whiteColor,
-            size: 24,
-          ),
-          if (isActive)
-            Container(
-              margin: EdgeInsets.only(top: 4),
-              height: 2,
-              width: 20,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(1),
-              ),
             ),
-        ],
+            Icon(Icons.arrow_forward_ios, color: grey3, size: 16),
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    size = Measurements(MediaQuery.of(context).size);
     return Scaffold(
       backgroundColor: color3,
       appBar: AppBar(
-        backgroundColor: primaryColor,
-        title: Text(
-          'Video Notes',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: whiteColor,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: whiteColor),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: primaryColor,
+            size: size!.hp(3.5), // Slightly larger than default
+            weight: 700, // For a little thickness (Flutter 3.7+)
+          ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
+        backgroundColor: Colors.white,
+        elevation: 0.2,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: SizedBox(
+          height: 250, // Set the width of the container
+          width: 200, // Set the height of the container
+          child:
+              Image.asset(edvoyagelogo1), // Replace with the actual image path
+        ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: primaryColor,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationScreen()));
+              })
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: videoTopicsFuture,
+                future: videoListFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -292,14 +219,10 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 48,
-                            color: grey3,
-                          ),
+                          Icon(Icons.error_outline, size: 48, color: grey3),
                           SizedBox(height: 16),
                           Text(
-                            'Failed to load content',
+                            'Failed to load videos',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
@@ -307,19 +230,10 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          Text(
-                            'Please check your connection',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: grey3,
-                            ),
-                          ),
-                          SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                videoTopicsFuture = fetchVideoTopics();
+                                videoListFuture = fetchVideos();
                               });
                             },
                             style: ElevatedButton.styleFrom(
@@ -342,13 +256,26 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                     );
                   }
 
-                  final topics = snapshot.data ?? [];
+                  final videos = snapshot.data ?? [];
+
+                  if (videos.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No videos available',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: grey3,
+                        ),
+                      ),
+                    );
+                  }
 
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    itemCount: topics.length,
+                    itemCount: videos.length,
                     itemBuilder: (context, index) {
-                      return _buildVideoTopicCard(topics[index]);
+                      return _buildVideoCard(videos[index]);
                     },
                   );
                 },
