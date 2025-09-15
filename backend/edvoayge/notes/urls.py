@@ -4,20 +4,12 @@ from . import views
 app_name = 'notes'
 
 urlpatterns = [
-    path('categories/', views.categories_view, name='categories'),
-    path('topics/<int:topic_id>/video-lectures/', views.video_lectures_view, name='video_lectures'),
-    path('categories/<str:category_name>/topics/', views.topics_view, name='topics'),
-    path('topics/<int:topic_id>/modules/', views.modules_view, name='modules'),
-    path('modules/track-view/', views.track_view, name='track_view'),
-    path('mcq/track-attempt/', views.track_mcq_attempt, name='track_mcq_attempt'),
-    path('statistics/', views.statistics_view, name='statistics'),
-    path('featured-content/', views.featured_content_view, name='featured_content'),
+   
+  path('videos/overview/', views.video_overview, name='video_overview'),
+    path('videos/topics/', views.video_topic_breakdown, name='video_topic_breakdown'),
+    path('videos/details/', views.video_details, name='video_details'),
+    path('videos/urls/', views.video_urls, name='video_urls'),
 
-
-    path('notesvideos/',views.VideoLectureListView.as_view(), name='notes_videos'),
-    path('notesmcqs/',views.get_all_mcqs, name='notes_mcqs'),
-    path('notesclinicalcases/', views.get_all_clinical_cases, name='notes_clinical_cases'),
-    path('notesqbank/', views.get_all_qbank, name='notes_qbank'),
-    path('notesflashcards/', views.get_all_flashcards, name='notes_flashcards'),
+    
 
 ] 

@@ -24,14 +24,14 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
   @override
   void initState() {
     super.initState();
-    videoListFuture = fetchVideos();
+    videoListFuture = fetchTopics();
   }
 
-  /// Fetches all videos from the API
-  Future<List<Map<String, dynamic>>> fetchVideos() async {
+  /// Fetches all video topics from the API
+  Future<List<Map<String, dynamic>>> fetchTopics() async {
     try {
       final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/notesvideos/'),
+        Uri.parse('${BaseUrl.baseUrl}/notes/videos/topics/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -45,35 +45,30 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
         final List<dynamic> data = json.decode(response.body);
         return List<Map<String, dynamic>>.from(data);
       } else {
-        throw Exception('Failed to load videos: ${response.statusCode}');
+        throw Exception('Failed to load video topics: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching videos: $e');
-      // Return empty list if API fails
+      print('Error fetching video topics: $e');
       return [];
     }
   }
 
   /// Navigate to video sub screen
-  void _navigateToVideoSubScreen(Map<String, dynamic> video) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => VideoNotesSubScreen(
-    //       categoryTitle: video['title'] ?? 'Unknown Video',
-    //       categoryId: video['id'] ?? 0, // Or pass videoId if needed
-    //       videoUrl: video[
-    //         'videoId'], // Make sure VideoNotesSubScreen accepts videoUrl
-    //   ),
-    // ),
-    // );
-    print('Navigating to video: ${video['title']}');
+  void _navigateToVideoSubScreen(Map<String, dynamic> videoTopic) {
+    // You'll need to update this to navigate to the correct screen
+    // based on the topic. The original code was commented out.
+    // This is a placeholder.
+    print('Navigating to video topic: ${videoTopic['topic']}');
   }
 
-  /// Builds individual video cards
-  Widget _buildVideoCard(Map<String, dynamic> video) {
+  /// Builds individual video topic cards
+  Widget _buildVideoCard(Map<String, dynamic> videoTopic) {
+    String topicTitle = videoTopic['topic'] ?? 'Unknown Topic';
+    int videoCount = videoTopic['videos'] ?? 0;
+    String countText = '$videoCount video${videoCount != 1 ? 's' : ''}';
+
     return GestureDetector(
-      onTap: () => _navigateToVideoSubScreen(video),
+      onTap: () => _navigateToVideoSubScreen(videoTopic),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: EdgeInsets.all(12),
@@ -88,55 +83,39 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
             ),
           ],
         ),
-        child: Row(
+        child: Stack(
           children: [
-            // Thumbnail
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(8),
-            //   child: Image.network(
-            //     video['thumbnailUrl'] ?? '',
-            //     width: 100,
-            //     height: 60,
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
-            SizedBox(width: 12),
-            // Video info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    video['title'] ?? 'Unknown Video',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: titlecolor,
-                    ),
+            // Topic title at the top left
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                child: Text(
+                  topicTitle,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: titlecolor,
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    video['doctor'] ?? '',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: grey3,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    video['duration'] ?? '0 Min',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      color: grey3,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: grey3, size: 16),
+            // Video count at the bottom right
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0, right: 8.0),
+                child: Text(
+                  countText,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    color: grey3,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -153,8 +132,8 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new,
             color: primaryColor,
-            size: size!.hp(3.5), // Slightly larger than default
-            weight: 700, // For a little thickness (Flutter 3.7+)
+            size: size!.hp(3.5),
+            weight: 700,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -165,10 +144,9 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: SizedBox(
-          height: 250, // Set the width of the container
-          width: 200, // Set the height of the container
-          child:
-              Image.asset(edvoyagelogo1), // Replace with the actual image path
+          height: 250,
+          width: 200,
+          child: Image.asset(edvoyagelogo1),
         ),
         actions: [
           IconButton(
@@ -202,7 +180,7 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                           ),
                           SizedBox(height: 16),
                           Text(
-                            'Loading Videos...',
+                            'Loading Topics...',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
@@ -222,7 +200,7 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                           Icon(Icons.error_outline, size: 48, color: grey3),
                           SizedBox(height: 16),
                           Text(
-                            'Failed to load videos',
+                            'Failed to load topics',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
@@ -233,7 +211,7 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                videoListFuture = fetchVideos();
+                                videoListFuture = fetchTopics();
                               });
                             },
                             style: ElevatedButton.styleFrom(
@@ -256,12 +234,12 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
                     );
                   }
 
-                  final videos = snapshot.data ?? [];
+                  final videoTopics = snapshot.data ?? [];
 
-                  if (videos.isEmpty) {
+                  if (videoTopics.isEmpty) {
                     return Center(
                       child: Text(
-                        'No videos available',
+                        'No video topics available',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 16,
@@ -273,9 +251,9 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
 
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    itemCount: videos.length,
+                    itemCount: videoTopics.length,
                     itemBuilder: (context, index) {
-                      return _buildVideoCard(videos[index]);
+                      return _buildVideoCard(videoTopics[index]);
                     },
                   );
                 },
