@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:notes/screens/constants.dart';
-import 'package:notes/screens/logo.dart';
-import 'package:notes/screens/topbar.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/topbar.dart';
 
 // DATA MODELS (can be in their own file)
 class FlashcardImage {
@@ -73,9 +73,8 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
         if (flashcardSetData != null) {
           final List<dynamic> imagesJson = flashcardSetData['images'] ?? [];
           setState(() {
-            _images = imagesJson
-                .map((img) => FlashcardImage.fromJson(img))
-                .toList();
+            _images =
+                imagesJson.map((img) => FlashcardImage.fromJson(img)).toList();
             _isLoading = false;
           });
         } else {

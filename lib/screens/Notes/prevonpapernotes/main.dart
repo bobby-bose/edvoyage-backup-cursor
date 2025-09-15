@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/_env/env.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
 
 class PreviousYearPapersNotesScreen extends StatefulWidget {
   const PreviousYearPapersNotesScreen({super.key});
@@ -30,7 +29,8 @@ class _PreviousYearPapersNotesScreenState
     try {
       final response = await http.get(
         Uri.parse(
-            '${BaseUrl.baseUrl}/notes/categories/previous_papers/topics/'),
+          '${BaseUrl.baseUrl}/notes/categories/previous_papers/topics/',
+        ),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -38,7 +38,8 @@ class _PreviousYearPapersNotesScreenState
       );
 
       print(
-          'Previous Year Papers Topics API Response Status: ${response.statusCode}');
+        'Previous Year Papers Topics API Response Status: ${response.statusCode}',
+      );
       print('Previous Year Papers Topics API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
@@ -54,7 +55,8 @@ class _PreviousYearPapersNotesScreenState
       } else {
         print('API Error: ${response.statusCode} - ${response.body}');
         throw Exception(
-            'Failed to load Previous Year Papers topics: ${response.statusCode}');
+          'Failed to load Previous Year Papers topics: ${response.statusCode}',
+        );
       }
     } catch (e) {
       print('Error fetching Previous Year Papers topics: $e');
@@ -66,7 +68,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year USMLE Step 1 examination papers',
           'papers_count': 25,
           'is_featured': true,
-          'order': 1
+          'order': 1,
         },
         {
           'id': 2,
@@ -74,7 +76,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year USMLE Step 2 CK examination papers',
           'papers_count': 20,
           'is_featured': false,
-          'order': 2
+          'order': 2,
         },
         {
           'id': 3,
@@ -82,7 +84,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year PLAB 1 examination papers',
           'papers_count': 18,
           'is_featured': false,
-          'order': 3
+          'order': 3,
         },
         {
           'id': 4,
@@ -90,7 +92,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year PLAB 2 examination papers',
           'papers_count': 15,
           'is_featured': false,
-          'order': 4
+          'order': 4,
         },
         {
           'id': 5,
@@ -98,7 +100,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year Australian Medical Council papers',
           'papers_count': 22,
           'is_featured': false,
-          'order': 5
+          'order': 5,
         },
         {
           'id': 6,
@@ -106,7 +108,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year Medical Council of Canada papers',
           'papers_count': 16,
           'is_featured': false,
-          'order': 6
+          'order': 6,
         },
         {
           'id': 7,
@@ -115,7 +117,7 @@ class _PreviousYearPapersNotesScreenState
               'Previous year Foreign Medical Graduate Examination papers',
           'papers_count': 30,
           'is_featured': false,
-          'order': 7
+          'order': 7,
         },
         {
           'id': 8,
@@ -123,7 +125,7 @@ class _PreviousYearPapersNotesScreenState
           'description': 'Previous year NEET PG examination papers',
           'papers_count': 28,
           'is_featured': false,
-          'order': 8
+          'order': 8,
         },
       ];
     }
@@ -136,12 +138,7 @@ class _PreviousYearPapersNotesScreenState
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border(
-          bottom: BorderSide(
-            color: grey1,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: grey1, width: 1)),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -197,8 +194,12 @@ class _PreviousYearPapersNotesScreenState
   }
 
   /// Builds individual navigation items
-  Widget _buildNavItem(int index, String iconPath, String label,
-      {bool isActive = false}) {
+  Widget _buildNavItem(
+    int index,
+    String iconPath,
+    String label, {
+    bool isActive = false,
+  }) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -281,11 +282,7 @@ class _PreviousYearPapersNotesScreenState
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 48,
-                            color: grey3,
-                          ),
+                          Icon(Icons.error_outline, size: 48, color: grey3),
                           SizedBox(height: 16),
                           Text(
                             'Failed to load content',
@@ -343,7 +340,6 @@ class _PreviousYearPapersNotesScreenState
                 },
               ),
             ),
-            BottomButton(onTap: () {}, selectedIndex: 3),
           ],
         ),
       ),

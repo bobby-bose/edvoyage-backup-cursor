@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/_env/env.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
 
 class ResponsivePreviousYearPapersNotesScreen extends StatefulWidget {
   const ResponsivePreviousYearPapersNotesScreen({super.key});
@@ -30,7 +29,8 @@ class _ResponsivePreviousYearPapersNotesScreenState
     try {
       final response = await http.get(
         Uri.parse(
-            '${BaseUrl.baseUrl}/notes/categories/previous_papers/topics/'),
+          '${BaseUrl.baseUrl}/notes/categories/previous_papers/topics/',
+        ),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -38,16 +38,19 @@ class _ResponsivePreviousYearPapersNotesScreenState
       );
 
       print(
-          'Responsive Previous Year Papers Topics API Response Status: ${response.statusCode}');
+        'Responsive Previous Year Papers Topics API Response Status: ${response.statusCode}',
+      );
       print(
-          'Responsive Previous Year Papers Topics API Response Body: ${response.body}');
+        'Responsive Previous Year Papers Topics API Response Body: ${response.body}',
+      );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
         if (data['status'] == 'success' && data['data'] != null) {
           print(
-              'Successfully fetched responsive Previous Year Papers topics from API');
+            'Successfully fetched responsive Previous Year Papers topics from API',
+          );
           return List<Map<String, dynamic>>.from(data['data']);
         } else {
           print('API Response structure unexpected: $data');
@@ -56,7 +59,8 @@ class _ResponsivePreviousYearPapersNotesScreenState
       } else {
         print('API Error: ${response.statusCode} - ${response.body}');
         throw Exception(
-            'Failed to load Previous Year Papers topics: ${response.statusCode}');
+          'Failed to load Previous Year Papers topics: ${response.statusCode}',
+        );
       }
     } catch (e) {
       print('Error fetching responsive Previous Year Papers topics: $e');
@@ -68,7 +72,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year USMLE Step 1 examination papers',
           'papers_count': 25,
           'is_featured': true,
-          'order': 1
+          'order': 1,
         },
         {
           'id': 2,
@@ -76,7 +80,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year USMLE Step 2 CK examination papers',
           'papers_count': 20,
           'is_featured': false,
-          'order': 2
+          'order': 2,
         },
         {
           'id': 3,
@@ -84,7 +88,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year PLAB 1 examination papers',
           'papers_count': 18,
           'is_featured': false,
-          'order': 3
+          'order': 3,
         },
         {
           'id': 4,
@@ -92,7 +96,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year PLAB 2 examination papers',
           'papers_count': 15,
           'is_featured': false,
-          'order': 4
+          'order': 4,
         },
         {
           'id': 5,
@@ -100,7 +104,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year Australian Medical Council papers',
           'papers_count': 22,
           'is_featured': false,
-          'order': 5
+          'order': 5,
         },
         {
           'id': 6,
@@ -108,7 +112,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year Medical Council of Canada papers',
           'papers_count': 16,
           'is_featured': false,
-          'order': 6
+          'order': 6,
         },
         {
           'id': 7,
@@ -117,7 +121,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
               'Previous year Foreign Medical Graduate Examination papers',
           'papers_count': 30,
           'is_featured': false,
-          'order': 7
+          'order': 7,
         },
         {
           'id': 8,
@@ -125,7 +129,7 @@ class _ResponsivePreviousYearPapersNotesScreenState
           'description': 'Previous year NEET PG examination papers',
           'papers_count': 28,
           'is_featured': false,
-          'order': 8
+          'order': 8,
         },
       ];
     }
@@ -133,22 +137,21 @@ class _ResponsivePreviousYearPapersNotesScreenState
 
   /// Builds individual Previous Year Papers topic cards
   Widget _buildPapersTopicCard(
-      Map<String, dynamic> topic, BuildContext context) {
+    Map<String, dynamic> topic,
+    BuildContext context,
+  ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: isTablet ? 40 : 20, vertical: isTablet ? 8 : 4),
+        horizontal: isTablet ? 40 : 20,
+        vertical: isTablet ? 8 : 4,
+      ),
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(isTablet ? 12 : 8),
-        border: Border(
-          bottom: BorderSide(
-            color: grey1,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: grey1, width: 1)),
         boxShadow: isTablet
             ? [
                 BoxShadow(
@@ -161,7 +164,9 @@ class _ResponsivePreviousYearPapersNotesScreenState
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: isTablet ? 24 : 16, vertical: isTablet ? 16 : 12),
+          horizontal: isTablet ? 24 : 16,
+          vertical: isTablet ? 16 : 12,
+        ),
         child: Row(
           children: [
             Expanded(
@@ -218,8 +223,12 @@ class _ResponsivePreviousYearPapersNotesScreenState
 
   /// Builds individual navigation items
   Widget _buildNavItem(
-      int index, String iconPath, String label, BuildContext context,
-      {bool isActive = false}) {
+    int index,
+    String iconPath,
+    String label,
+    BuildContext context, {
+    bool isActive = false,
+  }) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
@@ -370,8 +379,10 @@ class _ResponsivePreviousYearPapersNotesScreenState
                   // For landscape tablets, show cards in a grid
                   if (isTablet && isLandscape) {
                     return GridView.builder(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 3.0,
@@ -396,7 +407,6 @@ class _ResponsivePreviousYearPapersNotesScreenState
                 },
               ),
             ),
-            BottomButton(onTap: () {}, selectedIndex: 3),
           ],
         ),
       ),

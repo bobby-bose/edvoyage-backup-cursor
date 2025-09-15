@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:frontend/screens/home_screen/homeScreen.dart';
+import 'package:frontend/screens/notes/notes.dart';
+import 'package:frontend/screens/notes/videonotes/video_player.dart';
 import 'package:get/get.dart';
 
 import 'package:frontend/utils/BottomNavigation/bottom_navigation.dart';
@@ -21,8 +23,7 @@ class _ExhaustedBottomState extends State<ExhaustedBottom> {
     ProfileScreen(),
     ComingSoon(),
     HomeScreen(),
-    NotesSection(),
-    // OverseasOne(),
+    VideoSubjectScreen(),
   ];
 
   int selectedIndex =

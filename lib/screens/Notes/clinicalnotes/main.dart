@@ -1,159 +1,205 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend/utils/BottomNavigation/bottom_navigation.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:frontend/utils/colors/colors.dart';
-import 'package:frontend/_env/env.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
+import 'package:frontend/screens/notes/clinicalnotes/sub.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
 
+// 1. DATA MODEL: Represents a single clinical case from the API
+class ClinicalCase {
+  final int id;
+  final String caseTitle;
+  final String doctorName;
+  // subjectName is no longer in the API response but we keep the model flexible
+  // by giving it a default value in fromJson.
+  final String subjectName;
+  final String gatherEquipments;
+  final String introduction;
+  final String generalInspection;
+  final String closerInspection;
+  final String palpation;
+  final String finalExamination;
+  final String? references;
+  final DateTime createdAt;
+
+  ClinicalCase({
+    required this.id,
+    required this.caseTitle,
+    required this.doctorName,
+    required this.subjectName,
+    required this.gatherEquipments,
+    required this.introduction,
+    required this.generalInspection,
+    required this.closerInspection,
+    required this.palpation,
+    required this.finalExamination,
+    this.references,
+    required this.createdAt,
+  });
+
+  factory ClinicalCase.fromJson(Map<String, dynamic> json) {
+    return ClinicalCase(
+      id: json['id'] ?? 0,
+      caseTitle: json['case_title'] ?? 'No Title',
+      doctorName: json['doctor_name'] ?? 'N/A',
+      subjectName:
+          json['subject_name'] ?? 'N/A', // Handles missing field gracefully
+      gatherEquipments: json['gather_equipments'] ?? '',
+      introduction: json['introduction'] ?? '',
+      generalInspection: json['general_inspection'] ?? '',
+      closerInspection: json['closer_inspection'] ?? '',
+      palpation: json['palpation'] ?? '',
+      finalExamination: json['final_examination'] ?? '',
+      references: json['references'],
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
+    );
+  }
+}
+
+// 2. MAIN WIDGET: The screen that fetches and displays the data
 class ClinicalCasesScreen extends StatefulWidget {
   const ClinicalCasesScreen({super.key});
 
   @override
-  _ClinicalCasesScreenState createState() => _ClinicalCasesScreenState();
+  State<ClinicalCasesScreen> createState() => _ClinicalCasesScreenState();
 }
 
 class _ClinicalCasesScreenState extends State<ClinicalCasesScreen> {
-  late Future<List<Map<String, dynamic>>> modulesFuture;
-  int _selectedIndex = 3; // Notes tab is active
+  bool _isLoading = true;
+  String _errorMessage = '';
+  List<ClinicalCase> _cases = [];
+  // The subjectCounts map is no longer needed
 
   @override
   void initState() {
     super.initState();
-    modulesFuture = fetchClinicalModules();
+    _fetchClinicalCases();
   }
 
-  /// Fetch clinical case modules
-  Future<List<Map<String, dynamic>>> fetchClinicalModules() async {
+  Future<void> _fetchClinicalCases() async {
     try {
-      final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/notesclinicalcases/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+      final url = Uri.parse("${API}clinical-cases/");
+      final response = await http.get(url).timeout(const Duration(seconds: 15));
+
+      if (!mounted) return;
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List<dynamic> modules = data['data'];
+        final List<dynamic> data = jsonDecode(response.body);
+        final List<ClinicalCase> cases =
+            data.map((json) => ClinicalCase.fromJson(json)).toList();
 
-        return modules
-            .map<Map<String, dynamic>>((item) => item as Map<String, dynamic>)
-            .toList();
+        // The subject counting logic is no longer needed.
+
+        setState(() {
+          _cases = cases;
+          _isLoading = false;
+        });
       } else {
-        print('❌ API Error: ${response.statusCode}');
-        return [];
+        setState(() {
+          _errorMessage = "Failed to load data (Code: ${response.statusCode})";
+          _isLoading = false;
+        });
       }
     } catch (e) {
-      print('❌ Error fetching clinical modules: $e');
-      return [];
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = "An error occurred: $e";
+        _isLoading = false;
+      });
     }
   }
 
-  /// Build individual module cards
-  Widget _buildModuleCard(Map<String, dynamic> module) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(8),
-        border: Border(
-          bottom: BorderSide(color: grey1, width: 1),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            module['module_title'] ?? 'Unknown Module',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: titlecolor,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            module['module_description'] ?? '',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              color: grey3,
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Spacer(),
-              Text(
-                '${module['clinical_cases_count']} Case(s)',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  color: grey3,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Bottom navigation
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color3,
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        title: Text(
-          'Clinical Case Modules',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: whiteColor,
-          ),
+      // ✅ MODIFIED: AppBar title updated
+      appBar: CustomLogoAppBar(),
+      backgroundColor: Colors.grey[200],
+      body: _buildBody(),
+    );
+  }
+
+  // In clinical_cases_screen.dart
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_errorMessage.isNotEmpty) {
+      return Center(
+        child: Text(
+          _errorMessage,
+          style: const TextStyle(color: Colors.red, fontSize: 16),
         ),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: modulesFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(color: primaryColor),
-              );
-            }
+      );
+    }
 
-            if (snapshot.hasError) {
-              return Center(
-                  child: Text('Failed to load clinical case modules'));
-            }
-
-            final modules = snapshot.data ?? [];
-            if (modules.isEmpty) {
-              return Center(child: Text('No Clinical Case modules found'));
-            }
-
-            return ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              itemCount: modules.length,
-              itemBuilder: (context, index) {
-                return _buildModuleCard(modules[index]);
-              },
+    return ListView.builder(
+      itemCount: _cases.length,
+      padding: const EdgeInsets.all(8.0),
+      itemBuilder: (context, index) {
+        final clinicalCase = _cases[index];
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ClinicalCaseDetailScreen(caseTitle: clinicalCase.caseTitle),
+              ),
             );
           },
-        ),
-      ),
-      bottomNavigationBar: BottomButton(onTap: () {}, selectedIndex: 3),
+          child: Card(
+            margin: const EdgeInsets.symmetric(
+              vertical: 25.0,
+              horizontal: 15.0,
+            ),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 25),
+                  child: Text(
+                    clinicalCase.caseTitle,
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        clinicalCase.doctorName,
+                        style: TextStyle(fontSize: 20, color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ),
+                // ✅ Green bottom border
+                Container(
+                  height: 15,
+                  decoration: BoxDecoration(
+                    color: Colors.teal, // green border
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

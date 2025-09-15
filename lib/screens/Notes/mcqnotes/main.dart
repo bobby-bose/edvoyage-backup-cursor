@@ -1,172 +1,177 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend/utils/BottomNavigation/bottom_navigation.dart';
 import 'package:http/http.dart' as http;
-import 'package:frontend/utils/colors/colors.dart';
-import 'package:frontend/_env/env.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/topbar.dart';
 
-class MCQNotesScreen extends StatefulWidget {
-  const MCQNotesScreen({super.key});
+// Make sure to create this new file and widget as shown in the next step
+import 'sub.dart';
+
+class McqSubject {
+  final String subjectName;
+  final int moduleCount;
+
+  McqSubject({required this.subjectName, required this.moduleCount});
+
+  factory McqSubject.fromJson(Map<String, dynamic> json) {
+    return McqSubject(
+      subjectName: json['subject']?['name'] ?? 'Unknown',
+      moduleCount: 1, // default, will be aggregated later
+    );
+  }
 
   @override
-  _MCQNotesScreenState createState() => _MCQNotesScreenState();
+  String toString() =>
+      "McqSubject(subjectName: $subjectName, modules: $moduleCount)";
 }
 
-class _MCQNotesScreenState extends State<MCQNotesScreen> {
-  late Future<List<Map<String, dynamic>>> modulesFuture;
-  int _selectedIndex = 3; // Notes tab is active
+class McqSubjectsScreen extends StatefulWidget {
+  const McqSubjectsScreen({super.key});
+
+  @override
+  State<McqSubjectsScreen> createState() => _McqSubjectsScreenState();
+}
+
+class _McqSubjectsScreenState extends State<McqSubjectsScreen> {
+  bool isLoading = true;
+  List<McqSubject> mcqSubjects = [];
 
   @override
   void initState() {
     super.initState();
-    modulesFuture = fetchMCQModules();
+    fetchMcqSubjects();
   }
 
-  /// Fetch all MCQs and group by module
-  Future<List<Map<String, dynamic>>> fetchMCQModules() async {
+  Future<void> fetchMcqSubjects() async {
     try {
-      final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/notesmcqs/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+      final response = await http.get(Uri.parse("${API}mcqs/"));
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List<dynamic> mcqs = data['data'];
+        final List<dynamic> data = jsonDecode(response.body);
 
-        // Group MCQs by module_title
-        Map<String, Map<String, dynamic>> modulesMap = {};
+        List<McqSubject> allSubjects =
+            data.map((json) => McqSubject.fromJson(json)).toList();
 
-        for (var mcq in mcqs) {
-          String title = mcq['module_title'] ?? 'Unknown Module';
-          if (modulesMap.containsKey(title)) {
-            modulesMap[title]!['mcq_count'] += 1;
-          } else {
-            modulesMap[title] = {
-              'module_title': title,
-              'module_description': mcq['module_description'] ?? '',
-              'mcq_count': 1,
-            };
-          }
+        Map<String, int> subjectCounts = {};
+        for (var subject in allSubjects) {
+          subjectCounts[subject.subjectName] =
+              (subjectCounts[subject.subjectName] ?? 0) + 1;
         }
 
-        return modulesMap.values.toList();
+        List<McqSubject> uniqueSubjects = subjectCounts.entries
+            .map(
+              (entry) =>
+                  McqSubject(subjectName: entry.key, moduleCount: entry.value),
+            )
+            .toList();
+
+        setState(() {
+          mcqSubjects = uniqueSubjects;
+          isLoading = false;
+        });
+
+        debugPrint("Unique MCQ Subjects: $uniqueSubjects");
       } else {
-        print('❌ API Error: ${response.statusCode}');
-        return [];
+        throw Exception("Failed to load MCQ subjects");
       }
     } catch (e) {
-      print('❌ Error fetching MCQ modules: $e');
-      return [];
+      setState(() {
+        isLoading = false;
+      });
+      debugPrint("Error fetching MCQ subjects: $e");
     }
   }
-
-  /// Builds individual module cards
-  Widget _buildModuleCard(Map<String, dynamic> module) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(8),
-        border: Border(
-          bottom: BorderSide(color: grey1, width: 1),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            module['module_title'] ?? 'Unknown Module',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: titlecolor,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            module['module_description'] ?? '',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              color: grey3,
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Spacer(),
-              Text(
-                '${module['mcq_count']} MCQs',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  color: grey3,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Bottom navigation
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: color3,
-        appBar: AppBar(
-          backgroundColor: primaryColor,
-          title: Text(
-            'MCQ Modules',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: whiteColor,
-            ),
+      appBar: CustomLogoAppBar(),
+      body: Column(
+        children: [
+          Topbar(firstText: "MCQs", secondText: "Subjects"),
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: mcqSubjects.length,
+                    itemBuilder: (context, index) {
+                      final subject = mcqSubjects[index];
+
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => McqModulesScreen(
+                                subjectName: subject.subjectName,
+                              ),
+                            ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      subject.subjectName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${subject.moduleCount} MCQs",
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Bottom colored bar
+                              Container(
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: Colors.teal.shade700,
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
           ),
-          centerTitle: true,
-          elevation: 0,
-        ),
-        body: SafeArea(
-          child: FutureBuilder<List<Map<String, dynamic>>>(
-            future: modulesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(color: primaryColor),
-                );
-              }
-
-              if (snapshot.hasError) {
-                return Center(child: Text('Failed to load MCQ modules'));
-              }
-
-              final modules = snapshot.data ?? [];
-              if (modules.isEmpty) {
-                return Center(child: Text('No MCQ modules found'));
-              }
-
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                itemCount: modules.length,
-                itemBuilder: (context, index) {
-                  return _buildModuleCard(modules[index]);
-                },
-              );
-            },
-          ),
-        ),
-        bottomNavigationBar: BottomButton(onTap: () {}, selectedIndex: 3));
+        ],
+      ),
+    );
   }
 }

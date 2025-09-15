@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:notes/screens/constants.dart';
-import 'package:notes/screens/logo.dart';
-import 'package:notes/screens/main.dart';
-import 'package:notes/screens/topbar.dart';
-import 'package:notes/screens/videonotes/sub.dart'; // VideoTopicsScreen
-import 'package:notes/utils/colors/colors.dart';
-import 'package:notes/utils/responsive.dart';
-import 'package:notes/main.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/main.dart';
+import 'package:frontend/screens/notes/topbar.dart';
+import 'package:frontend/screens/notes/videonotes/sub.dart'; // VideoTopicsScreen
+import 'package:frontend/utils/colors/colors.dart';
+import 'package:frontend/utils/responsive.dart';
+import 'package:frontend/main.dart';
 
 // Data model for a Category
 class Category {
@@ -47,9 +47,8 @@ class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
 
-        final List<Category> tempCategories = data
-            .map((json) => Category.fromJson(json))
-            .toList();
+        final List<Category> tempCategories =
+            data.map((json) => Category.fromJson(json)).toList();
 
         setState(() {
           categories = tempCategories;
@@ -134,24 +133,6 @@ class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, // removes debug banner
-      title: 'Notes App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const VideoSubjectScreen(), // Your first screen
     );
   }
 }

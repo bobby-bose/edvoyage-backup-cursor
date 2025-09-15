@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend/utils/BottomNavigation/bottom_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/_env/env.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
 
 class QBankScreen extends StatefulWidget {
   const QBankScreen({super.key});
@@ -15,7 +13,7 @@ class QBankScreen extends StatefulWidget {
 
 class _QBankScreenState extends State<QBankScreen> {
   late Future<List<Map<String, dynamic>>> modulesFuture;
-  int _selectedIndex = 3; // Notes tab is active
+  final int _selectedIndex = 3; // Notes tab is active
 
   @override
   void initState() {
@@ -65,9 +63,7 @@ class _QBankScreenState extends State<QBankScreen> {
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border(
-          bottom: BorderSide(color: grey1, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: grey1, width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,11 +80,7 @@ class _QBankScreenState extends State<QBankScreen> {
           SizedBox(height: 4),
           Text(
             module['module_description'] ?? '',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              color: grey3,
-            ),
+            style: TextStyle(fontFamily: 'Poppins', fontSize: 14, color: grey3),
           ),
           SizedBox(height: 8),
           Row(
@@ -113,50 +105,50 @@ class _QBankScreenState extends State<QBankScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: color3,
-        appBar: AppBar(
-          backgroundColor: primaryColor,
-          title: Text(
-            'Q-Bank Modules',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: whiteColor,
-            ),
+      backgroundColor: color3,
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: Text(
+          'Q-Bank Modules',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: whiteColor,
           ),
-          centerTitle: true,
-          elevation: 0,
         ),
-        body: SafeArea(
-          child: FutureBuilder<List<Map<String, dynamic>>>(
-            future: modulesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(color: primaryColor),
-                );
-              }
-
-              if (snapshot.hasError) {
-                return Center(child: Text('Failed to load Q-Bank modules'));
-              }
-
-              final modules = snapshot.data ?? [];
-              if (modules.isEmpty) {
-                return Center(child: Text('No Q-Bank modules found'));
-              }
-
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                itemCount: modules.length,
-                itemBuilder: (context, index) {
-                  return _buildModuleCard(modules[index]);
-                },
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: modulesFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(color: primaryColor),
               );
-            },
-          ),
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text('Failed to load Q-Bank modules'));
+            }
+
+            final modules = snapshot.data ?? [];
+            if (modules.isEmpty) {
+              return Center(child: Text('No Q-Bank modules found'));
+            }
+
+            return ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              itemCount: modules.length,
+              itemBuilder: (context, index) {
+                return _buildModuleCard(modules[index]);
+              },
+            );
+          },
         ),
-        bottomNavigationBar: BottomButton(onTap: () {}, selectedIndex: 3));
+      ),
+    );
   }
 }

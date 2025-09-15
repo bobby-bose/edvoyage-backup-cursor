@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:notes/screens/constants.dart';
-import 'package:notes/screens/logo.dart';
-import 'package:notes/screens/topbar.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/topbar.dart';
 
 // ------------------- DATA MODELS -------------------
 // Note: For larger apps, it's best practice to move these model classes
@@ -34,9 +34,8 @@ class Question {
 
   factory Question.fromJson(Map<String, dynamic> json) {
     var optionsFromJson = json['options'] as List? ?? [];
-    List<Option> optionsList = optionsFromJson
-        .map((o) => Option.fromJson(o))
-        .toList();
+    List<Option> optionsList =
+        optionsFromJson.map((o) => Option.fromJson(o)).toList();
 
     return Question(
       id: json['id'] ?? 0,
@@ -91,9 +90,8 @@ class _QuizScreenState extends State<QuizScreen> {
         if (moduleData != null) {
           final List<dynamic> questionsJson = moduleData['questions'] ?? [];
           setState(() {
-            _questions = questionsJson
-                .map((q) => Question.fromJson(q))
-                .toList();
+            _questions =
+                questionsJson.map((q) => Question.fromJson(q)).toList();
             _isLoading = false;
           });
         } else {
@@ -342,9 +340,9 @@ class _QuizScreenState extends State<QuizScreen> {
             onPressed: _currentIndex == 0
                 ? null
                 : () => _pageController.previousPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeIn,
-                  ),
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    ),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF008080),
               foregroundColor: Colors.white,
@@ -363,9 +361,9 @@ class _QuizScreenState extends State<QuizScreen> {
             onPressed: isLastQuestion
                 ? null
                 : () => _pageController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeIn,
-                  ),
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    ),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF008080),
               foregroundColor: Colors.white,

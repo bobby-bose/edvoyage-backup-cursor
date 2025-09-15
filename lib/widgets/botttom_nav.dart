@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/notes/notes.dart';
 import 'package:frontend/screens/profile/profile_Screen.dart';
 import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/screens/Notes/main.dart';
@@ -77,7 +78,7 @@ class _BottomButtonState extends State<BottomButton> {
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotesSection()),
+                MaterialPageRoute(builder: (context) => VideoSubjectScreen()),
               );
               break;
             case 4:

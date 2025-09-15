@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/notes/videonotes/main.dart';
 import 'package:get/get.dart';
 import 'package:frontend/utils/BottomNavigation/bottom_navigation.dart';
 import 'package:frontend/utils/colors/colors.dart';
@@ -18,9 +19,8 @@ class _SadBottomState extends State<SadBottom> {
   final List<Widget> _children = [
     ProfileScreen(),
     CavityScreen(),
-    // Sad(),
     TeachHome(),
-    NotesSection(),
+    VideoSubjectScreen(),
   ];
 
   int selectedIndex = 2;

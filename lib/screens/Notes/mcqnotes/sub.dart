@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:notes/screens/constants.dart';
-import 'package:notes/screens/logo.dart';
-import 'package:notes/screens/mcqnotes/mcq.dart';
-import 'package:notes/screens/topbar.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/mcqnotes/mcq.dart';
+import 'package:frontend/screens/notes/topbar.dart';
 
 // 1. Model Class for the MCQ Module (No changes needed here)
 class McqModule {
@@ -185,13 +185,13 @@ class _McqModulesScreenState extends State<McqModulesScreen> {
                               // Placeholder while loading
                               loadingBuilder:
                                   (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return const Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                      ),
-                                    );
-                                  },
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                  ),
+                                );
+                              },
                               // Placeholder for errors
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(

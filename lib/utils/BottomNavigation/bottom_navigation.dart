@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/screens/notes/videonotes/main.dart';
 import 'package:get/get.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:frontend/screens/cavity_screen/main.dart';
@@ -26,7 +27,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     ProfileScreen(),
     CavityScreen(),
     HomeScreen(),
-    NotesSection(),
+    VideoSubjectScreen(),
   ];
 
   int selectedIndex = 2;

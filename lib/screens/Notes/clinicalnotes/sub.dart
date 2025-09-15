@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:notes/screens/constants.dart';
-import 'package:notes/screens/logo.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
 
 class ClinicalCaseDetailScreen extends StatefulWidget {
   final String caseTitle;

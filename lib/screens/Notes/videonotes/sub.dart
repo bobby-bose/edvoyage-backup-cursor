@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:notes/screens/constants.dart';
-import 'package:notes/screens/logo.dart';
-import 'package:notes/screens/topbar.dart';
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/topbar.dart';
 
 // --- DATA MODEL for Video ---
 class Video {
@@ -131,7 +131,6 @@ class _VideosBySubjectScreenState extends State<VideosBySubjectScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: [
                     Text(
                       video.title,
@@ -211,18 +210,18 @@ class _VideosBySubjectScreenState extends State<VideosBySubjectScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _videos.isEmpty
-                ? Center(
-                    child: Text(
-                      'No videos available for ${widget.subjectName}',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _videos.length,
-                    itemBuilder: (context, index) {
-                      return _buildVideoCard(_videos[index]);
-                    },
-                  ),
+                    ? Center(
+                        child: Text(
+                          'No videos available for ${widget.subjectName}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: _videos.length,
+                        itemBuilder: (context, index) {
+                          return _buildVideoCard(_videos[index]);
+                        },
+                      ),
           ),
         ],
       ),

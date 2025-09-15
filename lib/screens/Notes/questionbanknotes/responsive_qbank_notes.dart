@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/_env/env.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
 
 class ResponsiveQBankNotesScreen extends StatefulWidget {
   const ResponsiveQBankNotesScreen({super.key});
@@ -37,7 +36,8 @@ class _ResponsiveQBankNotesScreenState
       );
 
       print(
-          'Responsive Q-Bank Topics API Response Status: ${response.statusCode}');
+        'Responsive Q-Bank Topics API Response Status: ${response.statusCode}',
+      );
       print('Responsive Q-Bank Topics API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
@@ -65,7 +65,7 @@ class _ResponsiveQBankNotesScreenState
               'Comprehensive anatomy question bank for medical students',
           'modules_count': 18,
           'is_featured': true,
-          'order': 1
+          'order': 1,
         },
         {
           'id': 2,
@@ -73,7 +73,7 @@ class _ResponsiveQBankNotesScreenState
           'description': 'Physiology question bank and practice questions',
           'modules_count': 15,
           'is_featured': false,
-          'order': 2
+          'order': 2,
         },
         {
           'id': 3,
@@ -81,7 +81,7 @@ class _ResponsiveQBankNotesScreenState
           'description': 'Biochemistry question bank and molecular concepts',
           'modules_count': 20,
           'is_featured': false,
-          'order': 3
+          'order': 3,
         },
         {
           'id': 4,
@@ -89,7 +89,7 @@ class _ResponsiveQBankNotesScreenState
           'description': 'Drug mechanisms and therapeutic question bank',
           'modules_count': 22,
           'is_featured': false,
-          'order': 4
+          'order': 4,
         },
         {
           'id': 5,
@@ -97,7 +97,7 @@ class _ResponsiveQBankNotesScreenState
           'description': 'Disease mechanisms and diagnostic question bank',
           'modules_count': 16,
           'is_featured': false,
-          'order': 5
+          'order': 5,
         },
         {
           'id': 6,
@@ -106,7 +106,7 @@ class _ResponsiveQBankNotesScreenState
               'Microbial organisms and infectious disease question bank',
           'modules_count': 19,
           'is_featured': false,
-          'order': 6
+          'order': 6,
         },
         {
           'id': 7,
@@ -114,7 +114,7 @@ class _ResponsiveQBankNotesScreenState
           'description': 'Forensic science and toxicological question bank',
           'modules_count': 12,
           'is_featured': false,
-          'order': 7
+          'order': 7,
         },
         {
           'id': 8,
@@ -122,7 +122,7 @@ class _ResponsiveQBankNotesScreenState
           'description': 'Public health and community healthcare question bank',
           'modules_count': 14,
           'is_featured': false,
-          'order': 8
+          'order': 8,
         },
       ];
     }
@@ -130,22 +130,21 @@ class _ResponsiveQBankNotesScreenState
 
   /// Builds individual Q-Bank topic cards
   Widget _buildQBankTopicCard(
-      Map<String, dynamic> topic, BuildContext context) {
+    Map<String, dynamic> topic,
+    BuildContext context,
+  ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: isTablet ? 40 : 20, vertical: isTablet ? 8 : 4),
+        horizontal: isTablet ? 40 : 20,
+        vertical: isTablet ? 8 : 4,
+      ),
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(isTablet ? 12 : 8),
-        border: Border(
-          bottom: BorderSide(
-            color: grey1,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: grey1, width: 1)),
         boxShadow: isTablet
             ? [
                 BoxShadow(
@@ -158,7 +157,9 @@ class _ResponsiveQBankNotesScreenState
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: isTablet ? 24 : 16, vertical: isTablet ? 16 : 12),
+          horizontal: isTablet ? 24 : 16,
+          vertical: isTablet ? 16 : 12,
+        ),
         child: Row(
           children: [
             Expanded(
@@ -215,8 +216,12 @@ class _ResponsiveQBankNotesScreenState
 
   /// Builds individual navigation items
   Widget _buildNavItem(
-      int index, String iconPath, String label, BuildContext context,
-      {bool isActive = false}) {
+    int index,
+    String iconPath,
+    String label,
+    BuildContext context, {
+    bool isActive = false,
+  }) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
@@ -367,8 +372,10 @@ class _ResponsiveQBankNotesScreenState
                   // For landscape tablets, show cards in a grid
                   if (isTablet && isLandscape) {
                     return GridView.builder(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 3.0,
@@ -393,7 +400,6 @@ class _ResponsiveQBankNotesScreenState
                 },
               ),
             ),
-            BottomButton(onTap: () {}, selectedIndex: 3),
           ],
         ),
       ),

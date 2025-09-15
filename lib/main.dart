@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/screens/login/sign_up.dart';
+import 'package:frontend/screens/notes/notes.dart';
 import 'package:frontend/screens/profile/profile_Screen.dart';
 import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/utils/session_manager.dart';
-import 'package:frontend/screens/Notes/main.dart';
+import 'package:frontend/screens/notes/main.dart';
 
 void main() {
   runApp(
@@ -20,14 +21,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Edvoyage',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        textTheme: TextTheme(
-          bodyMedium: TextStyle(fontSize: 16),
-        ),
-      ),
-      home: NotesSection(),
+      debugShowCheckedModeBanner: false, // removes debug banner
+      title: 'Notes App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const VideoSubjectScreen(), // Your first screen
     );
   }
 }

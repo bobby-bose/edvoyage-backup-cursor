@@ -1,122 +1,160 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/notification/notification.dart';
-import 'package:frontend/utils/avatar.dart';
-import 'package:frontend/utils/responsive.dart';
 import 'package:http/http.dart' as http;
+import 'package:frontend/screens/notes/constants.dart';
+import 'package:frontend/screens/notes/logo.dart';
+import 'package:frontend/screens/notes/topbar.dart';
+import 'package:frontend/screens/notes/videonotes/sub.dart'; // VideoTopicsScreen
 import 'package:frontend/utils/colors/colors.dart';
-import 'package:frontend/_env/env.dart';
-import 'package:frontend/screens/Notes/videonotes/sub/main.dart';
-import 'package:frontend/widgets/botttom_nav.dart';
+import 'package:frontend/utils/responsive.dart';
 
-class VideoNotesScreen extends StatefulWidget {
-  const VideoNotesScreen({super.key});
+// Data model for a Subject
+class Subject {
+  final int id;
+  final String name;
+  final int videoCount;
 
-  @override
-  _VideoNotesScreenState createState() => _VideoNotesScreenState();
+  Subject({required this.id, required this.name, required this.videoCount});
+
+  factory Subject.fromJson(Map<String, dynamic> json) {
+    // This factory is no longer used for the top-level Subject list,
+    // but is kept for future use if needed.
+    return Subject(
+      id: json['id'],
+      name: json['name'],
+      videoCount: json['video_count'],
+    );
+  }
 }
 
-class _VideoNotesScreenState extends State<VideoNotesScreen> {
+class VideoSubjectScreen extends StatefulWidget {
+  const VideoSubjectScreen({super.key});
+
+  @override
+  State<VideoSubjectScreen> createState() => _VideoSubjectScreenState();
+}
+
+class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
   Measurements? size;
-  late Future<List<Map<String, dynamic>>> videoListFuture;
-  int _selectedIndex = 3; // Notes tab is active
+  bool isLoading = true;
+  List<Subject> subjects = []; // Correct type: List<Subject>
 
   @override
   void initState() {
     super.initState();
-    videoListFuture = fetchTopics();
+    fetchSubjects();
   }
 
-  /// Fetches all video topics from the API
-  Future<List<Map<String, dynamic>>> fetchTopics() async {
+  Future<void> fetchSubjects() async {
     try {
-      final response = await http.get(
-        Uri.parse('${BaseUrl.baseUrl}/notes/videos/topics/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-
-      print('Video API Response Status: ${response.statusCode}');
-      print('Video API Response Body: ${response.body}');
+      final response = await http.get(Uri.parse("${API}videos/"));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        final List<dynamic> data = jsonDecode(response.body);
+
+        // Group the data by subject_name and count the videos
+        final Map<String, List<dynamic>> subjectsMap = {};
+        for (var item in data) {
+          final subjectName = item['subject_name'] as String;
+          if (!subjectsMap.containsKey(subjectName)) {
+            subjectsMap[subjectName] = [];
+          }
+          subjectsMap[subjectName]!.add(item);
+        }
+
+        // Create a new list of Subject objects from the grouped data
+        final List<Subject> tempSubjects = subjectsMap.entries.map((entry) {
+          final subjectName = entry.key;
+          final videoList = entry.value;
+
+          return Subject(
+            id: videoList.first['subject'], // Use the first item's subject ID
+            name: subjectName,
+            videoCount: videoList.length,
+          );
+        }).toList();
+
+        setState(() {
+          subjects = tempSubjects;
+          isLoading = false;
+        });
       } else {
-        throw Exception('Failed to load video topics: ${response.statusCode}');
+        throw Exception('Failed to load subjects');
       }
     } catch (e) {
-      print('Error fetching video topics: $e');
-      return [];
+      setState(() {
+        isLoading = false;
+      });
+      debugPrint("Error fetching subjects: $e");
     }
   }
 
-  /// Navigate to video sub screen
-  void _navigateToVideoSubScreen(Map<String, dynamic> videoTopic) {
-    // You'll need to update this to navigate to the correct screen
-    // based on the topic. The original code was commented out.
-    // This is a placeholder.
-    print('Navigating to video topic: ${videoTopic['topic']}');
-  }
-
-  /// Builds individual video topic cards
-  Widget _buildVideoCard(Map<String, dynamic> videoTopic) {
-    String topicTitle = videoTopic['topic'] ?? 'Unknown Topic';
-    int videoCount = videoTopic['videos'] ?? 0;
-    String countText = '$videoCount video${videoCount != 1 ? 's' : ''}';
-
+  Widget buildSubjectCard(Subject subject) {
     return GestureDetector(
-      onTap: () => _navigateToVideoSubScreen(videoTopic),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: whiteColor,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: grey3.withOpacity(0.2),
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                VideosBySubjectScreen(subjectName: subject.name),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Stack(
-          children: [
-            // Topic title at the top left
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                child: Text(
-                  topicTitle,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: titlecolor,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        child: SizedBox(
+          height: 200,
+          width: double.infinity,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  subject.name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                trailing: const Icon(Icons.more_vert),
+              ),
+              const Expanded(child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${subject.videoCount} Modules',
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Video count at the bottom right
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0, right: 8.0),
-                child: Text(
-                  countText,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                    color: grey3,
-                  ),
-                ),
+              const SizedBox(height: 16),
+              Container(
+                height: 20,
+                width: double.infinity,
+                color: primaryColor,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -125,143 +163,26 @@ class _VideoNotesScreenState extends State<VideoNotesScreen> {
   @override
   Widget build(BuildContext context) {
     size = Measurements(MediaQuery.of(context).size);
+
     return Scaffold(
-      backgroundColor: color3,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new,
-            color: primaryColor,
-            size: size!.hp(3.5),
-            weight: 700,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0.2,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: SizedBox(
-          height: 250,
-          width: 200,
-          child: Image.asset(edvoyagelogo1),
-        ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.notifications,
-                color: primaryColor,
-              ),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationScreen()));
-              })
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: videoListFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            color: primaryColor,
-                            strokeWidth: 2,
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Loading Topics...',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: grey3,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.error_outline, size: 48, color: grey3),
-                          SizedBox(height: 16),
-                          Text(
-                            'Failed to load topics',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: grey3,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                videoListFuture = fetchTopics();
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'Retry',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: whiteColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  final videoTopics = snapshot.data ?? [];
-
-                  if (videoTopics.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'No video topics available',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          color: grey3,
-                        ),
-                      ),
-                    );
-                  }
-
-                  return ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    itemCount: videoTopics.length,
+      appBar: CustomLogoAppBar(),
+      body: Column(
+        children: [
+          // ADDED: Your Topbar widget
+          Topbar(firstText: "Video", secondText: ""),
+          // ADDED: Expanded widget to properly size the ListView
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    padding: const EdgeInsets.only(top: 10),
+                    itemCount: subjects.length,
                     itemBuilder: (context, index) {
-                      return _buildVideoCard(videoTopics[index]);
+                      return buildSubjectCard(subjects[index]);
                     },
-                  );
-                },
-              ),
-            ),
-            BottomButton(onTap: () {}, selectedIndex: 3),
-          ],
-        ),
+                  ),
+          ),
+        ],
       ),
     );
   }
