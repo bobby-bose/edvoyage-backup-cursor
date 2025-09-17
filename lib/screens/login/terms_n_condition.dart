@@ -35,7 +35,7 @@ class _terms_conditionState extends State<terms_condition> {
                   left: 70, // Adjust the position as needed
                   child: Text(
                     'TERMS & CONDITIONS',
-                    textScaleFactor: 1.1,
+                    textScaler: TextScaler.linear(1.1),
                     style: TextStyle(
                       color: primaryColor,
                       fontFamily: 'Roboto',

@@ -19,7 +19,7 @@ class BoldText extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         text,
-        textScaleFactor: 1.7,
+        textScaler: TextScaler.linear(1.7),
         style: TextStyle(
           fontFamily: 'Roboto',
           color: primaryColor,
@@ -39,7 +39,7 @@ class LateBold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      textScaleFactor: 1.25,
+      textScaler: TextScaler.linear(1.25),
       textAlign: TextAlign.center,
       style: TextStyle(
         fontFamily: 'Roboto',

@@ -21,11 +21,6 @@ final style = TextStyle(
 class _ProfileAboutState extends State<ProfileAbout> {
   @override
   Widget build(BuildContext context) {
-    final labelTextStyle = Theme.of(context).textTheme.titleSmall!.copyWith(
-        fontSize: 16.0,
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w700,
-        color: titlecolor);
     return Scaffold(
       backgroundColor: color3,
       body: SingleChildScrollView(

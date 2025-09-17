@@ -39,7 +39,7 @@ Widget buildExploreCoursesContainer(BuildContext context) {
         children: [
           const Text(
             'Explore Courses & Universities',
-            textScaleFactor: 1.6,
+            textScaler: TextScaler.linear(1.6),
             style: TextStyle(
               color: primaryColor,
               fontWeight: FontWeight.w800, // Import the 'FontWeight' class.

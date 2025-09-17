@@ -129,7 +129,7 @@ class _WorkDetailsState extends State<WorkDetails> {
                   },
                   child: Text(
                     'Save',
-                    textScaleFactor: 1.25,
+                    textScaler: TextScaler.linear(1.25),
                     style: TextStyle(
                       color: thirdColor,
                       fontWeight: FontWeight.w700,
@@ -151,7 +151,7 @@ class _WorkDetailsState extends State<WorkDetails> {
                   },
                   child: Text(
                     'Cancel',
-                    textScaleFactor: 1.25,
+                    textScaler: TextScaler.linear(1.25),
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w700,

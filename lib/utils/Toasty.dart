@@ -8,7 +8,7 @@ class Toasty {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       textColor: Colors.white,
-      backgroundColor: Colors.black.withOpacity(0.5),
+      backgroundColor: Colors.black.withValues(alpha: 0.5),
     );
   }
 }

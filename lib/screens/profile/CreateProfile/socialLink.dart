@@ -81,7 +81,7 @@ class _SocialLinkState extends State<SocialLink> {
                   },
                   child: Text(
                     'Save',
-                    textScaleFactor: 1.25,
+                    textScaler: TextScaler.linear(1.25),
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       color: thirdColor,
@@ -104,7 +104,7 @@ class _SocialLinkState extends State<SocialLink> {
                   },
                   child: Text(
                     'Cancel',
-                    textScaleFactor: 1.25,
+                    textScaler: TextScaler.linear(1.25),
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       color: Colors.black,

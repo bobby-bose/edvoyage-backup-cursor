@@ -19,7 +19,7 @@ class _SkipButtonState extends State<SkipButton> {
       },
       child: Text(
         'Skip',
-        textScaleFactor: 1.4,
+        textScaler: TextScaler.linear(1.4),
         style: TextStyle(
             fontFamily: 'Roboto',
             color: primaryColor,

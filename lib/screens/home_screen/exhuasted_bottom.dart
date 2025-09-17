@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/screens/notes/notes.dart';
-import 'package:frontend/screens/notes/videonotes/video_player.dart';
 import 'package:get/get.dart';
 
 import 'package:frontend/utils/BottomNavigation/bottom_navigation.dart';
 import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/screens/comingsoon.dart';
 import 'package:frontend/screens/profile/profile_Screen.dart';
-import 'package:frontend/screens/Notes/main.dart';
 
 class ExhaustedBottom extends StatefulWidget {
   const ExhaustedBottom({super.key});

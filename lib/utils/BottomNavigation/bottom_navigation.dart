@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/screens/notes/videonotes/main.dart';
+import 'package:frontend/screens/profile/profile_Screen.dart';
+import 'package:frontend/widgets/drawer_menu_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:frontend/screens/cavity_screen/main.dart';
-import '../../screens/home_screen/homeScreen.dart';
-
-import '../../screens/profile/profile_Screen.dart';
-import '../../screens/Notes/main.dart';
-import '../../widgets/drawer_menu_page.dart';
-import '../colors/colors.dart';
+import 'package:frontend/utils/colors/colors.dart';
 import 'controller.dart';
 
 BottomNavigationController controller = Get.put(BottomNavigationController());
@@ -46,7 +44,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
         .copyWith(fontFamily: 'Roboto', fontSize: 8.0);
 
     return Obx(() {
-      int index = controller.tabIndex.toInt();
       return ZoomDrawer(
         menuBackgroundColor: Colors.white,
         borderRadius: 24.0,
@@ -134,7 +131,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withValues(alpha: 0.1),
                                   offset: const Offset(0.0, 1.0),
                                   blurRadius: 1.0,
                                   spreadRadius: 0.0)
@@ -163,7 +160,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withValues(alpha: 0.1),
                                   offset: const Offset(0.0, 1.0),
                                   blurRadius: 1.0,
                                   spreadRadius: 0.0)

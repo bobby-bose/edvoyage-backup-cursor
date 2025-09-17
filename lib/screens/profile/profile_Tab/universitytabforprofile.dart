@@ -66,7 +66,7 @@ class _UniversityFavouritesPageState extends State<UniversityFavouritesPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: primaryColor.withOpacity(0.5)),
+          border: Border.all(color: primaryColor.withValues(alpha: 0.5)),
           borderRadius: BorderRadius.circular(15),
         ),
         padding: const EdgeInsets.all(12),

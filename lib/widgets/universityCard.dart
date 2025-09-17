@@ -47,7 +47,7 @@ class UniversityCard extends StatelessWidget {
             leading: Image.asset(image),
             title: Text(
               title,
-              textScaleFactor: 1,
+              textScaler: TextScaler.linear(1),
               style: TextStyle(
                   fontFamily: 'Roboto',
                   color: primaryColor,
@@ -55,7 +55,7 @@ class UniversityCard extends StatelessWidget {
             ),
             subtitle: Text(
               subTitle,
-              textScaleFactor: .8,
+              textScaler: TextScaler.linear(.8),
               style: TextStyle(
                   fontFamily: 'Roboto',
                   color: grey2,
@@ -72,13 +72,13 @@ class UniversityCard extends StatelessWidget {
                 children: [
                   Text(
                     text1,
-                    textScaleFactor: .9,
+                    textScaler: TextScaler.linear(.9),
                     style: TextStyle(
                         fontFamily: 'Roboto', fontWeight: FontWeight.bold),
                   ),
                   Text(
                     text1_2,
-                    textScaleFactor: .8,
+                    textScaler: TextScaler.linear(.8),
                     style: TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w500,
@@ -90,13 +90,13 @@ class UniversityCard extends StatelessWidget {
                 children: [
                   Text(
                     text2,
-                    textScaleFactor: .9,
+                    textScaler: TextScaler.linear(.9),
                     style: TextStyle(
                         fontFamily: 'Roboto', fontWeight: FontWeight.bold),
                   ),
                   Text(
                     text2_2,
-                    textScaleFactor: .8,
+                    textScaler: TextScaler.linear(.8),
                     style: TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w500,
@@ -108,13 +108,13 @@ class UniversityCard extends StatelessWidget {
                 children: [
                   Text(
                     text3,
-                    textScaleFactor: .9,
+                    textScaler: TextScaler.linear(.9),
                     style: TextStyle(
                         fontFamily: 'Roboto', fontWeight: FontWeight.bold),
                   ),
                   Text(
                     text3_2,
-                    textScaleFactor: .8,
+                    textScaler: TextScaler.linear(.8),
                     style: TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w500,
@@ -126,13 +126,13 @@ class UniversityCard extends StatelessWidget {
                 children: [
                   Text(
                     text4,
-                    textScaleFactor: .9,
+                    textScaler: TextScaler.linear(.9),
                     style: TextStyle(
                         fontFamily: 'Roboto', fontWeight: FontWeight.bold),
                   ),
                   Text(
                     text4_2,
-                    textScaleFactor: .8,
+                    textScaler: TextScaler.linear(.8),
                     style: TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w500,

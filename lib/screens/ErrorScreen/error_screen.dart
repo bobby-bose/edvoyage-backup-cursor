@@ -19,12 +19,6 @@ final style = TextStyle(
 class _ErrorScreenState extends State<ErrorScreen> {
   @override
   Widget build(BuildContext context) {
-    final labelTextStyle = Theme.of(context).textTheme.titleSmall!.copyWith(
-          fontSize: 16.0,
-          fontWeight: FontWeight.w700,
-          color: titlecolor,
-          fontFamily: 'Roboto',
-        );
     return Scaffold(
       backgroundColor: White,
       appBar: AppBar(

@@ -196,7 +196,7 @@ class _ExhuastedSplashState extends State<ExhuastedSplash> {
                       borderRadius: BorderRadius.circular(25)),
                   child: Text(
                     '"Focus on the outcome, not the obstacle"',
-                    textScaleFactor: 1.2,
+                    textScaler: TextScaler.linear(1.2),
                     style: TextStyle(
                         color: primaryColor, fontWeight: FontWeight.bold),
                   ),
@@ -271,7 +271,7 @@ class _ExhuastedSplashState extends State<ExhuastedSplash> {
                                         universityLength > 0
                                             ? universityLength.toString()
                                             : '--',
-                                        textScaleFactor: 1.5,
+                                        textScaler: TextScaler.linear(1.5),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w900,
                                           color: universityLength > 0
@@ -325,7 +325,7 @@ class _ExhuastedSplashState extends State<ExhuastedSplash> {
                                         coursesLength > 0
                                             ? coursesLength.toString()
                                             : '--',
-                                        textScaleFactor: 1.5,
+                                        textScaler: TextScaler.linear(1.5),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w900,
                                           color: coursesLength > 0

@@ -66,7 +66,7 @@ class _HappyState extends State<Happy> {
                   ),
                   child: Text(
                     'Everyday is a new day !',
-                    textScaleFactor: 1.2,
+                    textScaler: TextScaler.linear(1.2),
                     style: TextStyle(
                       color: primaryColor,
                       fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class _HappyState extends State<Happy> {
                     children: [
                       Text(
                         'Explore Courses & Universities',
-                        textScaleFactor: 1.8,
+                        textScaler: TextScaler.linear(1.8),
                         style: TextStyle(
                           color: primaryColor,
                           fontWeight: FontWeight.w800,
@@ -131,7 +131,7 @@ class _HappyState extends State<Happy> {
                                 ),
                                 Text(
                                   '300+',
-                                  textScaleFactor: 1.5,
+                                  textScaler: TextScaler.linear(1.5),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                   ),
@@ -171,7 +171,7 @@ class _HappyState extends State<Happy> {
                                 ),
                                 Text(
                                   '30,000+',
-                                  textScaleFactor: 1.5,
+                                  textScaler: TextScaler.linear(1.5),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                   ),

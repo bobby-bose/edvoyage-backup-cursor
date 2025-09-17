@@ -426,7 +426,7 @@ class _EducationDetailsState extends State<EducationDetails> {
                         },
                         child: Text(
                           'Submit',
-                          textScaleFactor: 1.25,
+                          textScaler: TextScaler.linear(1.25),
                           style: TextStyle(
                             color: thirdColor,
                             fontFamily: 'Roboto',

@@ -35,11 +35,7 @@ class _ProfileFeedState extends State<ProfileFeed>
 
   @override
   Widget build(BuildContext context) {
-    final labelTextStyle = Theme.of(context).textTheme.titleSmall!.copyWith(
-        fontSize: 16.0,
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w700,
-        color: titlecolor);
+
     return Scaffold(
       // floatingActionButton: _tabController!.index == 0
       //     ? FloatingActionButton(
@@ -70,7 +66,7 @@ class _ProfileFeedState extends State<ProfileFeed>
           //       msg: 'You will be notify through SMS', // Your message here
           //       toastLength: Toast.LENGTH_SHORT, // Duration of the message
           //       gravity: ToastGravity.BOTTOM, // Location of the message on the screen
-          //       backgroundColor: Colors.black.withOpacity(0.7), // Background color
+          //       backgroundColor: Colors.black.withValues(alpha:0.7), // Background color
           //       textColor: Colors.white, // Text color
           //     );
           //   },

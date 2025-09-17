@@ -35,7 +35,7 @@ class ComingSoon extends StatelessWidget {
             children: [
               Text(
                 'Get ready!',
-                textScaleFactor: 4.0, // Increased font size
+                textScaler: TextScaler.linear(4.0), // Increased font size
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   color: primaryColor,
@@ -53,7 +53,7 @@ class ComingSoon extends StatelessWidget {
                   children: [
                     Text(
                       "Something really Cool is Coming!!",
-                      textScaleFactor: 1.2,
+                      textScaler: TextScaler.linear(1.2),
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         // No specific font weight for this text

@@ -199,10 +199,10 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: primaryColor.withOpacity(0.1),
+                        color: primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border:
-                            Border.all(color: primaryColor.withOpacity(0.3)),
+                        border: Border.all(
+                            color: primaryColor.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         'Day ${DateTime.now().day}',
@@ -249,8 +249,9 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
                           borderRadius: BorderRadius.circular(8),
                           color: isSelected
                               ? (isCorrect
-                                  ? ColorConst.greenColor.withOpacity(0.1)
-                                  : ColorConst.errorColor.withOpacity(0.1))
+                                  ? ColorConst.greenColor.withValues(alpha: 0.1)
+                                  : ColorConst.errorColor
+                                      .withValues(alpha: 0.1))
                               : thirdColor,
                         ),
                         child: Row(
@@ -308,9 +309,10 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.1),
+                      color: primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: primaryColor.withOpacity(0.3)),
+                      border: Border.all(
+                          color: primaryColor.withValues(alpha: 0.3)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +336,7 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
                           Text(
                             explanation,
                             style: TextStyle(
-                              color: primaryColor.withOpacity(0.8),
+                              color: primaryColor.withValues(alpha: 0.8),
                               fontSize: 12,
                             ),
                           ),

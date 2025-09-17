@@ -31,7 +31,7 @@ Widget buildCourseCountContainer(
         ),
         Text(
           count,
-          textScaleFactor: 1.5,
+          textScaler: TextScaler.linear(1.5),
           style: TextStyle(
             fontWeight: FontWeight.w900,
           ),

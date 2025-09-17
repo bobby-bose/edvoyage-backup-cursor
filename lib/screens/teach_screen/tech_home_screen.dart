@@ -16,10 +16,12 @@ class _TeachHomeState extends State<TeachHome> {
   @override
   Widget build(BuildContext context) {
     size = Measurements(MediaQuery.of(context).size);
-    return WillPopScope(
-      onWillPop: () async {
-        SystemNavigator.pop();
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          SystemNavigator.pop(); // exit the app
+        }
       },
       child: SafeArea(
         child: Scaffold(

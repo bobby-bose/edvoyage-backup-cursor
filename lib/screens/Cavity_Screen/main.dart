@@ -353,7 +353,7 @@ class _CavityScreenState extends State<CavityScreen> {
         color: whiteColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 2),
           ),
@@ -386,9 +386,9 @@ class _CavityScreenState extends State<CavityScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: primaryColor.withOpacity(0.3)),
+                border: Border.all(color: primaryColor.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -441,7 +441,7 @@ class _CavityScreenState extends State<CavityScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: Offset(0, 4),
               ),
@@ -454,7 +454,7 @@ class _CavityScreenState extends State<CavityScreen> {
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
+                  color: primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12),
@@ -510,11 +510,12 @@ class _CavityScreenState extends State<CavityScreen> {
           padding: EdgeInsets.symmetric(
               horizontal: 16, vertical: 10), // Reduced vertical padding
           decoration: BoxDecoration(
-            color:
-                isSelected ? primaryColor.withOpacity(0.1) : Colors.transparent,
+            color: isSelected
+                ? primaryColor.withValues(alpha: 0.1)
+                : Colors.transparent,
             border: Border(
               bottom: BorderSide(
-                color: grey1.withOpacity(0.3),
+                color: grey1.withValues(alpha: 0.3),
                 width: 0.5,
               ),
             ),
@@ -597,7 +598,7 @@ class _CavityScreenState extends State<CavityScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 2),
           ),
@@ -649,7 +650,7 @@ class _CavityScreenState extends State<CavityScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: secondaryColor.withOpacity(0.1),
+                              color: secondaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -684,7 +685,7 @@ class _CavityScreenState extends State<CavityScreen> {
           ),
           // Divider
           Divider(
-            color: grey1.withOpacity(0.3),
+            color: grey1.withValues(alpha: 0.3),
             height: 1,
           ),
           // Post Content
@@ -714,11 +715,12 @@ class _CavityScreenState extends State<CavityScreen> {
                             EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: (post['like_count'] ?? 0) > 0
-                              ? Colors.green.withOpacity(0.1)
+                              ? Colors.green.withValues(alpha: 0.1)
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                           border: (post['like_count'] ?? 0) > 0
-                              ? Border.all(color: Colors.green.withOpacity(0.3))
+                              ? Border.all(
+                                  color: Colors.green.withValues(alpha: 0.3))
                               : null,
                         ),
                         child: Row(
@@ -788,7 +790,7 @@ class _CavityScreenState extends State<CavityScreen> {
                   Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: grey1.withOpacity(0.3),
+                      color: grey1.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -832,7 +834,7 @@ class _CavityScreenState extends State<CavityScreen> {
                   Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: grey1.withOpacity(0.1),
+                      color: grey1.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -856,7 +858,7 @@ class _CavityScreenState extends State<CavityScreen> {
                                     color: whiteColor,
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                        color: grey1.withOpacity(0.2)),
+                                        color: grey1.withValues(alpha: 0.2)),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -868,8 +870,8 @@ class _CavityScreenState extends State<CavityScreen> {
                                             width: 24,
                                             height: 24,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  primaryColor.withOpacity(0.1),
+                                              color: primaryColor.withValues(
+                                                  alpha: 0.1),
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                             ),
@@ -930,7 +932,7 @@ class _CavityScreenState extends State<CavityScreen> {
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: grey1.withOpacity(0.1),
+                      color: grey1.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -980,9 +982,9 @@ class _CavityScreenState extends State<CavityScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

@@ -203,7 +203,7 @@ class _HappySplashState extends State<HappySplash> {
                     children: [
                       Text(
                         'Explore Courses & Universities',
-                        textScaleFactor: 1.8,
+                        textScaler: TextScaler.linear(1.8),
                         style: TextStyle(
                           color: primaryColor,
                           fontWeight: FontWeight.w800,
@@ -236,7 +236,7 @@ class _HappySplashState extends State<HappySplash> {
                                 ),
                                 Text(
                                   '300+',
-                                  textScaleFactor: 1.5,
+                                  textScaler: TextScaler.linear(1.5),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                   ),
@@ -274,7 +274,7 @@ class _HappySplashState extends State<HappySplash> {
                                 ),
                                 Text(
                                   '30,000+',
-                                  textScaleFactor: 1.5,
+                                  textScaler: TextScaler.linear(1.5),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                   ),

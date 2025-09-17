@@ -118,7 +118,7 @@ class _ChatScreenState extends State<ChatScreen> {
         color: whiteColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 2),
           ),
@@ -131,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               height: 45,
               decoration: BoxDecoration(
-                color: grey1.withOpacity(0.1),
+                color: grey1.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: TextField(
@@ -198,7 +198,7 @@ class _ChatScreenState extends State<ChatScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 2),
           ),

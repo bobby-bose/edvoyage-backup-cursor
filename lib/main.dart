@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/screens/login/sign_up.dart';
 import 'package:frontend/screens/notes/notes.dart';
-import 'package:frontend/screens/profile/profile_Screen.dart';
 import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/utils/session_manager.dart';
-import 'package:frontend/screens/notes/main.dart';
 
 void main() {
   runApp(

@@ -210,7 +210,7 @@ class _SadSplashState extends State<SadSplash> {
                               borderRadius: BorderRadius.circular(25)),
                           child: Text(
                             '"Every setback is a setup for a comeback"',
-                            textScaleFactor: 1.2,
+                            textScaler: TextScaler.linear(1.2),
                             style: TextStyle(
                                 color: primaryColor,
                                 fontWeight: FontWeight.bold),
@@ -290,7 +290,7 @@ class _SadSplashState extends State<SadSplash> {
                                         universityLength > 0
                                             ? universityLength.toString()
                                             : '--',
-                                        textScaleFactor: 1.5,
+                                        textScaler: TextScaler.linear(1.5),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w900,
                                           color: universityLength > 0
@@ -344,7 +344,7 @@ class _SadSplashState extends State<SadSplash> {
                                         coursesLength > 0
                                             ? coursesLength.toString()
                                             : '--',
-                                        textScaleFactor: 1.5,
+                                        textScaler: TextScaler.linear(1.5),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w900,
                                           color: coursesLength > 0

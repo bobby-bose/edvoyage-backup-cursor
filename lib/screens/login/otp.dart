@@ -343,7 +343,7 @@ class _OtpState extends State<Otp> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Enter OTP',
-                        textScaleFactor: 2.2,
+                        textScaler: TextScaler.linear(2.2),
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           color: primaryColor,
@@ -377,7 +377,7 @@ class _OtpState extends State<Otp> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "A 6 digit code has been sent to\n your mobile number: ${widget.mobile}",
-                        textScaleFactor: 1.4,
+                        textScaler: TextScaler.linear(1.4),
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           color: Color.fromARGB(255, 67, 56, 56),
@@ -396,9 +396,10 @@ class _OtpState extends State<Otp> {
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.red.withOpacity(0.3)),
+                    border:
+                        Border.all(color: Colors.red.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
@@ -459,9 +460,10 @@ class _OtpState extends State<Otp> {
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
+                    color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                    border:
+                        Border.all(color: Colors.blue.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
@@ -488,9 +490,10 @@ class _OtpState extends State<Otp> {
                     margin: EdgeInsets.symmetric(horizontal: 30),
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
+                      color: Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                      border: Border.all(
+                          color: Colors.orange.withValues(alpha: 0.3)),
                     ),
                     child: Text(
                       '${3 - attempts} attempts remaining',

@@ -33,7 +33,7 @@ class _privacyState extends State<privacy> {
                   left: 70, // Adjust the position as needed
                   child: Text(
                     'PRIVACY POLICY',
-                    textScaleFactor: 1.1,
+                    textScaler: TextScaler.linear(1.1),
                     style: TextStyle(
                       color: primaryColor,
                       fontFamily: 'Roboto',

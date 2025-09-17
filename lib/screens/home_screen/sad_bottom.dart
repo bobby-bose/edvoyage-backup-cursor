@@ -6,7 +6,6 @@ import 'package:frontend/utils/colors/colors.dart';
 import 'package:frontend/screens/cavity_screen/cavity.dart';
 import 'package:frontend/screens/profile/profile_Screen.dart';
 import 'package:frontend/screens/teach_screen/tech_home_screen.dart';
-import 'package:frontend/screens/Notes/main.dart';
 
 class SadBottom extends StatefulWidget {
   const SadBottom({super.key});

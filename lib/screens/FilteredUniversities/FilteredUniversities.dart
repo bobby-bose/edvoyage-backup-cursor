@@ -107,7 +107,7 @@ final filteredUniversitiesProvider = StateNotifierProvider<
 class FilteredUniversities extends ConsumerStatefulWidget {
   final List ranking;
   final List cities;
-  String rating;
+  final String rating;
   FilteredUniversities(
       {super.key,
       required this.ranking,

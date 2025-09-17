@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/notes/notes.dart';
 import 'package:frontend/screens/profile/profile_Screen.dart';
 import 'package:frontend/screens/home_screen/homeScreen.dart';
-import 'package:frontend/screens/Notes/main.dart';
 import 'package:frontend/screens/cavity_screen/main.dart';
 import 'package:frontend/screens/studyabroadnew/main.dart';
 import 'package:frontend/utils/colors/colors.dart';

@@ -194,10 +194,12 @@ class _HomeScreenState extends State<HomeScreensadsplash> {
   @override
   Widget build(BuildContext context) {
     size = Measurements(MediaQuery.of(context).size);
-    return WillPopScope(
-      onWillPop: () async {
-        SystemNavigator.pop();
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          SystemNavigator.pop(); // exit the app
+        }
       },
       child: Scaffold(
           bottomNavigationBar: BottomButton(onTap: () {}, selectedIndex: 2),
@@ -242,7 +244,7 @@ class _HomeScreenState extends State<HomeScreensadsplash> {
                           borderRadius: BorderRadius.circular(25)),
                       child: Text(
                         '"Its All right ,Its Okay"',
-                        textScaleFactor: 1.2,
+                        textScaler: TextScaler.linear(1.2),
                         style: TextStyle(
                             color: primaryColor, fontWeight: FontWeight.bold),
                       ),
@@ -268,7 +270,7 @@ class _HomeScreenState extends State<HomeScreensadsplash> {
                         children: [
                           Text(
                             'Explore Courses & Universities',
-                            textScaleFactor: 1.6,
+                            textScaler: TextScaler.linear(1.6),
                             style: TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.w800,
@@ -314,7 +316,7 @@ class _HomeScreenState extends State<HomeScreensadsplash> {
                                             universityLength > 0
                                                 ? universityLength.toString()
                                                 : '--',
-                                            textScaleFactor: 1.5,
+                                            textScaler: TextScaler.linear(1.5),
                                             style: TextStyle(
                                               fontWeight: FontWeight.w900,
                                               color: universityLength > 0
@@ -368,7 +370,7 @@ class _HomeScreenState extends State<HomeScreensadsplash> {
                                             coursesLength > 0
                                                 ? coursesLength.toString()
                                                 : '--',
-                                            textScaleFactor: 1.5,
+                                            textScaler: TextScaler.linear(1.5),
                                             style: TextStyle(
                                               fontWeight: FontWeight.w900,
                                               color: coursesLength > 0

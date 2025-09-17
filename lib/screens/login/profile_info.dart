@@ -57,7 +57,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
             children: [
               Text(
                 'Profile Info',
-                textScaleFactor: 2,
+                textScaler: TextScaler.linear(2),
                 style: TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w700,

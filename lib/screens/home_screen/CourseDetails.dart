@@ -7,7 +7,7 @@ import '../../utils/avatar.dart';
 import '../../utils/colors/colors.dart';
 import '../../utils/responsive.dart';
 import 'Devoyage_screen.dart';
-import 'application_screen.dart';
+// import 'application_screen.dart';
 import 'couese.dart';
 import 'package:http/http.dart' as http;
 
@@ -225,7 +225,7 @@ class _CourseDetailsState extends State<CourseDetails>
                     Fourthyearsubjects: Fourthyearsubjects,
                     Fifthyearsubjects: Fifthyearsubjects,
                   ),
-                  CustomStepper(),
+                  // CustomStepper(),
                   DevoyageTab(),
                 ],
               ),

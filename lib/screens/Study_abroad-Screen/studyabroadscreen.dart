@@ -159,8 +159,6 @@ class _UniversitHomeScreenState extends State<UniversitHomeScreen>
         .titleSmall!
         .copyWith(fontFamily: 'Roboto', fontSize: 8.0);
     return Obx(() {
-      int index = controller.tabIndex.toInt();
-
       return Scaffold(
         backgroundColor: White,
         appBar: AppBar(
@@ -270,7 +268,7 @@ class _UniversitHomeScreenState extends State<UniversitHomeScreen>
                         color: White,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 8,
                             offset: Offset(0, 2),
                           ),

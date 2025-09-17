@@ -24,7 +24,7 @@ class LongButton extends StatelessWidget {
           onPressed: action,
           child: Text(
             text,
-            textScaleFactor: 1.25,
+            textScaler: TextScaler.linear(1.25),
             style: TextStyle(
               fontFamily: 'Roboto',
               color: thirdColor,

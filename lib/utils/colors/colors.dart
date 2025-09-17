@@ -64,7 +64,7 @@ class ColorConst {
   static Color greyTextColor = const Color(0xFF9E9E9E);
   static Color errorColor = Colors.red;
   static Color greenColor = const Color(0xff4CBB17);
-  static Color scafoldColor = Colors.grey[200]!.withOpacity(.5);
+  static Color scafoldColor = Colors.grey[200]!.withValues(alpha: .5);
 }
 
 extension HexColor on Color {
