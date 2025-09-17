@@ -322,11 +322,15 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
                             Icon(Icons.lightbulb,
                                 color: primaryColor, size: 16),
                             SizedBox(width: 8),
-                            Text(
-                              'Correct answer: ${options[correctAnswer]}',
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                'Correct answer: ${options[correctAnswer]}',
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
                               ),
                             ),
                           ],

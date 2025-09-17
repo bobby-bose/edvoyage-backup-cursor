@@ -423,7 +423,7 @@ class _ExploreCoursesState extends State<ExploreUniversitiesScreen> {
                                     ),
                                     vGap(4),
                                     Text(
-                                      "${university.city}, ${university.country}",
+                                      "${university.state}, ${university.country}",
                                       style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontSize: 12,

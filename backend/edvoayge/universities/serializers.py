@@ -6,11 +6,40 @@ Handles data serialization for university-related endpoints.
 from rest_framework import serializers
 from .models import (
     University, Campus, UniversityRanking, UniversityProgram,
-    UniversityFaculty, UniversityResearch, UniversityPartnership, UniversityGallery
+    UniversityFaculty, UniversityResearch, UniversityPartnership, UniversityGallery , Feed
 )
 
-from content.serializers import FeedSerializer
-from content.models import Feed
+# adjust import if Feed is in another app
+
+
+class FeedSerializer(serializers.ModelSerializer):
+    university_id = serializers.PrimaryKeyRelatedField(
+        source="university", queryset=University.objects.all(), write_only=True
+    )
+    university_name = serializers.CharField(source="university.name", read_only=True)
+    time_ago = serializers.ReadOnlyField()
+    profile_image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Feed
+        fields = [
+            "id",
+            "university_id",   # ✅ renamed
+            "university_name",
+            "user_name",
+            "profile_image_url",
+            "title",
+            "description",
+            "created_at",
+            "time_ago",
+        ]
+
+    def get_profile_image_url(self, obj):
+        request = self.context.get("request")
+        if obj.profile_image and request:
+            return request.build_absolute_uri(obj.profile_image.url)
+        return None
+
 
 
 class UniversityGallerySerializer(serializers.ModelSerializer):
@@ -277,32 +306,9 @@ class UniversitySerializer(serializers.ModelSerializer):
         return value
 
     def get_feed(self, obj):
-        """Get feeds related to this university."""
-        print(f"🔍 DEBUG: Getting feeds for university: {obj.name} (ID: {obj.id})")
-        
-        # Try multiple filtering strategies to find relevant feeds
-        feeds = []
-        
-        # Strategy 1: Filter by title containing university name
-        title_feeds = Feed.objects.filter(title__icontains=obj.name)[:3]
-        feeds.extend(title_feeds)
-        print(f"🔍 DEBUG: Found {title_feeds.count()} feeds by title match")
-        
-        # Strategy 2: Filter by description containing university name
-        desc_feeds = Feed.objects.filter(description__icontains=obj.name)[:2]
-        feeds.extend(desc_feeds)
-        print(f"🔍 DEBUG: Found {desc_feeds.count()} feeds by description match")
-        
-        # Strategy 3: Get recent feeds if no specific matches found
-        if not feeds:
-            feeds = Feed.objects.all()[:5]
-            print(f"🔍 DEBUG: No specific matches, using {len(feeds)} recent feeds")
-        
-        # Remove duplicates and limit to 5
-        unique_feeds = list({feed.id: feed for feed in feeds}.values())[:5]
-        print(f"🔍 DEBUG: Returning {len(unique_feeds)} unique feeds")
-        
-        return FeedSerializer(unique_feeds, many=True).data
+        """Get feeds directly linked to this university."""
+        feeds = obj.feeds.all().order_by("-created_at")[:5]
+        return FeedSerializer(feeds, many=True, context=self.context).data
 
     def get_logo_url(self, obj):
         """Get the full URL for the university logo."""

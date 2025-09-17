@@ -10,7 +10,9 @@ from django.utils import timezone
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, permissions
+from .models import Feed
+from .serializers import FeedSerializer
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
@@ -31,6 +33,10 @@ from .serializers import (
 
 logger = logging.getLogger(__name__)
 
+class FeedViewSet(viewsets.ModelViewSet):
+    queryset = Feed.objects.all().select_related("university")
+    serializer_class = FeedSerializer
+    permission_classes = [permissions.AllowAny]  # adjust later if needed
 
 class UniversityPagination(PageNumberPagination):
     """Custom pagination for university listings."""

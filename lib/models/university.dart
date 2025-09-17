@@ -3,6 +3,7 @@ class University {
   final String name;
   final String city;
   final String country;
+  final String state;
   final String? logoUrl;
   final int? estd;
   final double? rating;
@@ -24,6 +25,7 @@ class University {
     required this.name,
     required this.city,
     required this.country,
+    required this.state,
     this.logoUrl,
     this.estd,
     this.rating,
@@ -47,6 +49,7 @@ class University {
       name: json['name'] ?? '',
       city: json['city'] ?? json['location'] ?? '',
       country: json['country'] ?? '',
+      state: json['state'] ?? '',
       logoUrl: json['logo_url'] ?? json['logo_url'],
       estd: json['estd'],
       rating: (json['rating'] ?? 0).toDouble(),

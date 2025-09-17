@@ -4,6 +4,7 @@ import 'package:frontend/screens/login/sign_up.dart';
 import 'package:frontend/screens/notes/notes.dart';
 import 'package:frontend/screens/home_screen/homeScreen.dart';
 import 'package:frontend/utils/session_manager.dart';
+import 'package:frontend/screens/splash/splash_screen.dart';
 
 void main() {
   runApp(
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // removes debug banner
       title: 'Notes App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const VideoSubjectScreen(), // Your first screen
+      home: const SplashScreen(), // Your first screen
     );
   }
 }

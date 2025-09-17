@@ -158,43 +158,126 @@ class _UniversitHomeScreenState extends State<UniversitHomeScreen>
         .textTheme
         .titleSmall!
         .copyWith(fontFamily: 'Roboto', fontSize: 8.0);
-    return Obx(() {
-      return Scaffold(
+
+    return Scaffold(
+      backgroundColor: White,
+      appBar: AppBar(
         backgroundColor: White,
-        appBar: AppBar(
-          backgroundColor: White,
-          centerTitle: true,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_ios, color: Cprimary)),
-          title: SizedBox(
-            height: 250, // Set the width of the container
-            width: 200, // Set the height of the container
-            child: Image.asset(
-                edvoyagelogo1), // Replace with the actual image path
-          ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios, color: Cprimary)),
+        title: SizedBox(
+          height: 250, // Set the width of the container
+          width: 200, // Set the height of the container
+          child:
+              Image.asset(edvoyagelogo1), // Replace with the actual image path
         ),
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  // University Banner Image
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                      color: color3,
-                      shape: BoxShape.rectangle,
-                    ),
-                    child: university.banner_image != null &&
-                            university.banner_image!.isNotEmpty
-                        ? ClipRRect(
+      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                // University Banner Image
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 150.0,
+                  decoration: BoxDecoration(
+                    color: color3,
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: university.banner_image != null &&
+                          university.banner_image!.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            absoluteBannerUrl,
+                            headers: {'User-Agent': 'Flutter App'},
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: color3,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                    color: Cprimary,
+                                  ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              print(
+                                  "🔍 DEBUG: Error loading university banner: $error");
+                              print(
+                                  "🔍 DEBUG: Banner URL that failed: $absoluteBannerUrl");
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: color3,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.school,
+                                    color: Cprimary,
+                                    size: 48,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: color3,
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              absoluteBannerUrl,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.school,
+                              color: Cprimary,
+                              size: 48,
+                            ),
+                          ),
+                        ),
+                ),
+                // University Logo
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  heightFactor: 2.3,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    width: 100,
+                    height: 90.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: White,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: (university.logo != null &&
+                                  university.logo!.isNotEmpty) ||
+                              (university.logoUrl != null &&
+                                  university.logoUrl!.isNotEmpty)
+                          ? Image.network(
+                              absoluteLogoUrl,
                               headers: {'User-Agent': 'Flutter App'},
                               fit: BoxFit.cover,
                               loadingBuilder:
@@ -202,8 +285,8 @@ class _UniversitHomeScreenState extends State<UniversitHomeScreen>
                                 if (loadingProgress == null) return child;
                                 return Container(
                                   decoration: BoxDecoration(
-                                    color: color3,
-                                    borderRadius: BorderRadius.circular(8),
+                                    color: Cprimary,
+                                    shape: BoxShape.circle,
                                   ),
                                   child: Center(
                                     child: CircularProgressIndicator(
@@ -215,274 +298,171 @@ class _UniversitHomeScreenState extends State<UniversitHomeScreen>
                                                   loadingProgress
                                                       .expectedTotalBytes!
                                               : null,
-                                      color: Cprimary,
+                                      color: White,
                                     ),
                                   ),
                                 );
                               },
                               errorBuilder: (context, error, stackTrace) {
                                 print(
-                                    "🔍 DEBUG: Error loading university banner: $error");
+                                    "🔍 DEBUG: Error loading university logo: $error");
                                 print(
-                                    "🔍 DEBUG: Banner URL that failed: $absoluteBannerUrl");
+                                    "🔍 DEBUG: Logo URL that failed: $absoluteLogoUrl");
                                 return Container(
                                   decoration: BoxDecoration(
-                                    color: color3,
-                                    borderRadius: BorderRadius.circular(8),
+                                    color: Cprimary,
+                                    shape: BoxShape.circle,
                                   ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.school,
-                                      color: Cprimary,
-                                      size: 48,
-                                    ),
+                                  child: Icon(
+                                    Icons.school,
+                                    color: White,
+                                    size: 40,
                                   ),
                                 );
                               },
-                            ),
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              color: color3,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: Cprimary,
+                                shape: BoxShape.circle,
+                              ),
                               child: Icon(
                                 Icons.school,
-                                color: Cprimary,
-                                size: 48,
+                                color: White,
+                                size: 40,
                               ),
                             ),
-                          ),
-                  ),
-                  // University Logo
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    heightFactor: 2.3,
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      width: 100,
-                      height: 90.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: White,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: (university.logo != null &&
-                                    university.logo!.isNotEmpty) ||
-                                (university.logoUrl != null &&
-                                    university.logoUrl!.isNotEmpty)
-                            ? Image.network(
-                                absoluteLogoUrl,
-                                headers: {'User-Agent': 'Flutter App'},
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Cprimary,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
-                                        color: White,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  print(
-                                      "🔍 DEBUG: Error loading university logo: $error");
-                                  print(
-                                      "🔍 DEBUG: Logo URL that failed: $absoluteLogoUrl");
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Cprimary,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.school,
-                                      color: White,
-                                      size: 40,
-                                    ),
-                                  );
-                                },
-                              )
-                            : Container(
-                                decoration: BoxDecoration(
-                                  color: Cprimary,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.school,
-                                  color: White,
-                                  size: 40,
-                                ),
-                              ),
-                      ),
                     ),
                   ),
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(university.name),
-                      hGap(5),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GoogleScreenWidget(
-                                      url: 'https://sibmed.ru/ru/')));
-                        },
-                        child: Image.asset(
-                          "assets/external-link-alt.png",
-                          width: 10,
-                          height: 10,
-                        ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(university.name),
+                    hGap(5),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GoogleScreenWidget(
+                                    url: 'https://sibmed.ru/ru/')));
+                      },
+                      child: Image.asset(
+                        "assets/external-link-alt.png",
+                        width: 10,
+                        height: 10,
                       ),
-                    ],
-                  ),
-                  vGap(5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.location_on),
-                      hGap(5),
-                      Text(
-                          '${university.location ?? ''} , ${university.country ?? ''}'),
-                    ],
-                  ),
-                  vGap(5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      isLoadingBookmark
-                          ? ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStateProperty.all(Colors.grey),
-                                  shape: WidgetStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      side: BorderSide(color: grey2),
-                                    ),
-                                  )),
-                              onPressed: null, // Disable when loading
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(White),
-                                    ),
+                    ),
+                  ],
+                ),
+                vGap(5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.location_on),
+                    hGap(5),
+                    Text(
+                        '${university.state ?? ''} , ${university.country ?? ''}'),
+                  ],
+                ),
+                vGap(5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    isLoadingBookmark
+                        ? ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    WidgetStateProperty.all(Colors.grey),
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    side: BorderSide(color: grey2),
                                   ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Loading...',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto', color: White),
+                                )),
+                            onPressed: null, // Disable when loading
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor:
+                                        AlwaysStoppedAnimation<Color>(White),
                                   ),
-                                ],
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Loading...',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto', color: White),
+                                ),
+                              ],
+                            ),
+                          )
+                        : isBookmarked
+                            ? ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        WidgetStateProperty.all(secondaryColor),
+                                    shape: WidgetStatePropertyAll(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        side: BorderSide(color: grey2),
+                                      ),
+                                    )),
+                                onPressed: toggleBookmark,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'UnFollow',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto', color: White),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        WidgetStateProperty.all(Ctext2),
+                                    shape: WidgetStatePropertyAll(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        side: BorderSide(color: grey2),
+                                      ),
+                                    )),
+                                onPressed: toggleBookmark,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Follow',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: fourthColor),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            )
-                          : isBookmarked
-                              ? ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: WidgetStateProperty.all(
-                                          secondaryColor),
-                                      shape: WidgetStatePropertyAll(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          side: BorderSide(color: grey2),
-                                        ),
-                                      )),
-                                  onPressed: toggleBookmark,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        'UnFollow',
-                                        style: TextStyle(
-                                            fontFamily: 'Roboto', color: White),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          WidgetStateProperty.all(Ctext2),
-                                      shape: WidgetStatePropertyAll(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          side: BorderSide(color: grey2),
-                                        ),
-                                      )),
-                                  onPressed: toggleBookmark,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        'Follow',
-                                        style: TextStyle(
-                                            fontFamily: 'Roboto',
-                                            color: fourthColor),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                      hGap(25),
-                      ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.all(Ctext2),
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  side: BorderSide(color: grey2),
-                                ),
-                              )),
-                          onPressed: () {
-                            _launchWhatsApp('1234567890');
-                          },
-                          child: Image.network(
-                              "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/WhatsApp_icon.png/598px-WhatsApp_icon.png",
-                              width: 26.0,
-                              height: 26.0)),
-                      hGap(25),
-                      ElevatedButton(
+                    hGap(25),
+                    ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all(Ctext2),
                             shape: WidgetStatePropertyAll(
@@ -492,69 +472,85 @@ class _UniversitHomeScreenState extends State<UniversitHomeScreen>
                               ),
                             )),
                         onPressed: () {
-                          displayModalBottomSheet(context);
+                          _launchWhatsApp('1234567890');
                         },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Apply',
-                              style: TextStyle(
-                                  fontFamily: 'Roboto', color: fourthColor),
+                        child: Image.network(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/WhatsApp_icon.png/598px-WhatsApp_icon.png",
+                            width: 26.0,
+                            height: 26.0)),
+                    hGap(25),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(Ctext2),
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              side: BorderSide(color: grey2),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                          ],
-                        ),
+                          )),
+                      onPressed: () {
+                        displayModalBottomSheet(context);
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Apply',
+                            style: TextStyle(
+                                fontFamily: 'Roboto', color: fourthColor),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
                       ),
-                    ],
-                  )
+                    ),
+                  ],
+                )
+              ],
+            ),
+            vGap(5),
+            Container(
+              color: White,
+              child: TabBar(
+                unselectedLabelColor: Colors.grey,
+                labelColor: Cprimary,
+                controller: _tabController,
+                indicatorColor: Cprimary,
+                labelStyle: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 15.0) ??
+                    TextStyle(fontSize: 15.0),
+                unselectedLabelStyle: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 14.0) ??
+                    TextStyle(fontSize: 14.0),
+                indicatorSize: TabBarIndicatorSize.tab,
+                tabs: const [
+                  Tab(child: Text('About')),
+                  Tab(child: Text('Feed')),
+                  Tab(child: Text('Courses')),
+                  Tab(child: Text('Gallery')),
                 ],
               ),
-              vGap(5),
-              Container(
-                color: White,
-                child: TabBar(
-                  unselectedLabelColor: Colors.grey,
-                  labelColor: Cprimary,
-                  controller: _tabController,
-                  indicatorColor: Cprimary,
-                  labelStyle: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(fontSize: 15.0) ??
-                      TextStyle(fontSize: 15.0),
-                  unselectedLabelStyle: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(fontSize: 14.0) ??
-                      TextStyle(fontSize: 14.0),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  tabs: const [
-                    Tab(child: Text('About')),
-                    Tab(child: Text('Feed')),
-                    Tab(child: Text('Courses')),
-                    Tab(child: Text('Gallery')),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  AboutTab(university: university),
+                  FeedTab(universityId: university.id),
+                  CoursesScreenTab(universityId: university.id),
+                  GalleryTab(universityId: university.id),
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    AboutTab(university: university),
-                    FeedTab(universityId: university.id),
-                    CoursesScreenTab(universityId: university.id),
-                    GalleryTab(universityId: university.id),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   void _launchWhatsApp(String phone) async {

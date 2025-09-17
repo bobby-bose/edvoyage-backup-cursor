@@ -10,9 +10,58 @@ from django.utils import timezone
 from django import forms
 from django.utils.safestring import mark_safe
 from .models import (
-    University, Campus, UniversityRanking, UniversityProgram,
+    University, Campus, UniversityRanking, UniversityProgram,Feed,
     UniversityFaculty, UniversityResearch, UniversityPartnership, UniversityGallery
 )
+class FeedInline(admin.TabularInline):
+    model = Feed
+    fields = ["user_name", "title", "description", "created_at"]
+    extra = 1
+
+    readonly_fields = ["created_at"]
+    show_change_link = True
+
+
+
+
+@admin.register(Feed)
+class FeedAdmin(admin.ModelAdmin):
+    """Admin for Feed model."""
+
+    list_display = [
+        "title",
+        "university",
+        "user_name",
+        "created_at",
+        "profile_image_preview",
+        "time_ago",
+    ]
+    list_filter = ["university", "created_at"]
+    search_fields = ["title", "description", "user_name", "university__name"]
+    readonly_fields = ["created_at", "profile_image_preview"]
+
+    fieldsets = (
+        ("Feed Information", {
+            "fields": ("university", "title", "description")
+        }),
+        ("Author", {
+            "fields": ("user_name", "profile_image", "profile_image_preview")
+        }),
+        ("Metadata", {
+            "fields": ("created_at",),
+            "classes": ("collapse",),
+        }),
+    )
+
+    def profile_image_preview(self, obj):
+        """Preview for profile image in admin."""
+        if obj.profile_image:
+            return format_html('<img src="{}" style="max-height:50px; border-radius:50%;" />', obj.profile_image.url)
+        return "No Image"
+
+    profile_image_preview.short_description = "Profile Image"
+
+
 
 
 @admin.register(UniversityGallery)
@@ -174,7 +223,7 @@ class UniversityAdmin(admin.ModelAdmin):
     """Admin for University model."""
     
     form = UniversityAdminForm
-    
+    inlines = [FeedInline]
     list_display = [
         'name', 'short_name', 'university_type', 'country', 'city',
         'total_students', 'international_students', 'faculty_count',

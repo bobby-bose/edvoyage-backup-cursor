@@ -45,39 +45,28 @@ class _NotesScreenState extends State<NotesScreen> {
       final response = await http.get(Uri.parse("${API}videos/"));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final List<dynamic> data = responseData["results"] ?? [];
 
-        int titleCount = data.length;
-
-        int count = 0;
-
-        var SubjectNames = data
+        var subjectNames = data
             .where((video) => video['category']["name"] == widget.className)
             .map((video) => video['subject_name'])
-            .toList()
             .toSet();
 
-        var VideoUrls = data
+        var videoUrls = data
             .where((video) => video['category']["name"] == widget.className)
             .map((video) => video['video_url'])
             .toList();
 
-        print("The Video Urls are $VideoUrls");
-        print("The Subject Names are $SubjectNames");
-        int VideoUrlsCount = VideoUrls.length;
-        int SubjectNamesCount = SubjectNames.length;
-        print("The Video Urls Count is $VideoUrlsCount");
-        print("The Subject Names Count is $SubjectNamesCount");
-
         setState(() {
-          _VideoUniqueCount = SubjectNamesCount;
-          _VideoTotalCount = VideoUrlsCount;
+          _VideoUniqueCount = subjectNames.length;
+          _VideoTotalCount = videoUrls.length;
         });
       } else {
-        print("Failed to load data. Status: ${response.statusCode}");
+        print("Failed to load video stats. Status: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching MCQ stats: $e");
+      print("Error fetching video stats: $e");
     }
   }
 
@@ -86,41 +75,30 @@ class _NotesScreenState extends State<NotesScreen> {
       final response = await http.get(Uri.parse("${API}mcqs/"));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final List<dynamic> data = responseData["results"] ?? [];
 
-        int titleCount = data.length;
-
-        int count = 0;
-
-        var SubjectNames = data
-            .where((video) => video['category']["name"] == widget.className)
-            .map((video) => video['subject']['name'])
-            .toList()
+        var subjectNames = data
+            .where((mcq) => mcq['category']["name"] == widget.className)
+            .map((mcq) => mcq['subject']['name'])
             .toSet();
 
-        var McqQuestions = data
+        var mcqQuestions = data
             .where(
-              (video) =>
-                  video['category']["name"] == widget.className &&
-                  video['questions'] != null &&
-                  (video['questions'] as List).isNotEmpty,
+              (mcq) =>
+                  mcq['category']["name"] == widget.className &&
+                  mcq['questions'] != null &&
+                  (mcq['questions'] as List).isNotEmpty,
             )
-            .map((video) => video['questions'])
+            .map((mcq) => mcq['questions'])
             .toList();
 
-        print("The MCQ Questions are $McqQuestions");
-        print("The Subject Names are $SubjectNames");
-        int McqQuestionsCount = McqQuestions.length;
-        int SubjectNamesCount = SubjectNames.length;
-        print("The McQ Count is $McqQuestionsCount");
-        print("The Subject Names Count is $SubjectNamesCount");
-
         setState(() {
-          _mcqCount = McqQuestionsCount;
-          _mcqSubjectCount = SubjectNamesCount;
+          _mcqSubjectCount = subjectNames.length;
+          _mcqCount = mcqQuestions.length;
         });
       } else {
-        print("Failed to load data. Status: ${response.statusCode}");
+        print("Failed to load MCQ stats. Status: ${response.statusCode}");
       }
     } catch (e) {
       print("Error fetching MCQ stats: $e");
@@ -130,33 +108,28 @@ class _NotesScreenState extends State<NotesScreen> {
   Future<void> _fetchClinicalCases() async {
     try {
       final response = await http.get(Uri.parse("${API}clinical-cases/"));
+
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final List<dynamic> data = responseData["results"] ?? [];
 
-        int titleCount = data.length;
-
-        int count = 0;
-
-        var SubjectNames = data
-            .where((video) => video['category']["name"] == widget.className)
-            .map((video) => video['subject_name'])
-            .toList()
+        var subjectNames = data
+            .where(
+                (caseItem) => caseItem['category']["name"] == widget.className)
+            .map((caseItem) => caseItem['subject_name'])
             .toSet();
 
         var clinicalCases = data
-            .where((video) => video['category']["name"] == widget.className)
+            .where(
+                (caseItem) => caseItem['category']["name"] == widget.className)
             .toList();
 
-        print("The Clinical Cases  are $clinicalCases");
-        print("The Subject Names are $SubjectNames");
-        int clinicalCasesCount = clinicalCases.length;
-        int SubjectNamesCount = SubjectNames.length;
-        print("The clinicalCasesCount Count is $clinicalCasesCount");
-        print("The Subject Names Count is $SubjectNamesCount");
         setState(() {
-          _subjectNamesCount = SubjectNamesCount;
-          _clinicalTotalCount = clinicalCasesCount;
+          _subjectNamesCount = subjectNames.length;
+          _clinicalTotalCount = clinicalCases.length;
         });
+      } else {
+        print("Failed to load clinical cases. Status: ${response.statusCode}");
       }
     } catch (e) {
       print("Error fetching Clinical Cases: $e");
@@ -166,33 +139,26 @@ class _NotesScreenState extends State<NotesScreen> {
   Future<void> _fetchFlashCards() async {
     try {
       final response = await http.get(Uri.parse("${API}flashcards/"));
+
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        int titleCount = data.length;
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final List<dynamic> data = responseData["results"] ?? [];
 
-        int count = 0;
-
-        var SubjectNames = data
-            .where((video) => video['category']["name"] == widget.className)
-            .map((video) => video['subject_name'])
-            .toList()
+        var subjectNames = data
+            .where((card) => card['category']["name"] == widget.className)
+            .map((card) => card['subject_name'])
             .toSet();
 
         var flashCards = data
-            .where((video) => video['category']["name"] == widget.className)
+            .where((card) => card['category']["name"] == widget.className)
             .toList();
 
-        print("The Flash Cards are $flashCards");
-        print("The Subject Names are $SubjectNames");
-        int flashCardsCount = flashCards.length;
-        int SubjectNamesCount = SubjectNames.length;
-        print("The FlashcardCount Count is $flashCardsCount");
-        print("The Subject Names Count is $SubjectNamesCount");
-
         setState(() {
-          _flashCardUniqueCount = SubjectNamesCount;
-          _flashCardTotalCount = flashCardsCount;
+          _flashCardUniqueCount = subjectNames.length;
+          _flashCardTotalCount = flashCards.length;
         });
+      } else {
+        print("Failed to load flashcards. Status: ${response.statusCode}");
       }
     } catch (e) {
       print("Error fetching Flashcards: $e");
@@ -238,16 +204,16 @@ class _NotesScreenState extends State<NotesScreen> {
                   navigateTo: const McqSubjectsScreen(),
                 ),
 
-                // Clinical Case Card
-                NoteCard(
-                  title: 'Clinical Case',
-                  leftSubtitle: _isLoading
-                      ? 'Loading...'
-                      : '$_subjectNamesCount Subjects',
-                  rightSubtitle:
-                      _isLoading ? '' : '$_clinicalTotalCount Clinical Cases',
-                  navigateTo: const ClinicalCasesScreen(),
-                ),
+                if (widget.className == "NEET PG")
+                  NoteCard(
+                    title: 'Clinical Case',
+                    leftSubtitle: _isLoading
+                        ? 'Loading...'
+                        : '$_subjectNamesCount Subjects',
+                    rightSubtitle:
+                        _isLoading ? '' : '$_clinicalTotalCount Clinical Cases',
+                    navigateTo: const ClinicalCasesScreen(),
+                  ),
 
                 // Flash Card
                 NoteCard(

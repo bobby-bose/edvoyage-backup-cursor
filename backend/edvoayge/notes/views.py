@@ -1,82 +1,80 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from django.db.models import Sum, Count
-from django.utils import timezone
-from datetime import date, timedelta
-import json
+# api/views.py
 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-# import API_VIEW
-from rest_framework.views import APIView
-from .models import (
-    NotesCategory,  NotesVideoMain, NotesVideoSub,NotesVideoPlayer
-)
-from .serializers import (
-    NotesCategorySerializer, NotesVideoMainSerializer, NotesVideoSubSerializer, NotesVideoPlayerSerializer
-)
-
-# -------------------------- new part
+from rest_framework import viewsets
+from .models import Subject, Doctor, Video, MCQ, Question, Option , ClinicalCase , Flashcard , FlashcardImage , Category
+from rest_framework import serializers
+from .serializers import SubjectSerializer, DoctorSerializer, VideoSerializer, MCQSerializer, QuestionSerializer, OptionSerializer , ClinicalCaseSerializer , FlashcardSerializer , CategorySerializer
+from rest_framework import viewsets
 
 
-# 1. Total count of sub topics and videos under category "video"
-@api_view(['GET'])
-def video_overview(request):
-    try:
-        category = NotesCategory.objects.get(name="video")
-    except NotesCategory.DoesNotExist:
-        return Response({"error": "Video category not found"}, status=404)
-
-    total_topics = NotesVideoMain.objects.filter(category=category).count()
-    total_videos = NotesVideoSub.objects.filter(title__category=category).count()
-
-    return Response({
-        "category": category.name,
-        "total_topics": total_topics,
-        "total_videos": total_videos
-    })
-
-
-# 2. Count of videos under each sub-topic
-@api_view(['GET'])
-def video_topic_breakdown(request):
-    topics = NotesVideoMain.objects.all()
-    data = []
-    for topic in topics:
-        video_count = NotesVideoSub.objects.filter(title=topic).count()
-        data.append({
-            "topic": topic.title,
-            "videos": video_count
-        })
-    return Response(data)
-
-
-# 3. Details of each video
-@api_view(['GET'])
-def video_details(request):
-    videos = NotesVideoSub.objects.all()
-    serializer = NotesVideoSubSerializer(videos, many=True, context={'request': request})
-    return Response(serializer.data)
-
-
-# 4. Video URLs (logo file URL or placeholder if missing)
-@api_view(['GET'])
-def video_urls(request):
-    videos = NotesVideoSub.objects.all()
-    data = []
-    for video in videos:
-        data.append({
-            "id": video.id,
-            "title": video.title.title,
-            "video_url": request.build_absolute_uri(video.logo.url) if video.logo else None
-        })
-    return Response(data)
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all().order_by('id')
+    serializer_class = CategorySerializer
 
 
 
-     
+class SubjectViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows subjects to be viewed.
+    Provides `list` and `retrieve` actions.
+    """
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows doctors to be viewed.
+    Provides `list` and `retrieve` actions.
+    """
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+
+class VideoViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows videos to be viewed.
+    Provides `list` and `retrieve` actions.
+    Can be filtered by subject or doctor ID, e.g., /api/videos/?subject=1
+    """
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+    filterset_fields = ['subject', 'doctor', 'is_free', 'category']
+
+
+class MCQViewSet(viewsets.ModelViewSet):
+    queryset = MCQ.objects.all()
+    serializer_class = MCQSerializer
+
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+
+class OptionViewSet(viewsets.ModelViewSet):
+    queryset = Option.objects.all()
+    serializer_class = OptionSerializer
+
+
+
+class ClinicalCaseViewSet(viewsets.ModelViewSet):
+    # Use select_related to perform a SQL join and improve performance
+    queryset = ClinicalCase.objects.select_related('doctor').all()
+    serializer_class = ClinicalCaseSerializer
+
+
+
+
+
+class FlashcardViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows flashcards to be viewed or edited.
+    """
+    serializer_class = FlashcardSerializer
+    
+
+    def get_queryset(self):
+        """
+        Optimizes the query by pre-fetching related images (one-to-many)
+        and selecting the related subject (one-to-one) in a single query.
+        """
+        return Flashcard.objects.select_related('subject').prefetch_related('images').all().order_by('-created_at')

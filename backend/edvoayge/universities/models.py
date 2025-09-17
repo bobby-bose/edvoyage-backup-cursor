@@ -8,6 +8,49 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
 
+class Feed(models.Model):
+    university = models.ForeignKey(
+        "University",
+        on_delete=models.CASCADE,
+        related_name="feeds",
+        verbose_name="University",
+    )
+    user_name = models.CharField(max_length=255, verbose_name="User Name")
+    profile_image = models.ImageField(
+        upload_to="feeds/profile_images/", blank=True, null=True, verbose_name="Profile Image"
+    )
+    title = models.CharField(max_length=255, verbose_name="Heading / Title")
+    description = models.TextField(verbose_name="Description")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Feed"
+        verbose_name_plural = "Feeds"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.university.name} - {self.user_name}: {self.title}"
+
+    @property
+    def time_ago(self):
+        """
+        Returns human-readable time like "2 days ago".
+        """
+        now = timezone.now()
+        diff = now - self.created_at
+
+        if diff.days > 0:
+            return f"{diff.days} day{'s' if diff.days > 1 else ''} ago"
+        elif diff.seconds // 3600 > 0:
+            hours = diff.seconds // 3600
+            return f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif diff.seconds // 60 > 0:
+            minutes = diff.seconds // 60
+            return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            return "just now"
+
+
 class University(models.Model):
     """
     University model with comprehensive information.
@@ -438,6 +481,9 @@ class UniversityPartnership(models.Model):
         else:
             print(f"Creating new partnership: {self.partner_name}") if hasattr(self, '_meta') else None
         super().save(*args, **kwargs)
+
+
+
 class UniversityGallery(models.Model):
     university = models.OneToOneField(
         'University', 

@@ -32,7 +32,7 @@ class VideoSubjectScreen extends StatefulWidget {
 class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
   Measurements? size;
   bool isLoading = true;
-  List<Category> categories = []; // Correct type: List<Category>
+  List<Category> categories = [];
 
   @override
   void initState() {
@@ -45,7 +45,10 @@ class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
       final response = await http.get(Uri.parse("${API}categories/"));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        // DRF pagination → categories are inside "results"
+        final List<dynamic> data = responseData["results"] ?? [];
 
         final List<Category> tempCategories =
             data.map((json) => Category.fromJson(json)).toList();
