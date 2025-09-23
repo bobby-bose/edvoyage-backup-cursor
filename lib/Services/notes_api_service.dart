@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class NotesApiService {
-  static const String baseUrl = 'http://localhost:8000/api/v1/notes';
+  static const String baseUrl =
+      'https://bobbykbose37.pythonanywhere.com/api/v1/notes';
 
   /// Fetch video lectures for a specific category
   static Future<List<Map<String, dynamic>>> fetchVideoLectures({

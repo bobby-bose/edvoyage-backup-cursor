@@ -1,4 +1,8 @@
 from django.contrib import admin
+from django.conf import settings
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.utils.html import mark_safe
 from .models import (
     Subject,
     Doctor,
@@ -11,6 +15,7 @@ from .models import (
     FlashcardImage,
     Category
 )
+from pdf2image import convert_from_path
 
 
 @admin.register(Category)
@@ -113,27 +118,50 @@ class ClinicalCaseAdmin(admin.ModelAdmin):
 
 # In your app's admin.py file
 
+# admin.py
 from django.contrib import admin
 from .models import Flashcard, FlashcardImage
 
 class FlashcardImageInline(admin.TabularInline):
     model = FlashcardImage
-    extra = 1
-    readonly_fields = ('image_preview',)
+    extra = 0
+    readonly_fields = ("image_preview", "caption")
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False  # prevent manual add
 
     def image_preview(self, obj):
         from django.utils.html import mark_safe
         if obj.image:
             return mark_safe(f'<img src="{obj.image.url}" width="150" height="150" />')
         return "No Image"
-    image_preview.short_description = 'Image Preview'
 
 @admin.register(Flashcard)
 class FlashcardAdmin(admin.ModelAdmin):
     inlines = [FlashcardImageInline]
-    # Updated to show 'subject' instead of 'title'
-    list_display = ('subject', 'description', 'created_at')
-    # Updated to filter and search by the subject's name
-    list_filter = ('subject',)
-    search_fields = ('subject__name', 'description')
-    list_select_related = ('subject',) # Improves performance
+    list_display = ("subject", "description", "created_at")
+    list_filter = ("subject",)
+    search_fields = ("subject__name", "description")
+    readonly_fields = ("created_at",)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        
+
+        if obj.pdf_file:
+            pdf_path = obj.pdf_file.path
+
+            # Split PDF into images
+            pages = convert_from_path(pdf_path, poppler_path=settings.POPPLER_PATH)
+
+            for i, page in enumerate(pages, start=1):
+                img_io = BytesIO()
+                page.save(img_io, format='JPEG')
+                img_content = ContentFile(img_io.getvalue(), name=f"{obj.id}_page_{i}.jpg")
+
+                FlashcardImage.objects.create(
+                    flashcard=obj,
+                    image=img_content,
+                    caption=f"Page {i}"
+                )

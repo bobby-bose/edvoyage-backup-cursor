@@ -103,6 +103,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'edvoayge.wsgi.application'
 
+POPPLER_PATH = r"C:\poppler\bin"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

@@ -57,8 +57,9 @@ class _UniversityFavouritesPageState extends State<UniversityFavouritesPage> {
   Widget _buildCard(dynamic favItem) {
     final university = favItem['university'];
     final String logoUrl = university['logo_url'] ?? '';
-    final String fullImageUrl =
-        logoUrl.startsWith('http') ? logoUrl : 'http://localhost:8000/$logoUrl';
+    final String fullImageUrl = logoUrl.startsWith('http')
+        ? logoUrl
+        : 'https://bobbykbose37.pythonanywhere.com/$logoUrl';
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

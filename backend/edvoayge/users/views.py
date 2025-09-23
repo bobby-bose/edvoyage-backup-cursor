@@ -310,6 +310,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 
                 # Generate OTP for password reset
                 otp_code = ''.join(random.choices(string.digits, k=6))
+                print("THE OTP CODE generated is",otp_code)
                 
                 otp = OTPVerification.objects.create(
                     user=user,
@@ -602,6 +603,7 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
     @classmethod
     def generate_otp(cls):
         cls.otp = str(random.randint(100000, 999999))  # 6-digit OTP
+        print("The generated OTP is",cls.otp)
         return cls.otp
 
     @classmethod
@@ -646,6 +648,7 @@ class OTPVerificationViewSet(viewsets.ModelViewSet):
             
             # Generate 6-digit OTP for ALL users (new and existing)
             otp_code = self.generate_otp()
+            print("The otp is",otp_code)
             
             print(f"🔍 DEBUG: Generated OTP: {otp_code} for email: {contact} | Type: {otp_type}")
             from datetime import timedelta

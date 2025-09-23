@@ -66,9 +66,11 @@ class _VideosBySubjectScreenState extends State<VideosBySubjectScreen> {
       final response = await http.get(Uri.parse("${API}videos/"));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final decoded = jsonDecode(response.body);
+        final List<dynamic> data = decoded['results'];
+
         print(data);
-        // Flter videos by the passed subjectName
+
         final filteredVideos = data
             .map((json) => Video.fromJson(json))
             .where((video) => video.subjectName == widget.subjectName)

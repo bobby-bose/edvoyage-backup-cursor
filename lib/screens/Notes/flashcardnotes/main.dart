@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:frontend/screens/notes/constants.dart';
-import 'package:frontend/screens/notes/flashcardnotes/sub.dart';
+import 'package:frontend/screens/notes/flashcardnotes/sub.dart'; // This should contain FlashcardDetailScreen
 import 'package:frontend/screens/notes/logo.dart';
 import 'package:frontend/screens/notes/topbar.dart';
 
-// 1. DATA MODELS: These are still useful for correctly parsing the initial JSON data.
-
+// 1. DATA MODELS
 class FlashcardImage {
   final int id;
   final String imageUrl;
@@ -55,8 +54,7 @@ class FlashcardSet {
   }
 }
 
-// 2. MAIN WIDGET: Fetches data and displays the count for each subject.
-
+// 2. MAIN WIDGET: Shows all subjects
 class FlashcardsScreen extends StatefulWidget {
   const FlashcardsScreen({super.key});
 
@@ -67,8 +65,7 @@ class FlashcardsScreen extends StatefulWidget {
 class _FlashcardsScreenState extends State<FlashcardsScreen> {
   bool _isLoading = true;
   String _errorMessage = '';
-  // This new map will store the counts, e.g., {"Anatomy": 1, "Human Anatomy": 1}
-  Map<String, int> _subjectCounts = {};
+  Map<String, int> _subjectCounts = {}; // subject -> number of cards
 
   @override
   void initState() {
@@ -84,21 +81,21 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
       if (!mounted) return;
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        final List<FlashcardSet> sets =
-            data.map((json) => FlashcardSet.fromJson(json)).toList();
+        final Map<String, dynamic> decoded = jsonDecode(response.body);
 
-        // ✅ CORE LOGIC: Group by subject_name and count the items.
-        final Map<String, int> subjectCounts = {};
-        for (var flashcardSet in sets) {
-          subjectCounts[flashcardSet.subjectName] =
-              (subjectCounts[flashcardSet.subjectName] ?? 0) + 1;
+        // Access the list inside "results"
+        final List<dynamic> allFlashcardSets = decoded['results'] ?? [];
+
+        // Count cards per subject
+        final Map<String, int> counts = {};
+        for (var set in allFlashcardSets) {
+          final subject = set['subject_name'] ?? 'Unknown';
+          final List images = set['images'] ?? [];
+          counts[subject] = (counts[subject] ?? 0) + images.length;
         }
 
-        print(subjectCounts);
-
         setState(() {
-          _subjectCounts = subjectCounts;
+          _subjectCounts = counts;
           _isLoading = false;
         });
       } else {
@@ -120,13 +117,10 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomLogoAppBar(),
-      // Updated Scaffold background color
-      backgroundColor: const Color(0xFFF5F5F5), // Light grey background
+      backgroundColor: const Color(0xFFF5F5F5),
       body: _buildBody(),
     );
   }
-
-  // In _FlashcardsScreenState
 
   Widget _buildBody() {
     if (_isLoading) {
@@ -134,7 +128,10 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
     }
     if (_errorMessage.isNotEmpty) {
       return Center(
-        child: Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+        child: Text(
+          _errorMessage,
+          style: const TextStyle(color: Colors.red, fontSize: 16),
+        ),
       );
     }
 
@@ -189,7 +186,7 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                               ),
                               Text(
                                 '$count ${count == 1 ? "Card" : "Cards"}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 20,
                                   color: Colors.black,

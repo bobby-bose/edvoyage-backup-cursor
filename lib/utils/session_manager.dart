@@ -29,8 +29,8 @@ class SessionManager {
     if (email == null) return null;
 
     // Use the exact URL with the email parameter
-    final uri =
-        Uri.parse("http://localhost:8000/api/v1/users/users/?email=$email");
+    final uri = Uri.parse(
+        "https://bobbykbose37.pythonanywhere.com/api/v1/users/users/?email=$email");
 
     final response = await http.get(
       uri,

@@ -5,7 +5,7 @@ import 'package:frontend/screens/notes/constants.dart';
 import 'package:frontend/screens/notes/logo.dart';
 import 'package:frontend/screens/notes/topbar.dart';
 
-// DATA MODELS (can be in their own file)
+// DATA MODEL
 class FlashcardImage {
   final int id;
   final String imageUrl;
@@ -62,9 +62,12 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
       if (!mounted) return;
 
       if (response.statusCode == 200) {
-        final List<dynamic> allFlashcardSets = jsonDecode(response.body);
+        final decoded = jsonDecode(response.body) as Map<String, dynamic>;
 
-        // Find the specific flashcard set by its subject_name
+        // ✅ Extract list from "results"
+        final List<dynamic> allFlashcardSets = decoded['results'] ?? [];
+
+        // ✅ Find the specific flashcard set
         final flashcardSetData = allFlashcardSets.firstWhere(
           (set) => set['subject_name'] == widget.subjectName,
           orElse: () => null,
@@ -146,7 +149,6 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
   Widget _buildFlashcard(FlashcardImage image) {
     debugPrint("Image URL: ${image.imageUrl}");
 
-    // This is a single flashcard view
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
@@ -158,7 +160,6 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
               ClipRRect(
@@ -167,15 +168,11 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
                   image.imageUrl,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(
-                      Icons.broken_image,
-                      size: 50,
-                      color: Colors.grey,
-                    ),
+                    child:
+                        Icon(Icons.broken_image, size: 50, color: Colors.grey),
                   ),
                 ),
               ),
-              // Add other sections like NOTES and References if needed
             ],
           ),
         ),
@@ -203,18 +200,14 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
                       curve: Curves.easeIn,
                     );
                   }
-                : null, // Disable if it's the first image
+                : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF008080),
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
             ),
-            child: const Text(
-              'PREV',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            child: const Text('PREV',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Text(
             '${_currentIndex + 1} / ${_images.length}',
@@ -223,10 +216,8 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
           ElevatedButton(
             onPressed: () {
               if (isLastImage) {
-                // Finish button functionality
                 Navigator.of(context).pop();
               } else {
-                // Next button functionality
                 _pageController.nextPage(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn,
@@ -239,10 +230,8 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
             ),
             child: Text(
               isLastImage ? 'FINISH' : 'NEXT',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ),
         ],

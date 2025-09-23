@@ -130,15 +130,24 @@ class _OtpState extends State<Otp> {
     try {
       String deviceId = '1';
 
-      // Check if it's the backup OTP code for testing
       if (otps == '000000') {
-        print('🔍 DEBUG: Using backup OTP code for testing');
-        print('🔍 DEBUG: Mobile number: ${widget.mobile}');
-
-        // Check if user exists first
-        await _checkAndCreateUser(widget.mobile, '000000');
-        return;
+        print('✅ DEBUG: Using test OTP bypass (000000)');
+        await SessionManager.storeEmail(widget.mobile);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        Toasty.showtoast('Test OTP verified successfully!');
+        return; // ⬅️ Skip backend completely
       }
+      // if (otps == '000000') {
+      //   print('🔍 DEBUG: Using backup OTP code for testing');
+      //   print('🔍 DEBUG: Mobile number: ${widget.mobile}');
+
+      //   // Check if user exists first
+      //   await _checkAndCreateUser(widget.mobile, '000000');
+      //   return;
+      // }
 
       final response = await http.post(
         Uri.parse('${BaseUrl.baseUrl}/users/otp/verify/'),

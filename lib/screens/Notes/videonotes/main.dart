@@ -17,12 +17,14 @@ class Subject {
   Subject({required this.id, required this.name, required this.videoCount});
 
   factory Subject.fromJson(Map<String, dynamic> json) {
-    // This factory is no longer used for the top-level Subject list,
-    // but is kept for future use if needed.
     return Subject(
-      id: json['id'],
-      name: json['name'],
-      videoCount: json['video_count'],
+      id: json['subject'] is int
+          ? json['subject']
+          : int.tryParse(json['subject']?.toString() ?? '0') ?? 0,
+      name: json['subject_name']?.toString() ?? 'Unknown',
+      videoCount: (json['video_count'] is int)
+          ? json['video_count']
+          : int.tryParse(json['video_count']?.toString() ?? '0') ?? 0,
     );
   }
 }
@@ -46,29 +48,59 @@ class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
   }
 
   Future<void> fetchSubjects() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       final response = await http.get(Uri.parse("${API}videos/"));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final decoded = jsonDecode(response.body);
 
-        // Group the data by subject_name and count the videos
-        final Map<String, List<dynamic>> subjectsMap = {};
-        for (var item in data) {
-          final subjectName = item['subject_name'] as String;
-          if (!subjectsMap.containsKey(subjectName)) {
-            subjectsMap[subjectName] = [];
-          }
-          subjectsMap[subjectName]!.add(item);
+        // Determine where the list is: in decoded['results'] or decoded itself
+        List<dynamic> dataList;
+        if (decoded is Map<String, dynamic> &&
+            decoded.containsKey('results') &&
+            decoded['results'] is List) {
+          dataList = decoded['results'] as List<dynamic>;
+        } else if (decoded is List) {
+          dataList = decoded;
+        } else {
+          // Unexpected structure
+          throw Exception('Unexpected response structure when fetching videos');
         }
 
-        // Create a new list of Subject objects from the grouped data
+        // Group by subject_name and count the videos
+        final Map<String, List<dynamic>> subjectsMap = {};
+        for (var item in dataList) {
+          if (item is Map<String, dynamic>) {
+            final subjectName = (item['subject_name'] ?? 'Unknown').toString();
+            subjectsMap.putIfAbsent(subjectName, () => []);
+            subjectsMap[subjectName]!.add(item);
+          }
+        }
+
         final List<Subject> tempSubjects = subjectsMap.entries.map((entry) {
           final subjectName = entry.key;
           final videoList = entry.value;
+          // get subject id from the first item that's an int or convertible
+          int subjectId = 0;
+          for (var v in videoList) {
+            if (v is Map<String, dynamic> && v.containsKey('subject')) {
+              final raw = v['subject'];
+              if (raw is int) {
+                subjectId = raw;
+                break;
+              } else if (raw != null) {
+                subjectId = int.tryParse(raw.toString()) ?? 0;
+                if (subjectId != 0) break;
+              }
+            }
+          }
 
           return Subject(
-            id: videoList.first['subject'], // Use the first item's subject ID
+            id: subjectId,
             name: subjectName,
             videoCount: videoList.length,
           );
@@ -79,13 +111,20 @@ class _VideoSubjectScreenState extends State<VideoSubjectScreen> {
           isLoading = false;
         });
       } else {
-        throw Exception('Failed to load subjects');
+        // non-200
+        debugPrint(
+            'fetchSubjects: HTTP ${response.statusCode} - ${response.body}');
+        setState(() {
+          isLoading = false;
+        });
+        throw Exception(
+            'Failed to load subjects (status ${response.statusCode})');
       }
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint("Error fetching subjects: $e\n$st");
       setState(() {
         isLoading = false;
       });
-      debugPrint("Error fetching subjects: $e");
     }
   }
 

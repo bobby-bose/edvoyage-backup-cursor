@@ -381,7 +381,7 @@ class _CoursesScreenTabState extends State<CoursesScreenTab> {
                                     try {
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://localhost:8000/api/v1/bookmarks/add-favourite-course/'),
+                                            'https://bobbykbose37.pythonanywhere.com/api/v1/bookmarks/add-favourite-course/'),
                                         headers: {
                                           'Content-Type': 'application/json'
                                         },
@@ -439,7 +439,7 @@ class _CoursesScreenTabState extends State<CoursesScreenTab> {
                                     try {
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://localhost:8000/api/v1/bookmarks/add-favourite-course/'),
+                                            'https://bobbykbose37.pythonanywhere.com/api/v1/bookmarks/add-favourite-course/'),
                                         headers: {
                                           'Content-Type': 'application/json'
                                         },
