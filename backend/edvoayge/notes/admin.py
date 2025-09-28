@@ -129,39 +129,19 @@ class FlashcardImageInline(admin.TabularInline):
     can_delete = False
 
     def has_add_permission(self, request, obj=None):
-        return False  # prevent manual add
+        return False
 
     def image_preview(self, obj):
-        from django.utils.html import mark_safe
         if obj.image:
             return mark_safe(f'<img src="{obj.image.url}" width="150" height="150" />')
         return "No Image"
 
+
 @admin.register(Flashcard)
 class FlashcardAdmin(admin.ModelAdmin):
     inlines = [FlashcardImageInline]
-    list_display = ("subject", "description", "created_at")
-    list_filter = ("subject",)
-    search_fields = ("subject__name", "description")
+    list_display = ("category", "subject", "description", "created_at")
+    list_filter = ("category", "subject")
+    search_fields = ("subject__name", "category__name", "description")
     readonly_fields = ("created_at",)
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        
-
-        if obj.pdf_file:
-            pdf_path = obj.pdf_file.path
-
-            # Split PDF into images
-            pages = convert_from_path(pdf_path, poppler_path=settings.POPPLER_PATH)
-
-            for i, page in enumerate(pages, start=1):
-                img_io = BytesIO()
-                page.save(img_io, format='JPEG')
-                img_content = ContentFile(img_io.getvalue(), name=f"{obj.id}_page_{i}.jpg")
-
-                FlashcardImage.objects.create(
-                    flashcard=obj,
-                    image=img_content,
-                    caption=f"Page {i}"
-                )
+    fields = ("category", "subject", "description", "pdf_file", "created_at")

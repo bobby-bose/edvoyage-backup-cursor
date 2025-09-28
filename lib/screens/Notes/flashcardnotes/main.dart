@@ -56,7 +56,8 @@ class FlashcardSet {
 
 // 2. MAIN WIDGET: Shows all subjects
 class FlashcardsScreen extends StatefulWidget {
-  const FlashcardsScreen({super.key});
+  final String className;
+  const FlashcardsScreen({super.key, required this.className});
 
   @override
   State<FlashcardsScreen> createState() => _FlashcardsScreenState();
@@ -89,11 +90,13 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
         // Count cards per subject
         final Map<String, int> counts = {};
         for (var set in allFlashcardSets) {
-          final subject = set['subject_name'] ?? 'Unknown';
-          final List images = set['images'] ?? [];
-          counts[subject] = (counts[subject] ?? 0) + images.length;
+          if (set['category'] != null &&
+              set['category']["name"] == widget.className) {
+            final subject = set['subject_name'] ?? 'Unknown';
+            final List images = set['images'] ?? [];
+            counts[subject] = (counts[subject] ?? 0) + images.length;
+          }
         }
-
         setState(() {
           _subjectCounts = counts;
           _isLoading = false;
@@ -156,8 +159,9 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute<void>(
-                        builder: (context) =>
-                            FlashcardDetailScreen(subjectName: subjectName),
+                        builder: (context) => FlashcardDetailScreen(
+                            subjectName: subjectName,
+                            className: widget.className),
                       ),
                     );
                   },

@@ -160,17 +160,6 @@ class ClinicalCase(models.Model):
 
 
 
-class Flashcard(models.Model):
-    category = models.ForeignKey(Category, related_name='flashcards', on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, related_name='flashcards', on_delete=models.CASCADE)
-    description = models.TextField(
-        blank=True,
-        help_text="Optional: A brief description or the 'back' of the main card."
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.subject.name
 
 # models.py
 from django.db import models
@@ -181,48 +170,60 @@ import io, os
 from django.conf import settings
 from uuid import uuid4
 
+from django.db import models
+from django.core.files import File
+from pdf2image import convert_from_path
+import io
+from uuid import uuid4
+
+
 class Flashcard(models.Model):
+    category = models.ForeignKey(Category, related_name='flashcards', on_delete=models.CASCADE)  # 👈 ADD THIS
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     pdf_file = models.FileField(upload_to="flashcards/pdfs/", blank=True, null=True)
-    
 
     def save(self, *args, **kwargs):
+        # Check if a new file is uploaded
+        new_pdf = self.pk is None or "pdf_file" in kwargs.get("update_fields", [])
+
         super().save(*args, **kwargs)
 
-        # If a new PDF is uploaded → split into images
-        if self.pdf_file:
+        if self.pdf_file and new_pdf:
+            # Clear old images first (in case of update)
+            self.images.all().delete()
             self._process_pdf_to_images()
 
     def _process_pdf_to_images(self):
- 
-
-        if not self.pdf_file:
-            return
-
         pdf_path = self.pdf_file.path
-
-        # Convert PDF to images
         pages = convert_from_path(pdf_path, poppler_path=r"C:\poppler\bin")
 
-        # Save each page as an image linked to this flashcard
         for i, page in enumerate(pages, start=1):
-            # Save image to memory
             image_io = io.BytesIO()
-            page.save(image_io, format='JPEG')
+            page.save(image_io, format="JPEG")
             image_io.seek(0)
 
-            # Generate unique filename
             filename = f"{uuid4()}.jpg"
-
-            # Save image to FlashcardImage model
             FlashcardImage.objects.create(
                 flashcard=self,
-                image=File(image_io, name=filename)
+                image=File(image_io, name=filename),
+                caption=f"Page {i}"
             )
 
+
 class FlashcardImage(models.Model):
+    flashcard = models.ForeignKey(
+        Flashcard,
+        related_name="images",
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to="flashcards/")
+    caption = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Image for '{self.flashcard.subject.name}'"
+
     flashcard = models.ForeignKey(
         Flashcard,
         related_name="images",

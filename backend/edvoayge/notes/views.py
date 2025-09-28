@@ -62,19 +62,7 @@ class ClinicalCaseViewSet(viewsets.ModelViewSet):
     serializer_class = ClinicalCaseSerializer
 
 
+class FlashcardViewSet(viewsets.ReadOnlyModelViewSet):
 
-
-
-class FlashcardViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows flashcards to be viewed or edited.
-    """
+    queryset = Flashcard.objects.all()
     serializer_class = FlashcardSerializer
-    
-
-    def get_queryset(self):
-        """
-        Optimizes the query by pre-fetching related images (one-to-many)
-        and selecting the related subject (one-to-one) in a single query.
-        """
-        return Flashcard.objects.select_related('subject').prefetch_related('images').all().order_by('-created_at')

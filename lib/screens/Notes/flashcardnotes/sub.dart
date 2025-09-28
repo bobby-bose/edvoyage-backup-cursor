@@ -29,7 +29,9 @@ class FlashcardImage {
 // MAIN WIDGET for the detail screen
 class FlashcardDetailScreen extends StatefulWidget {
   final String subjectName;
-  const FlashcardDetailScreen({super.key, required this.subjectName});
+  final String className;
+  const FlashcardDetailScreen(
+      {super.key, required this.subjectName, required this.className});
 
   @override
   State<FlashcardDetailScreen> createState() => _FlashcardDetailScreenState();
@@ -69,7 +71,9 @@ class _FlashcardDetailScreenState extends State<FlashcardDetailScreen> {
 
         // ✅ Find the specific flashcard set
         final flashcardSetData = allFlashcardSets.firstWhere(
-          (set) => set['subject_name'] == widget.subjectName,
+          (set) =>
+              set['subject_name'] == widget.subjectName &&
+              set['category']?['name'] == widget.className,
           orElse: () => null,
         );
 

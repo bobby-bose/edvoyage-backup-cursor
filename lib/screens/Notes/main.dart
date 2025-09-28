@@ -223,7 +223,7 @@ class _NotesScreenState extends State<NotesScreen> {
                       : '$_flashCardUniqueCount Subjects',
                   rightSubtitle:
                       _isLoading ? '' : '$_flashCardTotalCount Flash Cards',
-                  navigateTo: const FlashcardsScreen(),
+                  navigateTo: FlashcardsScreen(className: widget.className),
                 ),
               ],
             ),
