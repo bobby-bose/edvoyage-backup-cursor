@@ -199,6 +199,18 @@ class Flashcard(models.Model):
         pdf_path = self.pdf_file.path
         pages = convert_from_path(pdf_path, poppler_path=r"C:\poppler\bin")
 
+
+
+    def _process_pdf_to_images(self):
+        pdf_path = self.pdf_file.path
+
+        if platform.system() == "Windows":
+            # Use your Windows Poppler installation path
+            pages = convert_from_path(pdf_path, poppler_path=r"C:\poppler\bin")
+        else:
+            # On Linux (Render, Ubuntu, etc.), Poppler is installed via apt
+            pages = convert_from_path(pdf_path)
+
         for i, page in enumerate(pages, start=1):
             image_io = io.BytesIO()
             page.save(image_io, format="JPEG")
