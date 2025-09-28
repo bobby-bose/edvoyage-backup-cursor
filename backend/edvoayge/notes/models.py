@@ -5,7 +5,7 @@ import os
 from uuid import uuid4
 from django.core.files import File
 from pdf2image import convert_from_path
-
+import platform
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     
