@@ -17,19 +17,10 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-*4=oz87^klwj@y(v==q^)!@sw9o&002r%n6e%@fe#tg&#a+ufl'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
-
-# Make sure ALLOWED_HOSTS also includes it
 ALLOWED_HOSTS = [
     "edvoyage-backup-cursor.onrender.com",
     "localhost",
@@ -40,7 +31,6 @@ ALLOWED_HOSTS = [
 DEVELOPER_MODE = True
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third party apps
     'rest_framework',
     'corsheaders',
     'drf_yasg',
 
+    # Your apps
     'users',
     'universities',
     'courses',
@@ -76,18 +67,18 @@ INSTALLED_APPS = [
     'chat',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # MUST be before CommonMiddleware
     'django.middleware.common.CommonMiddleware',
-    'edvoayge.middleware.CustomCSRFMiddleware',  # Add custom CSRF middleware
+    'edvoayge.middleware.CustomCSRFMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'edvoayge.middleware.CustomAuthenticationMiddleware',  # Add custom authentication middleware
-    
+    'edvoayge.middleware.CustomAuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'edvoayge.urls'
@@ -112,8 +103,6 @@ WSGI_APPLICATION = 'edvoayge.wsgi.application'
 POPPLER_PATH = r"C:\poppler\bin"
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -121,65 +110,33 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
-
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25,
     'DEFAULT_RENDERER_CLASSES': [
@@ -202,7 +159,6 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
@@ -211,119 +167,36 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-# CORS Settings
-# For development, allow all origins so any Flutter frontend can access the API
- # WARNING: Restrict this in production!
-CORS_ALLOWED_ORIGINS = [
-    "https://edvoyage.netlify.app",
-    "http://localhost:3381",
-    "http://192.168.137.1:3000",
-    "http://127.0.0.1:3000",
-    "http://192.168.137.1:8080",
-    "http://127.0.0.1:8080",
-    "http://192.168.137.1:8000",
-    "http://127.0.0.1:8000",
-    "http://192.168.137.1:5000",
-    "http://127.0.0.1:5000",
-    # Flutter web development ports
-    "http://192.168.137.1:50265",
-    "http://127.0.0.1:50265",
-    "http://192.168.137.1:50266",
-    "http://127.0.0.1:50266",
-    "http://192.168.137.1:50267",
-    "http://127.0.0.1:50267",
-    "http://192.168.137.1:50268",
-    "http://127.0.0.1:50268",
-    "http://192.168.137.1:50269",
-    "http://127.0.0.1:50269",
-    "http://192.168.137.1:50270",
-    "http://127.0.0.1:50270",
-    "http://192.168.137.1:61601",
-    "http://127.0.0.1:61601",
-    # Chrome debug ports
-    "http://192.168.137.1:9102",
-    "http://127.0.0.1:9102",
-    "http://localhost:5000",
-]
-
-# CSRF Settings for development
-CSRF_TRUSTED_ORIGINS = [
-    "https://edvoyage-backup-cursor.onrender.com",
-    "http://192.168.137.1:3000",
-    "http://127.0.0.1:3000",
-    "http://192.168.137.1:8080",
-    "http://127.0.0.1:8080",
-    "http://192.168.137.1:8000",
-    "http://127.0.0.1:8000",
-    "http://192.168.137.1:5000",
-    "http://127.0.0.1:5000",
-    # Flutter web development ports
-    "http://192.168.137.1:50265",
-    "http://127.0.0.1:50265",
-    "http://192.168.137.1:50266",
-    "http://127.0.0.1:50266",
-    "http://192.168.137.1:50267",
-    "http://127.0.0.1:50267",
-    "http://192.168.137.1:50268",
-    "http://127.0.0.1:50268",
-    "http://192.168.137.1:50269",
-    "http://127.0.0.1:50269",
-    "http://192.168.137.1:50270",
-    "http://127.0.0.1:50270",
-    "http://192.168.137.1:61601",
-    "http://127.0.0.1:61601",
-    # Chrome debug ports
-    "http://192.168.137.1:9102",
-    "http://127.0.0.1:9102",
-]
-
-# Additional CORS settings for Flutter web
+# CORS Settings (Flutter Web Friendly)
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
+    'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT',
 ]
 CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-    'device-id',  # Add custom header
-]
-
-# Additional settings for Flutter web compatibility
-CORS_EXPOSE_HEADERS = [
-    'content-type',
-    'content-length',
-    'authorization',
+    'accept', 'accept-encoding', 'authorization', 'content-type',
+    'dnt', 'origin', 'user-agent', 'x-csrftoken', 'x-requested-with',
     'device-id',
 ]
+CORS_EXPOSE_HEADERS = [
+    'content-type', 'content-length', 'authorization', 'device-id',
+]
 
-# Allow all origins for development (more permissive)
-
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    "https://edvoyage-backup-cursor.onrender.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 # Logging Configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
+        'verbose': {'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}', 'style': '{'},
+        'simple': {'format': '{levelname} {message}', 'style': '{'},
     },
     'handlers': {
         'file': {
@@ -332,37 +205,22 @@ LOGGING = {
             'filename': BASE_DIR / 'logs' / 'edvoyage.log',
             'formatter': 'verbose',
         },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
+        'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'simple'},
     },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
+    'root': {'handlers': ['console', 'file'], 'level': 'INFO'},
+    'loggers': {'django': {'handlers': ['console', 'file'], 'level': 'INFO', 'propagate': False}},
 }
 
 # File Upload Settings
 MAX_UPLOAD_SIZE_MB = 10
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
-CORS_URLS_REGEX = r'^/api/.*$'
-
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
-# Custom User Model (if needed)
+# Custom User Model
 # AUTH_USER_MODEL = 'users.User'
 
 # Email Configuration
@@ -371,18 +229,14 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bobbykboseoffice@gmail.com'
-EMAIL_HOST_PASSWORD = 'qlxo uaqf zqix kndx'  # App password for Gmail
+EMAIL_HOST_PASSWORD = 'qlxo uaqf zqix kndx'  # Gmail App password
 DEFAULT_FROM_EMAIL = 'bobbykboseoffice@gmail.com'
 DEFAULT_TO_EMAIL = 'bobbykboseoffice@gmail.com'
 
 # Swagger Settings
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
+        'Bearer': {'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}
     },
     'USE_SESSION_AUTH': False,
 }
