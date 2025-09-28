@@ -354,7 +354,8 @@ LOGGING = {
 # File Upload Settings
 MAX_UPLOAD_SIZE_MB = 10
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
-CORS_URLS_REGEX = r'^/media/.*$'
+CORS_URLS_REGEX = r'^/api/.*$'
+
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
