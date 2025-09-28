@@ -20,11 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // removes debug banner
-      title: 'Notes App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashScreen(), // Your first screen
-    );
+        debugShowCheckedModeBanner: false, // removes debug banner
+        title: 'Notes App',
+        theme: ThemeData(primarySwatch: Colors.blue),
+        home: const VideoSubjectScreen() // Your first screen
+        );
   }
 }
 
