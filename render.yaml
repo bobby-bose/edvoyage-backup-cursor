@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: edvoayge
+    env: python
+    plan: free
+    region: oregon
+
+    # Install system dependencies here (instead of apt-get in build.sh)
+    aptPackages:
+      - poppler-utils
+      - build-essential
+      - libpq-dev
+
+    # Build steps (replace build.sh)
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r backend/edvoayge/requirements.txt
+      python backend/edvoayge/manage.py collectstatic --noinput
+
+    # Start command (use runserver since that's what you had in build.sh)
+    startCommand: python backend/edvoayge/manage.py runserver 0.0.0.0:8000
+
+    pythonVersion: 3.13
