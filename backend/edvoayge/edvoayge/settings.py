@@ -27,8 +27,16 @@ SECRET_KEY = 'django-insecure-*4=oz87^klwj@y(v==q^)!@sw9o&002r%n6e%@fe#tg&#a+ufl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    "https://edvoyage-backup-cursor.onrender.com",
+]
 
+# Make sure ALLOWED_HOSTS also includes it
+ALLOWED_HOSTS = [
+    "edvoyage-backup-cursor.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 # Developer Mode for logging
 DEVELOPER_MODE = True
