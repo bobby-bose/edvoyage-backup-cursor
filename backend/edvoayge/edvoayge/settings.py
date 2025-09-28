@@ -213,7 +213,7 @@ SIMPLE_JWT = {
 
 # CORS Settings
 # For development, allow all origins so any Flutter frontend can access the API
-CORS_ALLOW_ALL_ORIGINS = True  # WARNING: Restrict this in production!
+ # WARNING: Restrict this in production!
 CORS_ALLOWED_ORIGINS = [
     "https://edvoyage.netlify.app",
     "http://localhost:3381",
@@ -309,7 +309,7 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 # Allow all origins for development (more permissive)
-CORS_ORIGIN_ALLOW_ALL = True
+
 
 # Logging Configuration
 LOGGING = {
