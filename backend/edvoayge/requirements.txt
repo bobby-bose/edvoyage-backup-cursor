@@ -2,25 +2,28 @@
 Django==5.2.4
 
 # Django REST Framework
- djangorestframework
+djangorestframework
 
 # JWT Authentication
- djangorestframework-simplejwt
+djangorestframework-simplejwt
 
 # CORS support
- django-cors-headers
+django-cors-headers
 
 # Swagger/OpenAPI docs
- drf-yasg
+drf-yasg
 
 # Filtering support
- django-filter
+django-filter
 
 # Image/file handling (required for ImageField/FileField)
- Pillow
+Pillow
 
 # Nested routers for DRF (rest_framework_nested)
 drf-nested-routers
+
+# Gunicorn for production server
+gunicorn
 
 # Optional: If using PostgreSQL, uncomment below
 # psycopg2-binary
@@ -28,4 +31,4 @@ drf-nested-routers
 # Optional: If using MySQL, uncomment below
 # mysqlclient
 
-# Any other dependencies can be added below 
+# Any other dependencies can be added below
