@@ -6,10 +6,10 @@ set -e
 
 
 echo "Updating system packages..."
-sudo apt-get update
+apt-get update
 
 echo "Installing system dependencies: Poppler, build tools, PostgreSQL dev..."
-sudo apt-get install -y poppler-utils build-essential libpq-dev
+apt-get install -y poppler-utils build-essential libpq-dev
 
 echo "Upgrading pip..."
 pip install --upgrade pip
