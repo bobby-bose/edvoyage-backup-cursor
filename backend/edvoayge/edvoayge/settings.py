@@ -100,7 +100,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'edvoayge.wsgi.application'
 
-POPPLER_PATH = r"C:\poppler\bin"
+if os.name == "nt":
+    POPPLER_PATH = r"C:\poppler\bin"
+else:
+    POPPLER_PATH = "/usr/bin"  # or wherever Poppler is installed
+
 
 # Database
 DATABASES = {
@@ -188,7 +192,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
-    "https://edvoyage.netlify.app/",
+    "https://edvoyage.netlify.app",
     "https://edvoyage-backup-cursor.onrender.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -218,6 +222,16 @@ LOGGING = {
 # File Upload Settings
 MAX_UPLOAD_SIZE_MB = 10
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
+# Make sure Django builds HTTPS URLs
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
+# Explicitly set site URL base
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Force Django to generate https:// URLs
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
