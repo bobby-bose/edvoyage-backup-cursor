@@ -41,6 +41,9 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['-created_at']  # newest first
+
 
 class MCQ(models.Model):
     category = models.ForeignKey(Category, related_name='mcqs', on_delete=models.CASCADE)
