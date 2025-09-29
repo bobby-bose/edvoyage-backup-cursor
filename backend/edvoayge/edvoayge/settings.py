@@ -167,9 +167,7 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-# CORS Settings (Flutter Web Friendly)
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = [
     'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT',
@@ -182,9 +180,15 @@ CORS_ALLOW_HEADERS = [
 CORS_EXPOSE_HEADERS = [
     'content-type', 'content-length', 'authorization', 'device-id',
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "https://edvoyage.netlify.app",
+    "https://edvoyage-backup-cursor.onrender.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
+    "https://edvoyage.netlify.app/",
     "https://edvoyage-backup-cursor.onrender.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
