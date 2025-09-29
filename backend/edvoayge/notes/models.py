@@ -42,7 +42,7 @@ class Video(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created_at']  # newest first
+        ordering = ['-id']  # newest first
 
 
 class MCQ(models.Model):
